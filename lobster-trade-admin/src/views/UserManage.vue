@@ -168,24 +168,29 @@ const loadUsers = async () => {
 }
 
 const handleBan = async (row) => {
-  await ElMessageBox.confirm(`确认封禁用户「${row.nickname}」？`, '封禁用户', { type: 'warning' })
   try {
+    await ElMessageBox.confirm(
+      `确定要封禁用户【${row.nickname}】吗？封禁后该用户将无法登录平台。`,
+      '⚠️ 确认封禁',
+      { confirmButtonText: '确认封禁', cancelButtonText: '取消', type: 'warning' }
+    )
     await request.post(`/admin/user/${row.id}/ban`)
     ElMessage.success('已封禁')
     loadUsers()
-  } catch (e) {
-    ElMessage.error('操作失败')
-  }
+  } catch (e) {}
 }
 
 const handleUnban = async (row) => {
   try {
+    await ElMessageBox.confirm(
+      `确定要解封用户【${row.nickname}】吗？解封后用户可恢复正常登录。`,
+      '确认解封',
+      { confirmButtonText: '确认', cancelButtonText: '取消', type: 'info' }
+    )
     await request.post(`/admin/user/${row.id}/unban`)
     ElMessage.success('已解封')
     loadUsers()
-  } catch (e) {
-    ElMessage.error('操作失败')
-  }
+  } catch (e) {}
 }
 
 const viewDetail = (row) => {

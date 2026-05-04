@@ -32,11 +32,13 @@ com\lobster\trade\controller\RealNameApiController.class
 com\lobster\trade\controller\AuthController.class
 com\lobster\trade\exception\BusinessException.class
 com\lobster\trade\service\ProductRecommendSlotService.class
+com\lobster\trade\util\PaymentSecurityUtil.class
 com\lobster\trade\service\impl\PaymentServiceImpl.class
 com\lobster\trade\model\request\AdminLoginRequest.class
 com\lobster\trade\service\AdminAuditService.class
 com\lobster\trade\model\request\OrderRecognizeRequest.class
 com\lobster\trade\controller\admin\TicketController.class
+com\lobster\trade\controller\SellerStatsController.class
 com\lobster\trade\model\entity\CsMessage.class
 com\lobster\trade\mapper\ImMessageMapper.class
 com\lobster\trade\controller\OrderController.class
@@ -98,6 +100,7 @@ com\lobster\trade\mapper\HotSearchWordMapper.class
 com\lobster\trade\service\JwtAuthService.class
 com\lobster\trade\model\entity\AdminRole.class
 com\lobster\trade\service\TradeReviewService.class
+com\lobster\trade\model\response\SellerStatsResponse.class
 com\lobster\trade\config\AdminContext.class
 com\lobster\trade\model\request\ResetPasswordRequest.class
 com\lobster\trade\model\entity\ServiceProviderCertification.class
@@ -156,6 +159,7 @@ com\lobster\trade\service\ProductService.class
 com\lobster\trade\controller\UserController$ApplyRealNameRequest.class
 com\lobster\trade\service\OrderProgressService.class
 com\lobster\trade\model\entity\TradeReview.class
+com\lobster\trade\util\RateLimitUtil.class
 com\lobster\trade\service\PlatformAnnouncementService.class
 com\lobster\trade\model\response\AdminProductVO.class
 com\lobster\trade\service\CsService.class

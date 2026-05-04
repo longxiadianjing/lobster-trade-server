@@ -18,6 +18,11 @@
     </template>
 
     <div class="stats-container">
+      <div class="stats-actions">
+        <el-button type="primary" size="large" @click="router.push({ path: '/wallet/withdraw' })">
+          💸 立即提现
+        </el-button>
+      </div>
       <h2 class="page-title">📊 收入统计</h2>
 
       <!-- 核心指标 -->
@@ -51,6 +56,11 @@
         </div>
         <el-empty v-else description="暂无数据" />
       </el-card>
+      <!-- 快捷入口 -->
+      <div class="quick-links">
+        <el-button type="primary" plain @click="router.push({ path: '/order/center' })">📦 查看所有订单</el-button>
+        <el-button type="success" plain @click="router.push({ path: '/product/list' })">🎮 管理我的商品</el-button>
+      </div>
     </div>
   </PageLayout>
 </template>
@@ -58,12 +68,13 @@
 <script setup>
   document.title = '数据统计 - 龙虾道具交易平台';
   import { ref, onMounted } from 'vue'
-  import { useRoute } from 'vue-router'
+  import { useRoute, useRouter } from 'vue-router'
   import request from '@/utils/request'
   import PageLayout from '@/components/PageLayout.vue'
   import { DataAnalysis, Goods, List } from '@element-plus/icons-vue'
 
   const route = useRoute()
+  const router = useRouter()
   const stats = ref({
     totalRevenue: '0.00',
     todayRevenue: '0.00',
@@ -102,6 +113,19 @@
 .trend-amount { font-size: 14px; font-weight: 700; color: #333; }
 .menu-card { border-radius: 12px; border: none; }
 .menu-title { font-weight: 600; font-size: 14px; }
+.stats-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.quick-links {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
 @media (max-width: 768px) {
   .stats-cards { grid-template-columns: repeat(2, 1fr); }
   .trend-list { flex-wrap: wrap; }
