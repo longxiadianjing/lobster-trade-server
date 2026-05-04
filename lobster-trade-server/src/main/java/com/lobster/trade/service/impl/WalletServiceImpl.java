@@ -108,6 +108,12 @@ public class WalletServiceImpl implements WalletService {
             throw new BusinessException("支付密码错误");
         }
 
+        BigDecimal fee = new BigDecimal("1.00");
+        BigDecimal actualAmount = amount.subtract(fee);
+        if (actualAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BusinessException("提现金额过低，需大于手续费");
+        }
+
         BigDecimal availableBalance = wallet.getBalance().subtract(wallet.getFrozenBalance());
         if (amount.compareTo(availableBalance) > 0) {
             throw new BusinessException("可用余额不足");
@@ -138,11 +144,11 @@ public class WalletServiceImpl implements WalletService {
         trans.setSource("withdraw");
         trans.setSourceNo(request.getChannel());
         trans.setStatus(3);
-        trans.setRemark("提现申请");
+        trans.setRemark("提现手续费 ¥" + fee);
         trans.setCreateTime(LocalDateTime.now());
         walletTransactionMapper.insert(trans);
 
-        log.info("用户 {} 提交提现申请，金额：{}，渠道：{}", userId, amount, channel);
+        log.info("用户 {} 申请提现 {} 元，手续费 {} 元，实际到账 {} 元", userId, amount, fee, actualAmount);
     }
 
     @Override

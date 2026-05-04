@@ -8,6 +8,7 @@ import com.lobster.trade.mapper.*;
 import com.lobster.trade.model.entity.*;
 import com.lobster.trade.model.request.OrderCreateRequest;
 import com.lobster.trade.model.response.OrderDetailVO;
+import com.lobster.trade.model.response.SellerStatsResponse;
 import com.lobster.trade.service.EscrowService;
 import com.lobster.trade.service.OrderService;
 import com.lobster.trade.service.SysNotificationService;
@@ -16,9 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -418,5 +419,62 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setStatus(status);
         tradeOrderMapper.updateById(order);
+    }
+
+    @Override
+    public SellerStatsResponse getSellerStats(Long sellerId) {
+        SellerStatsResponse resp = new SellerStatsResponse();
+
+        // 查询所有已完成的订单（自己是卖家）
+        List<TradeOrder> allCompleted = tradeOrderMapper.selectList(
+            new LambdaQueryWrapper<TradeOrder>()
+                .eq(TradeOrder::getSellerId, sellerId)
+                .eq(TradeOrder::getStatus, "completed")
+                .eq(TradeOrder::getIsDeleted, 0)
+        );
+
+        // 累计收入
+        BigDecimal totalRevenue = allCompleted.stream()
+                .map(TradeOrder::getEscrowAmount)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        LocalDate today = LocalDate.now();
+        LocalDate monthStart = today.withDayOfMonth(1);
+
+        // 今日收入
+        BigDecimal todayRevenue = allCompleted.stream()
+                .filter(o -> o.getConfirmTime() != null && !o.getConfirmTime().toLocalDate().isBefore(today))
+                .map(TradeOrder::getEscrowAmount)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // 本月收入
+        BigDecimal monthRevenue = allCompleted.stream()
+                .filter(o -> o.getConfirmTime() != null && !o.getConfirmTime().toLocalDate().isBefore(monthStart))
+                .map(TradeOrder::getEscrowAmount)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // 近7天每天收入
+        Map<String, BigDecimal> recent7Days = new LinkedHashMap<>();
+        for (int i = 6; i >= 0; i--) {
+            LocalDate d = today.minusDays(i);
+            String key = d.toString();
+            BigDecimal dayAmt = allCompleted.stream()
+                    .filter(o -> o.getConfirmTime() != null && o.getConfirmTime().toLocalDate().equals(d))
+                    .map(TradeOrder::getEscrowAmount)
+                    .filter(Objects::nonNull)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            recent7Days.put(key, dayAmt);
+        }
+
+        resp.setTotalRevenue(totalRevenue);
+        resp.setTodayRevenue(todayRevenue);
+        resp.setMonthRevenue(monthRevenue);
+        resp.setTotalOrders((long) allCompleted.size());
+        resp.setRecent7Days(recent7Days);
+
+        return resp;
     }
 }

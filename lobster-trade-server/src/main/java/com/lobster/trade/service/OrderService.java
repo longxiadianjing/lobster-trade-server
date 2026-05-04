@@ -3,6 +3,7 @@ package com.lobster.trade.service;
 import com.lobster.trade.model.entity.TradeOrder;
 import com.lobster.trade.model.request.OrderCreateRequest;
 import com.lobster.trade.model.response.OrderDetailVO;
+import com.lobster.trade.model.response.SellerStatsResponse;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 public interface OrderService {
@@ -20,4 +21,7 @@ public interface OrderService {
 
     /** 管理员手动更新订单状态 */
     void adminUpdateStatus(Long orderId, String status, String reason);
+
+    /** 获取卖家收入统计 */
+    SellerStatsResponse getSellerStats(Long sellerId);
 }
