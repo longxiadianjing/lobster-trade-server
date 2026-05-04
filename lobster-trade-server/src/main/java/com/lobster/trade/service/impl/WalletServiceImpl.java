@@ -15,6 +15,7 @@ import com.lobster.trade.model.request.WithdrawRequest;
 import com.lobster.trade.service.WalletService;
 import com.lobster.trade.util.PasswordEncoder;
 import com.lobster.trade.util.SnowflakeIdUtil;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,29 @@ public class WalletServiceImpl implements WalletService {
 
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new BusinessException("充值金额必须大于0");
+        }
+        // 单笔限额
+        if (amount.compareTo(new BigDecimal("10")) < 0) {
+            throw new BusinessException("单笔充值最低 ¥10");
+        }
+        if (amount.compareTo(new BigDecimal("50000")) > 0) {
+            throw new BusinessException("单笔充值最高 ¥50000");
+        }
+        // 每日累计上限
+        LocalDateTime dayStart = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        List<WalletTransaction> todayRecharges = walletTransactionMapper.selectList(
+            new LambdaQueryWrapper<WalletTransaction>()
+                .eq(WalletTransaction::getUserId, userId)
+                .eq(WalletTransaction::getType, 1)
+                .eq(WalletTransaction::getStatus, 1)
+                .ge(WalletTransaction::getCreateTime, dayStart)
+        );
+        BigDecimal todayTotal = todayRecharges.stream()
+            .map(WalletTransaction::getAmount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (todayTotal.add(amount).compareTo(new BigDecimal("200000")) > 0) {
+            BigDecimal remaining = new BigDecimal("200000").subtract(todayTotal);
+            throw new BusinessException("今日充值已达上限，剩余可充值 ¥" + remaining);
         }
 
         Wallet wallet = getWalletByUserId(userId);
