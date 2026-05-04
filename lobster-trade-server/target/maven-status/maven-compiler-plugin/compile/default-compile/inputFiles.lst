@@ -33,6 +33,7 @@ C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobste
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\DisputeService.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\impl\ProductServiceImpl.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\ProductRecommendSlotService.java
+C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\annotation\Audit.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\entity\WalletTransaction.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\entity\Product.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\request\ImSendMessageRequest.java
@@ -53,6 +54,7 @@ C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobste
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\EscrowService.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\mapper\UserRealNameMapper.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\controller\admin\AuditLogController.java
+C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\aspect\AuditLogAspect.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\controller\admin\HotSearchWordController.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\request\CsStartRequest.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\controller\FileUploadController.java

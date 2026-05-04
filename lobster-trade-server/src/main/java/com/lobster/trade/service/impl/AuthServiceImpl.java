@@ -252,4 +252,36 @@ public class AuthServiceImpl implements AuthService {
         }
         return code.toString();
     }
+
+    @Override
+    public boolean isTokenExpired(String token) {
+        if (token == null || token.isEmpty()) return true;
+        try {
+            return jwtUtil.isTokenExpired(token);
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    @Override
+    public LoginResponse refreshToken(String oldToken) {
+        // 解析旧Token获取userId
+        Long userId = JwtUtil.getUserIdFromToken(oldToken);
+        if (userId == null) {
+            throw new BusinessException("无效的Token");
+        }
+        // 生成新Token
+        String newToken = jwtUtil.generateToken(userId);
+        // 查用户信息
+        User user = userMapper.selectById(userId);
+        if (user == null) {
+            throw new BusinessException("用户不存在");
+        }
+        LoginResponse response = new LoginResponse();
+        response.setToken(newToken);
+        response.setUserId(user.getId());
+        response.setNickname(user.getNickname());
+        response.setAvatar(user.getAvatar());
+        return response;
+    }
 }

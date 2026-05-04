@@ -10,6 +10,10 @@ import com.lobster.trade.util.PasswordEncoder;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -107,5 +111,28 @@ public class AuthController {
     public ApiResponse<Void> resetPassword(@Validated @RequestBody ResetPasswordRequest request) {
         authService.resetPassword(request);
         return ApiResponse.success("密码重置成功");
+    }
+
+    /**
+     * 刷新 Token（无感续期）
+     * 条件：原Token未过期，且距离过期不足7天
+     * POST /api/auth/refresh
+     */
+    @PostMapping("/refresh")
+    public ApiResponse<LoginResponse> refreshToken(@RequestBody(required = false) Map<String, String> body) {
+        String token = null;
+        if (body != null && body.containsKey("token")) {
+            token = body.get("token");
+        }
+        if (token == null) {
+            return ApiResponse.fail(400, "token不能为空");
+        }
+        // 验证原Token未过期
+        if (authService.isTokenExpired(token)) {
+            return ApiResponse.fail(401, "token已过期，请重新登录");
+        }
+        // 刷新Token
+        LoginResponse newToken = authService.refreshToken(token);
+        return ApiResponse.success("刷新成功", newToken);
     }
 }

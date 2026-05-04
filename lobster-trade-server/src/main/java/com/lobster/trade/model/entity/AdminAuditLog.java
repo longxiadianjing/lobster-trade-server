@@ -12,23 +12,26 @@ public class AdminAuditLog {
     private Long id;
 
     private Long adminId;
-
     private String adminUsername;
 
-    private String action; // 操作类型
+    /** 操作类型 */
+    private String action;
 
-    private String entityType; // 操作的实体类型
+    /** 目标类型 */
+    private String entityType;
 
-    private Long entityId; // 操作的实体ID
+    /** 目标ID */
+    private Long entityId;
 
-    private String detail; // 操作详情
+    /** 操作详情 */
+    private String detail;
 
+    /** IP地址 */
     private String ip;
 
+    /** 浏览器UA */
     private String userAgent;
 
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
-
-    @TableLogic
-    private Integer isDeleted;
 }

@@ -24,4 +24,14 @@ public interface AuthService {
      * 重置密码
      */
     void resetPassword(ResetPasswordRequest request);
+
+    /**
+     * 检验Token是否已过期
+     */
+    boolean isTokenExpired(String token);
+
+    /**
+     * 刷新Token（无感续期）
+     */
+    LoginResponse refreshToken(String oldToken);
 }

@@ -1,9 +1,13 @@
 package com.lobster.trade.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lobster.trade.annotation.Audit;
 import com.lobster.trade.annotation.RequirePermission;
 import com.lobster.trade.common.Result;
+import com.lobster.trade.mapper.AdminAuditLogMapper;
 import com.lobster.trade.model.entity.Admin;
+import com.lobster.trade.model.entity.AdminAuditLog;
 import com.lobster.trade.model.entity.AdminPermission;
 import com.lobster.trade.model.entity.AdminRole;
 import com.lobster.trade.model.entity.GameCategory;
@@ -28,6 +32,7 @@ import java.util.Map;
 public class AdminController {
 
     private final AdminService adminService;
+    private final AdminAuditLogMapper adminAuditLogMapper;
 
     @PostMapping("/login")
     public Result<Map<String, Object>> login(@RequestBody AdminLoginRequest req) {
@@ -61,6 +66,7 @@ public class AdminController {
         return Result.success(result);
     }
 
+    @Audit(value = "封禁用户", targetType = "User")
     @PostMapping("/user/{id}/ban")
     @RequirePermission(AdminPermission.USER_BAN)
     public Result<Void> banUser(@PathVariable Long id) {
@@ -68,6 +74,7 @@ public class AdminController {
         return Result.success(null);
     }
 
+    @Audit(value = "解封用户", targetType = "User")
     @PostMapping("/user/{id}/unban")
     @RequirePermission(AdminPermission.USER_BAN)
     public Result<Void> unbanUser(@PathVariable Long id) {
@@ -75,6 +82,7 @@ public class AdminController {
         return Result.success(null);
     }
 
+    @Audit(value = "修改用户", targetType = "User")
     @PutMapping("/user/{id}")
     @RequirePermission(AdminPermission.USER_EDIT)
     public Result<Void> updateUser(@PathVariable Long id, @RequestBody Map<String, Object> body) {
@@ -106,6 +114,7 @@ public class AdminController {
         return Result.success(p.getRecords());
     }
 
+    @Audit(value = "修改订单", targetType = "Order")
     @PutMapping("/order/{id}")
     @RequirePermission(AdminPermission.ORDER_EDIT)
     public Result<Void> updateOrder(@PathVariable Long id, @RequestBody Map<String, Object> body) {
@@ -129,6 +138,7 @@ public class AdminController {
         return Result.success(result);
     }
 
+    @Audit(value = "下架商品", targetType = "Product")
     @PostMapping("/product/{id}/off")
     @RequirePermission(AdminPermission.PRODUCT_EDIT)
     public Result<Void> productOff(@PathVariable Long id) {
@@ -136,6 +146,7 @@ public class AdminController {
         return Result.success(null);
     }
 
+    @Audit(value = "上架商品", targetType = "Product")
     @PostMapping("/product/{id}/on")
     @RequirePermission(AdminPermission.PRODUCT_EDIT)
     public Result<Void> productOn(@PathVariable Long id) {
@@ -143,6 +154,7 @@ public class AdminController {
         return Result.success(null);
     }
 
+    @Audit(value = "封禁商品", targetType = "Product")
     @PostMapping("/product/{id}/ban")
     @RequirePermission(AdminPermission.PRODUCT_AUDIT)
     public Result<Void> productBan(@PathVariable Long id) {
@@ -150,6 +162,7 @@ public class AdminController {
         return Result.success(null);
     }
 
+    @Audit(value = "修改商品", targetType = "Product")
     @PutMapping("/product/{id}")
     @RequirePermission(AdminPermission.PRODUCT_EDIT)
     public Result<Void> updateProduct(@PathVariable Long id, @RequestBody AdminProductUpdateRequest req) {
@@ -180,6 +193,7 @@ public class AdminController {
         return Result.success(stats);
     }
 
+    @Audit(value = "处理仲裁", targetType = "Dispute")
     @PostMapping("/dispute/resolve/{orderId}")
     @RequirePermission(AdminPermission.DISPUTE_HANDLE)
     public Result<Void> resolveDispute(@PathVariable Long orderId, @RequestBody Map<String, String> body) {
@@ -187,6 +201,7 @@ public class AdminController {
         return Result.success(null);
     }
 
+    @Audit(value = "编辑仲裁", targetType = "Dispute")
     @PutMapping("/dispute/{orderId}")
     @RequirePermission(AdminPermission.DISPUTE_HANDLE)
     public Result<Void> updateDispute(@PathVariable Long orderId, @RequestBody Map<String, Object> body) {
@@ -202,6 +217,7 @@ public class AdminController {
         return Result.success(adminService.listGames());
     }
 
+    @Audit(value = "新增游戏", targetType = "Game")
     @PostMapping("/game")
     @RequirePermission(AdminPermission.GAME_EDIT)
     public Result<Void> createGame(@RequestBody GameCategory game) {
@@ -209,6 +225,7 @@ public class AdminController {
         return Result.success(null);
     }
 
+    @Audit(value = "修改游戏", targetType = "Game")
     @PutMapping("/game/{id}")
     @RequirePermission(AdminPermission.GAME_EDIT)
     public Result<Void> updateGame(@PathVariable Long id, @RequestBody GameCategory game) {
@@ -216,6 +233,7 @@ public class AdminController {
         return Result.success(null);
     }
 
+    @Audit(value = "修改游戏状态", targetType = "Game")
     @PostMapping("/game/{id}/status")
     @RequirePermission(AdminPermission.GAME_EDIT)
     public Result<Void> toggleGameStatus(@PathVariable Long id, @RequestBody Map<String, Integer> body) {
@@ -246,6 +264,7 @@ public class AdminController {
         return Result.success(adminService.getAdminById(id));
     }
 
+    @Audit(value = "新增管理员", targetType = "Admin")
     @PostMapping("/admin")
     @RequirePermission(AdminPermission.ADMIN_MANAGE)
     public Result<Void> createAdmin(@RequestBody Admin admin) {
@@ -253,6 +272,7 @@ public class AdminController {
         return Result.success(null);
     }
 
+    @Audit(value = "修改管理员", targetType = "Admin")
     @PutMapping("/admin/{id}")
     @RequirePermission(AdminPermission.ADMIN_MANAGE)
     public Result<Void> updateAdmin(@PathVariable Long id, @RequestBody Admin admin) {
@@ -260,6 +280,7 @@ public class AdminController {
         return Result.success(null);
     }
 
+    @Audit(value = "删除管理员", targetType = "Admin")
     @DeleteMapping("/admin/{id}")
     @RequirePermission(AdminPermission.ADMIN_MANAGE)
     public Result<Void> deleteAdmin(@PathVariable Long id) {
@@ -267,6 +288,7 @@ public class AdminController {
         return Result.success(null);
     }
 
+    @Audit(value = "启用/禁用管理员", targetType = "Admin")
     @PostMapping("/admin/{id}/status")
     @RequirePermission(AdminPermission.ADMIN_MANAGE)
     public Result<Void> updateAdminStatus(@PathVariable Long id, @RequestBody Map<String, Integer> body) {
@@ -274,6 +296,7 @@ public class AdminController {
         return Result.success(null);
     }
 
+    @Audit(value = "修改管理员权限", targetType = "Admin")
     @PostMapping("/admin/{id}/permissions")
     @RequirePermission(AdminPermission.ADMIN_MANAGE)
     public Result<Void> grantPermissions(@PathVariable Long id, @RequestBody Map<String, String> body) {
@@ -315,6 +338,124 @@ public class AdminController {
     public Result<Void> deleteRole(@PathVariable Long id) {
         adminService.deleteRole(id);
         return Result.success(null);
+    }
+
+    // ==================== 认证管理 ====================
+
+    @GetMapping("/certifications")
+    @RequirePermission(AdminPermission.CERT_VIEW)
+    public Result<Map<String, Object>> listCertifications(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize,
+            @RequestParam(required = false) String status) {
+        return Result.success(adminService.listCertifications(status, page, pageSize));
+    }
+
+    @Audit(value = "审核实名认证-通过", targetType = "Certification")
+    @PostMapping("/certification/{id}/approve")
+    @RequirePermission(AdminPermission.CERT_HANDLE)
+    public Result<Void> approveCertification(@PathVariable Long id) {
+        adminService.approveCertification(id);
+        return Result.success(null);
+    }
+
+    @Audit(value = "审核实名认证-拒绝", targetType = "Certification")
+    @PostMapping("/certification/{id}/reject")
+    @RequirePermission(AdminPermission.CERT_HANDLE)
+    public Result<Void> rejectCertification(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        adminService.rejectCertification(id, body.get("reason"));
+        return Result.success(null);
+    }
+
+    // ==================== 优惠券管理 ====================
+
+    @GetMapping("/coupons")
+    @RequirePermission(AdminPermission.COUPON_VIEW)
+    public Result<Map<String, Object>> listCoupons(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize,
+            @RequestParam(required = false) String status) {
+        return Result.success(adminService.listCoupons(status, page, pageSize));
+    }
+
+    @Audit(value = "新增优惠券", targetType = "Coupon")
+    @PostMapping("/coupon")
+    @RequirePermission(AdminPermission.COUPON_EDIT)
+    public Result<Void> createCoupon(@RequestBody Map<String, Object> body) {
+        adminService.createCoupon(body);
+        return Result.success(null);
+    }
+
+    @Audit(value = "修改优惠券", targetType = "Coupon")
+    @PutMapping("/coupon/{id}")
+    @RequirePermission(AdminPermission.COUPON_EDIT)
+    public Result<Void> updateCoupon(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        adminService.updateCoupon(id, body);
+        return Result.success(null);
+    }
+
+    @Audit(value = "删除优惠券", targetType = "Coupon")
+    @DeleteMapping("/coupon/{id}")
+    @RequirePermission(AdminPermission.COUPON_EDIT)
+    public Result<Void> deleteCoupon(@PathVariable Long id) {
+        adminService.deleteCoupon(id);
+        return Result.success(null);
+    }
+
+    // ==================== 热词管理 ====================
+
+    @GetMapping("/hot-search")
+    @RequirePermission(AdminPermission.HOTSEARCH_VIEW)
+    public Result<Map<String, Object>> listHotSearch(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return Result.success(adminService.listHotSearch(page, pageSize));
+    }
+
+    @Audit(value = "新增热词", targetType = "HotSearch")
+    @PostMapping("/hot-search")
+    @RequirePermission(AdminPermission.HOTSEARCH_EDIT)
+    public Result<Void> createHotSearch(@RequestBody Map<String, Object> body) {
+        adminService.createHotSearch(body);
+        return Result.success(null);
+    }
+
+    @Audit(value = "修改热词", targetType = "HotSearch")
+    @PutMapping("/hot-search/{id}")
+    @RequirePermission(AdminPermission.HOTSEARCH_EDIT)
+    public Result<Void> updateHotSearch(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        adminService.updateHotSearch(id, body);
+        return Result.success(null);
+    }
+
+    @Audit(value = "删除热词", targetType = "HotSearch")
+    @DeleteMapping("/hot-search/{id}")
+    @RequirePermission(AdminPermission.HOTSEARCH_EDIT)
+    public Result<Void> deleteHotSearch(@PathVariable Long id) {
+        adminService.deleteHotSearch(id);
+        return Result.success(null);
+    }
+
+    // ==================== 审计日志 ====================
+
+    /**
+     * 审计日志查询
+     */
+    @GetMapping("/audit-logs")
+    @RequirePermission(AdminPermission.AUDIT_VIEW)
+    public Result<Page<AdminAuditLog>> getAuditLogs(
+            @RequestParam(required = false) String action,
+            @RequestParam(required = false) String targetType,
+            @RequestParam(required = false) Long adminId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        LambdaQueryWrapper<AdminAuditLog> wrapper = new LambdaQueryWrapper<>();
+        if (action != null && !action.isEmpty()) wrapper.eq(AdminAuditLog::getAction, action);
+        if (targetType != null && !targetType.isEmpty()) wrapper.eq(AdminAuditLog::getTargetType, targetType);
+        if (adminId != null) wrapper.eq(AdminAuditLog::getAdminId, adminId);
+        wrapper.orderByDesc(AdminAuditLog::getCreateTime);
+        Page<AdminAuditLog> pageParam = new Page<>(page, size);
+        return Result.success(adminAuditLogMapper.selectPage(pageParam, wrapper));
     }
 
     // ==================== 权限信息 ====================
