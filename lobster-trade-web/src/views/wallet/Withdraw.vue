@@ -96,6 +96,7 @@
 
 import { ref, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { withdraw } from '@/api/wallet'
 import { useWalletStore } from '@/stores/wallet'
 import { ElMessage } from 'element-plus'
 import PageLayout from '@/components/PageLayout.vue'
@@ -113,7 +114,7 @@ const form = reactive({
 })
 const loading = ref(false)
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   if (!form.amount || parseFloat(form.amount) <= 0) {
     ElMessage.warning('请输入正确的提现金额')
     return
@@ -126,11 +127,35 @@ const handleSubmit = () => {
     ElMessage.warning('请输入支付密码')
     return
   }
+  const amt = parseFloat(form.amount)
+  if (amt < 10) {
+    ElMessage.warning('最低提现 10 元')
+    return
+  }
+  if (amt > 50000) {
+    ElMessage.warning('最高提现 50000 元')
+    return
+  }
+  if (amt > parseFloat(walletStore.availableBalance)) {
+    ElMessage.warning('可用余额不足')
+    return
+  }
   loading.value = true
-  setTimeout(() => {
-    ElMessage.success('提现申请已提交（实际接第三方支付）')
+  try {
+    await withdraw({
+      amount: amt,
+      channel: form.accountType,
+      accountInfo: form.accountInfo,
+      payPassword: form.payPassword
+    })
+    walletStore.refresh()
+    ElMessage.success('提现申请已提交，预计1-3个工作日到账')
     router.push({ path: '/wallet' })
-  }, 1000)
+  } catch (e) {
+    ElMessage.error(e.message || '提现失败，请稍后重试')
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 

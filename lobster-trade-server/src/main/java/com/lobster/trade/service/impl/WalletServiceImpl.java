@@ -120,6 +120,12 @@ public class WalletServiceImpl implements WalletService {
         wallet.setUpdateTime(LocalDateTime.now());
         walletMapper.updateById(wallet);
 
+        // 同步 user.balance（保持一致性）
+        LambdaUpdateWrapper<com.lobster.trade.model.entity.User> userWrapper = new LambdaUpdateWrapper<>();
+        userWrapper.eq(com.lobster.trade.model.entity.User::getId, userId)
+                   .set(com.lobster.trade.model.entity.User::getBalance, balanceAfter);
+        userMapper.update(null, userWrapper);
+
         WalletTransaction trans = new WalletTransaction();
         trans.setTransNo(SnowflakeIdUtil.generateTransNo());
         trans.setUserId(userId);

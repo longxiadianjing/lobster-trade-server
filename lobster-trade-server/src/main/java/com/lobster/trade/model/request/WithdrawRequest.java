@@ -16,6 +16,9 @@ public class WithdrawRequest {
     @NotBlank(message = "提现渠道不能为空")
     private String channel;
 
+    /** 账户信息（银行卡号/支付宝账号/微信号） */
+    private String accountInfo;
+
     @NotBlank(message = "支付密码不能为空")
     private String payPassword;
 }
