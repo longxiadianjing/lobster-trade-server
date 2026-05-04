@@ -26,6 +26,7 @@ public class ImServiceImpl implements ImService {
     private final ImMessageMapper imMessageMapper;
     private final UserMapper userMapper;
     private final TradeOrderMapper orderMapper;
+    private final ProductMapper productMapper;
 
     @Override
     public List<ImSessionVO> getMySessions(Long userId) {
@@ -82,6 +83,47 @@ public class ImServiceImpl implements ImService {
 
         // 发送系统消息
         addSystemMessage(session.getId(), "会话已建立，有问题可以在这里沟通");
+
+        return buildSessionVO(session, userId);
+    }
+
+    @Override
+    @Transactional
+    public ImSessionVO getOrCreateSessionByProduct(Long userId, Long productId) {
+        // 1. 获取商品信息
+        Product product = productMapper.selectById(productId);
+        if (product == null || product.getIsDeleted() == 1) {
+            throw new BusinessException(ErrorCode.PARAM_INVALID, "商品不存在");
+        }
+
+        Long sellerId = product.getSellerId();
+
+        // 不能和自己聊天
+        if (userId.equals(sellerId)) {
+            throw new BusinessException(ErrorCode.PARAM_INVALID, "不能和自己聊天");
+        }
+
+        // 2. 查询是否已存在该买卖双方的会话（同一个卖家ID，不依赖订单）
+        ImSession existing = findSessionByUsers(userId, sellerId, null);
+        if (existing != null) {
+            return buildSessionVO(existing, userId);
+        }
+
+        // 3. 创建新会话
+        ImSession session = new ImSession();
+        session.setSessionNo("IM" + SnowflakeIdUtil.generateOrderNo());
+        session.setOrderId(null);  // 无订单
+        session.setBuyerId(userId);
+        session.setSellerId(sellerId);
+        session.setUnreadBuyer(0);
+        session.setUnreadSeller(0);
+        session.setStatus(1);
+        session.setCreateTime(LocalDateTime.now());
+        session.setUpdateTime(LocalDateTime.now());
+        imSessionMapper.insert(session);
+
+        // 系统消息
+        addSystemMessage(session.getId(), "您已与卖家建立沟通，有任何问题可在此询问~");
 
         return buildSessionVO(session, userId);
     }
@@ -190,6 +232,23 @@ public class ImServiceImpl implements ImService {
                 .eq(ImSession::getOrderId, orderId)
                 .eq(ImSession::getIsDeleted, 0)
         );
+    }
+
+    private ImSession findSessionByUsers(Long userId, Long sellerId, Long orderId) {
+        LambdaQueryWrapper<ImSession> wrapper = new LambdaQueryWrapper<>();
+        wrapper.and(w -> w
+            .and(cond -> cond.eq(ImSession::getBuyerId, userId).eq(ImSession::getSellerId, sellerId))
+            .or()
+            .and(cond -> cond.eq(ImSession::getBuyerId, sellerId).eq(ImSession::getSellerId, userId))
+        );
+        if (orderId != null) {
+            wrapper.eq(ImSession::getOrderId, orderId);
+        } else {
+            wrapper.isNull(ImSession::getOrderId);
+        }
+        wrapper.eq(ImSession::getIsDeleted, 0);
+        wrapper.orderByDesc(ImSession::getCreateTime).last("LIMIT 1");
+        return imSessionMapper.selectOne(wrapper);
     }
 
     private void addSystemMessage(Long sessionId, String content) {

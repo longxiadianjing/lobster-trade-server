@@ -50,6 +50,17 @@ public class ImController {
     }
 
     /**
+     * 根据商品ID获取或创建IM会话（不依赖订单，买卖双方直接沟通）
+     * POST /api/im/session/by-product/{productId}
+     */
+    @PostMapping("/session/by-product/{productId}")
+    public ApiResponse<ImSessionVO> getOrCreateSessionByProduct(HttpServletRequest request,
+                                                               @PathVariable Long productId) {
+        Long userId = (Long) request.getAttribute("userId");
+        return ApiResponse.success(imService.getOrCreateSessionByProduct(userId, productId));
+    }
+
+    /**
      * 发送IM消息
      * POST /api/im/message
      */

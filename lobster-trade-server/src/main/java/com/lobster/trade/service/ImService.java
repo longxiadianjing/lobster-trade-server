@@ -36,4 +36,9 @@ public interface ImService {
      * 创建订单时自动创建IM会话（内部调用）
      */
     void createSessionForOrder(Long orderId, Long buyerId, Long sellerId);
+
+    /**
+     * 根据商品ID获取或创建IM会话（买卖双方直接沟通，无需订单）
+     */
+    ImSessionVO getOrCreateSessionByProduct(Long userId, Long productId);
 }
