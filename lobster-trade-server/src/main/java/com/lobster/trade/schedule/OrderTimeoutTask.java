@@ -26,6 +26,7 @@ public class OrderTimeoutTask {
 
     private final TradeOrderMapper tradeOrderMapper;
     private final EscrowService escrowService;
+    private final SysNotificationService sysNotificationService;
 
     /** 每5分钟执行一次 */
     @Scheduled(fixedRate = 300_000)

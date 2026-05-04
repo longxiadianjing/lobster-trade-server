@@ -77,6 +77,22 @@
             立即充值 ¥{{ selectedAmount || customAmount || 0 }}
           </el-button>
         </div>
+
+        <!-- 支付渠道选择弹窗 -->
+        <el-dialog v-model="showChannelDialog" title="选择支付渠道" width="400px" :close-on-click-modal="false">
+          <div class="channel-list">
+            <div
+              v-for="ch in channelOptions"
+              :key="ch.value"
+              class="channel-item"
+              @click="doRechargeWithChannel(ch.value)"
+            >
+              <span class="channel-icon">{{ ch.icon }}</span>
+              <span class="channel-name">{{ ch.label }}</span>
+              <el-icon class="channel-arrow"><Right /></el-icon>
+            </div>
+          </div>
+        </el-dialog>
       </el-card>
     </div>
   </PageLayout>
@@ -90,7 +106,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useWalletStore } from '@/stores/wallet'
 import { ElMessage } from 'element-plus'
 import PageLayout from '@/components/PageLayout.vue'
-import { User, Wallet, List, Goods, InfoFilled } from '@element-plus/icons-vue'
+import { User, Wallet, List, Goods, InfoFilled, Right } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -101,17 +117,61 @@ const selectedAmount = ref(100)
 const customAmount = ref('')
 const loading = ref(false)
 
+<script setup>
+  document.title = '充值 - 龙虾道具交易平台';
+
+import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useWalletStore } from '@/stores/wallet'
+import { ElMessage } from 'element-plus'
+import PageLayout from '@/components/PageLayout.vue'
+import { User, Wallet, List, Goods, InfoFilled } from '@element-plus/icons-vue'
+import { createRechargePayment } from '@/api/payment'
+
+const router = useRouter()
+const route = useRoute()
+const walletStore = useWalletStore()
+
+const amounts = [10, 50, 100, 200, 500, 1000]
+const selectedAmount = ref(100)
+const customAmount = ref('')
+const loading = ref(false)
+const showChannelDialog = ref(false)
+const selectedChannel = ref('')
+
+const channelOptions = [
+  { label: '支付宝', value: 'alipay', icon: '💙' },
+  { label: '微信支付', value: 'wechat', icon: '💚' },
+  { label: '银行卡', value: 'bankcard', icon: '💳' }
+]
+
 const handleRecharge = () => {
   const amount = selectedAmount.value || parseFloat(customAmount.value)
   if (!amount || amount <= 0) {
     ElMessage.warning('请选择或输入充值金额')
     return
   }
+  showChannelDialog.value = true
+}
+
+const doRechargeWithChannel = async (channel) => {
+  const amount = selectedAmount.value || parseFloat(customAmount.value)
+  selectedChannel.value = channel
+  showChannelDialog.value = false
   loading.value = true
-  setTimeout(() => {
-    ElMessage.success('充值模拟成功（实际接第三方支付）')
-    router.push({ path: '/wallet' })
-  }, 1000)
+  try {
+    const res = await createRechargePayment(amount, channel)
+    if (res.data && res.data.paymentNo) {
+      ElMessage.info('正在跳转支付页面...')
+      router.push({ path: '/payment/pay', query: { no: res.data.paymentNo, type: 'recharge' } })
+    } else {
+      ElMessage.error('创建支付单失败')
+    }
+  } catch (e) {
+    ElMessage.error('充值发起失败')
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
@@ -244,5 +304,43 @@ const handleRecharge = () => {
 
 :deep(.el-input__wrapper) {
   border-radius: 8px;
+}
+
+/* 支付渠道弹窗 */
+.channel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.channel-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.channel-item:hover {
+  border-color: #667eea;
+  background: #f9f8ff;
+}
+
+.channel-icon {
+  font-size: 28px;
+}
+
+.channel-name {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.channel-arrow {
+  color: #ccc;
 }
 </style>

@@ -158,6 +158,21 @@
                 <el-button type="primary" size="large" @click="handlePay">去付款</el-button>
                 <el-button size="large" type="danger" @click="handleCancel">取消订单</el-button>
               </template>
+              <!-- 支付渠道选择弹窗 -->
+              <el-dialog v-model="showChannelDialog" title="选择支付渠道" width="400px" :close-on-click-modal="false">
+                <div class="channel-list">
+                  <div
+                    v-for="ch in channelOptions"
+                    :key="ch.value"
+                    class="channel-item"
+                    @click="doPayWithChannel(ch.value)"
+                  >
+                    <span class="channel-icon">{{ ch.icon }}</span>
+                    <span class="channel-name">{{ ch.label }}</span>
+                    <el-icon class="channel-arrow"><Right /></el-icon>
+                  </div>
+                </div>
+              </el-dialog>
               <template v-if="order.status === 'paid' && isSeller">
                 <el-button type="success" size="large" @click="handleDeliver">发货</el-button>
               </template>
@@ -274,6 +289,7 @@ import { getOrderDetail, payOrder, confirmOrder, cancelOrder, submitDelivery, su
 import { getOrCreateSessionByOrder } from '@/api/im'
 import { getOrderProgress, ackOrderProgress } from '@/api/progress'
 import { useUserStore } from '@/stores/user'
+import { createOrderPayment } from '@/api/payment'
 
 const router = useRouter()
 const route = useRoute()
@@ -288,6 +304,13 @@ const hasReviewed = ref(false)
 const hasDisputed = ref(false)
 const showReviewDialog = ref(false)
 const showDisputeDialog = ref(false)
+const showChannelDialog = ref(false)
+
+const channelOptions = [
+  { label: '支付宝', value: 'alipay', icon: '💙' },
+  { label: '微信支付', value: 'wechat', icon: '💚' },
+  { label: '银行卡', value: 'bankcard', icon: '💳' }
+]
 
 const reviewForm = reactive({ rating: 5, content: '' })
 const disputeForm = reactive({ reason: '', description: '', images: '' })
@@ -365,19 +388,22 @@ const loadOrder = async () => {
 }
 
 const handlePay = async () => {
+  // 弹出支付渠道选择
+  showChannelDialog.value = true
+}
+
+const doPayWithChannel = async (channel) => {
+  showChannelDialog.value = false
   try {
-    await ElMessageBox.confirm('确认使用钱包余额支付该订单？', '提示', {
-      confirmButtonText: '确认支付',
-      cancelButtonText: '取消',
-      type: 'warning'
-    })
-    await payOrder(order.value.id, 'wallet')
-    ElMessage.success('支付成功')
-    loadOrder()
-  } catch (e) {
-    if (e !== 'cancel') {
-      ElMessage.error('支付失败')
+    const res = await createOrderPayment(order.value.id, channel)
+    if (res.data && res.data.paymentNo) {
+      ElMessage.info('正在跳转支付页面...')
+      router.push({ path: '/payment/pay', query: { no: res.data.paymentNo, type: 'order', orderId: order.value.id } })
+    } else {
+      ElMessage.error('创建支付单失败')
     }
+  } catch (e) {
+    ElMessage.error('发起支付失败')
   }
 }
 
@@ -728,6 +754,44 @@ onMounted(() => {
   font-size: 14px;
   color: #555;
   line-height: 1.6;
+}
+
+/* 支付渠道弹窗 */
+.channel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.channel-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.channel-item:hover {
+  border-color: #667eea;
+  background: #f9f8ff;
+}
+
+.channel-icon {
+  font-size: 28px;
+}
+
+.channel-name {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.channel-arrow {
+  color: #ccc;
 }
 
 </style>

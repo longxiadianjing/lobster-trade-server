@@ -186,6 +186,12 @@ const routes = [
     meta: { title: '客服会话', requiresAuth: true }
   },
   {
+    path: '/payment/pay',
+    name: 'PaymentPay',
+    component: () => import('@/views/payment/PayPage.vue'),
+    meta: { title: '订单支付', requiresAuth: true }
+  },
+  {
     path: '/certification/providers',
     name: 'CertificationProviders',
     component: () => import('@/views/certification/Providers.vue'),
