@@ -73,9 +73,11 @@ public class EscrowServiceImpl implements EscrowService {
         buyerWallet.setFrozenBalance(bFrozenBefore.subtract(amount));
         walletMapper.updateById(buyerWallet);
 
-        saveTransaction(order.getBuyerId(), 4, amount,
-            "资金解冻 #" + order.getOrderNo(), "解冻", order.getId(),
-            bBalBefore, bBalBefore, bFrozenBefore, bFrozenBefore.subtract(amount));
+        // 同步 user 表冻结余额
+        LambdaUpdateWrapper<User> buyerUserWrapper = new LambdaUpdateWrapper<>();
+        buyerUserWrapper.eq(User::getId, order.getBuyerId())
+                        .set(User::getFrozenBalance, bFrozenBefore.subtract(amount));
+        userMapper.update(null, buyerUserWrapper);
 
         // 增加卖家余额（扣除手续费）
         Wallet sellerWallet = getWallet(order.getSellerId());
@@ -85,12 +87,22 @@ public class EscrowServiceImpl implements EscrowService {
         sellerWallet.setTotalIncome(sellerWallet.getTotalIncome().add(sellerReceived));
         walletMapper.updateById(sellerWallet);
 
+        // 同步 user 表卖家余额
+        LambdaUpdateWrapper<User> sellerUserWrapper = new LambdaUpdateWrapper<>();
+        sellerUserWrapper.eq(User::getId, order.getSellerId())
+                         .set(User::getBalance, sBalAfter);
+        userMapper.update(null, sellerUserWrapper);
+
         // 平台手续费记录
         Wallet platformWallet = getPlatformWallet();
         BigDecimal pBalBefore = platformWallet.getBalance();
         platformWallet.setBalance(pBalBefore.add(platformFee));
         platformWallet.setTotalIncome(platformWallet.getTotalIncome().add(platformFee));
         walletMapper.updateById(platformWallet);
+
+        saveTransaction(order.getBuyerId(), 4, amount,
+            "资金解冻 #" + order.getOrderNo(), "解冻", order.getId(),
+            bBalBefore, bBalBefore, bFrozenBefore, bFrozenBefore.subtract(amount));
 
         saveTransaction(order.getSellerId(), 1, sellerReceived,
             "订单完成 #" + order.getOrderNo(), "收入", order.getId(),
@@ -116,6 +128,13 @@ public class EscrowServiceImpl implements EscrowService {
         buyerWallet.setFrozenBalance(bFrozenBefore.subtract(amount));
         buyerWallet.setBalance(bBalBefore.add(amount));
         walletMapper.updateById(buyerWallet);
+
+        // 同步 user 表买家余额和冻结余额
+        LambdaUpdateWrapper<User> buyerUserWrapper = new LambdaUpdateWrapper<>();
+        buyerUserWrapper.eq(User::getId, order.getBuyerId())
+                         .set(User::getBalance, bBalBefore.add(amount))
+                         .set(User::getFrozenBalance, bFrozenBefore.subtract(amount));
+        userMapper.update(null, buyerUserWrapper);
 
         saveTransaction(order.getBuyerId(), 5, amount,
             "订单取消退款 #" + order.getOrderNo(), "退款", order.getId(),

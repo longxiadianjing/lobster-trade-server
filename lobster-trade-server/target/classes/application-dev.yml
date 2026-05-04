@@ -27,8 +27,8 @@ mybatis-plus:
   type-aliases-package: com.lobster.trade.model.entity
 
 jwt:
-  secret: lobster-trade-secret-key-2026-dev
-  expire: 86400000
+  secret: ${JWT_SECRET:lobster-trade-secret-key-2026-dev}
+  expire: ${JWT_EXPIRE:86400000}
 
 server:
   port: 8080
