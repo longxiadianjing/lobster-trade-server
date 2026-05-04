@@ -3,7 +3,9 @@ package com.lobster.trade.controller;
 import com.lobster.trade.model.entity.PaymentTransaction;
 import com.lobster.trade.model.response.ApiResponse;
 import com.lobster.trade.service.PaymentService;
+import com.lobster.trade.util.PaymentSecurityUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/payment")
 @RequiredArgsConstructor
@@ -92,11 +95,45 @@ public class PaymentController {
     /**
      * 模拟回调接口（内部使用，前端模拟支付成功）
      * POST /api/payment/mock-callback
+     * 
+     * 签名验证：X-Payment-Signature header
+     * 签名内容 = paymentNo + "|" + amount + "|" + status
+     * 本地请求（127.0.0.1/localhost）跳过签名验证
      */
     @PostMapping("/mock-callback")
-    public ApiResponse<Void> mockPaymentCallback(@RequestParam String paymentNo) {
+    public ApiResponse<Void> mockPaymentCallback(
+            HttpServletRequest request,
+            @RequestParam String paymentNo) {
+        
+        // 签名验证（防止外部恶意调用）
+        if (!isLocalRequest(request)) {
+            String signature = request.getHeader("X-Payment-Signature");
+            if (signature == null || signature.isEmpty()) {
+                log.warn("[PAYMENT_CALLBACK] 缺少签名 paymentNo={}", paymentNo);
+                return ApiResponse.fail(400, "缺少签名");
+            }
+            // 从数据库获取 payment 记录，用于验证签名
+            PaymentTransaction payment = paymentService.getByPaymentNo(paymentNo);
+            if (payment == null) {
+                return ApiResponse.fail(404, "支付单不存在");
+            }
+            String signData = paymentNo + "|" + payment.getAmount().toPlainString() + "|" + payment.getStatus();
+            if (!PaymentSecurityUtil.verify(signData, signature)) {
+                log.warn("[PAYMENT_CALLBACK] 签名验证失败 paymentNo={}", paymentNo);
+                return ApiResponse.fail(401, "签名验证失败");
+            }
+        }
+        
         paymentService.processMockCallback(paymentNo);
         return ApiResponse.success(null);
+    }
+    
+    /**
+     * 判断是否为本地请求（开发调试用）
+     */
+    private boolean isLocalRequest(HttpServletRequest request) {
+        String ip = request.getRemoteAddr();
+        return "127.0.0.1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip);
     }
 
     /**
