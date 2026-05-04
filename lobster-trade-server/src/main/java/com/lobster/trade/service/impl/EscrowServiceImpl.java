@@ -1,9 +1,12 @@
 package com.lobster.trade.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.lobster.trade.mapper.UserMapper;
 import com.lobster.trade.mapper.WalletMapper;
 import com.lobster.trade.mapper.WalletTransactionMapper;
 import com.lobster.trade.model.entity.TradeOrder;
+import com.lobster.trade.model.entity.User;
 import com.lobster.trade.model.entity.Wallet;
 import com.lobster.trade.model.entity.WalletTransaction;
 import com.lobster.trade.service.EscrowService;
@@ -23,6 +26,7 @@ public class EscrowServiceImpl implements EscrowService {
 
     private final WalletMapper walletMapper;
     private final WalletTransactionMapper walletTransactionMapper;
+    private final UserMapper userMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -38,6 +42,13 @@ public class EscrowServiceImpl implements EscrowService {
         buyerWallet.setBalance(balanceAfter);
         buyerWallet.setFrozenBalance(frozenAfter);
         walletMapper.updateById(buyerWallet);
+
+        // 同步 user 表余额和冻结余额
+        LambdaUpdateWrapper<User> userWrapper = new LambdaUpdateWrapper<>();
+        userWrapper.eq(User::getId, order.getBuyerId())
+                   .set(User::getBalance, balanceAfter)
+                   .set(User::getFrozenBalance, frozenAfter);
+        userMapper.update(null, userWrapper);
 
         // 记录冻结：余额减少
         saveTransaction(order.getBuyerId(), 3, amount.negate(),

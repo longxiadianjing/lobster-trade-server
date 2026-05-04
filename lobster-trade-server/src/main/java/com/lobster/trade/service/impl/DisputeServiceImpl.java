@@ -2,6 +2,7 @@ package com.lobster.trade.service.impl;
 
 import com.lobster.trade.exception.BusinessException;
 import com.lobster.trade.exception.ErrorCode;
+import com.lobster.trade.mapper.ProductMapper;
 import com.lobster.trade.mapper.TradeOrderMapper;
 import com.lobster.trade.model.entity.TradeOrder;
 import com.lobster.trade.model.request.DisputeRequest;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class DisputeServiceImpl implements DisputeService {
 
     private final TradeOrderMapper orderMapper;
+    private final ProductMapper productMapper;
     private final EscrowService escrowService;
     private final SysNotificationService sysNotificationService;
 
@@ -104,6 +106,8 @@ public class DisputeServiceImpl implements DisputeService {
 
         if (result.contains("退款")) {
             escrowService.refundEscrow(order);
+            // 库存还原（原子操作）
+            productMapper.incrementStock(order.getProductId(), 1);
             sysNotificationService.createForUser(order.getBuyerId(),
                     "🔔 仲裁结果：退款",
                     "您的订单【" + order.getProductTitle() + "】仲裁已完成，款项将退还至您的钱包。订单号：" + order.getOrderNo(),

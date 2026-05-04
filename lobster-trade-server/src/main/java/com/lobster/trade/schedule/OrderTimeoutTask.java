@@ -1,6 +1,7 @@
 package com.lobster.trade.schedule;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.lobster.trade.mapper.ProductMapper;
 import com.lobster.trade.mapper.TradeOrderMapper;
 import com.lobster.trade.model.entity.TradeOrder;
 import com.lobster.trade.service.EscrowService;
@@ -25,6 +26,7 @@ import java.util.List;
 public class OrderTimeoutTask {
 
     private final TradeOrderMapper tradeOrderMapper;
+    private final ProductMapper productMapper;
     private final EscrowService escrowService;
     private final SysNotificationService sysNotificationService;
 
@@ -48,8 +50,9 @@ public class OrderTimeoutTask {
                 tradeOrderMapper.updateById(order);
                 // 退款（如果有冻结资金）
                 escrowService.refundEscrow(order);
-                // 库存还原
-                log.info("[ORDER_TIMEOUT] 订单 {} 已超时取消", order.getOrderNo());
+                // 库存还原（原子操作）
+                productMapper.incrementStock(order.getProductId(), 1);
+                log.info("[ORDER_TIMEOUT] 订单 {} 已超时取消，库存已还原", order.getOrderNo());
             } catch (Exception e) {
                 log.error("[ORDER_TIMEOUT] 取消订单 {} 失败: {}", order.getOrderNo(), e.getMessage());
             }

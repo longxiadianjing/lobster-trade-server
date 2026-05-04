@@ -42,8 +42,8 @@ public class OrderServiceImpl implements OrderService {
         if (product == null || product.getIsDeleted() == 1 || product.getStatus() != 1) {
             throw new BusinessException(ErrorCode.PARAM_INVALID, "商品不存在或已下架");
         }
-        if (product.getStock() != null && product.getStock() <= 0) {
-            throw new BusinessException(ErrorCode.PARAM_INVALID, "库存不足");
+        if (product.getStock() == null || product.getStock() < 1) {
+            throw new BusinessException(ErrorCode.PARAM_INVALID, "该商品已售罄，请选择其他商品");
         }
         if (buyerId.equals(product.getSellerId())) {
             throw new BusinessException(ErrorCode.PARAM_INVALID, "不能购买自己的商品");
@@ -123,8 +123,11 @@ public class OrderServiceImpl implements OrderService {
         order.setBoostRequirement(req.getBoostRequirement());
         tradeOrderMapper.insert(order);
 
-        product.setStock(product.getStock() - 1);
-        productMapper.updateById(product);
+        // 原子扣减库存（乐观锁）
+        int updated = productMapper.decrementStock(product.getId(), 1);
+        if (updated == 0) {
+            throw new BusinessException(ErrorCode.PARAM_INVALID, "库存不足，下单失败");
+        }
 
         // 创建IM会话
         imService.createSessionForOrder(order.getId(), buyerId, product.getSellerId());
@@ -326,11 +329,8 @@ public class OrderServiceImpl implements OrderService {
         }
         tradeOrderMapper.updateById(order);
 
-        Product p = productMapper.selectById(order.getProductId());
-        if (p != null) {
-            p.setStock(p.getStock() + 1);
-            productMapper.updateById(p);
-        }
+        // 原子还原库存
+        productMapper.incrementStock(order.getProductId(), 1);
     }
 
     private OrderDetailVO toVO(TradeOrder o) {
