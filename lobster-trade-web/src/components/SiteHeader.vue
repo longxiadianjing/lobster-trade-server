@@ -18,6 +18,11 @@
             我要卖
           </el-button>
           <el-button @click="router.push({ path: '/wallet' })" text class="action-text-btn">我的钱包</el-button>
+          <el-badge :value="unreadCount" :hidden="unreadCount === 0" :max="99" class="notif-badge">
+            <el-button text class="notif-btn" @click="router.push({ path: '/user/message' })">
+              <el-icon :size="20"><Bell /></el-icon>
+            </el-button>
+          </el-badge>
           <router-link to="/user" class="user-avatar-link">
             <el-avatar :size="32">{{ userStore.nickname?.charAt(0) || '我' }}</el-avatar>
           </router-link>
@@ -32,12 +37,33 @@
 </template>
 
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
-import { Sell } from '@element-plus/icons-vue'
+import { getUnreadCount } from '@/api/notification'
+import { Sell, Bell } from '@element-plus/icons-vue'
 
 const userStore = useUserStore()
 const router = useRouter()
+const unreadCount = ref(0)
+let pollTimer = null
+
+const fetchUnread = async () => {
+  if (!userStore.isLoggedIn) return
+  try {
+    const res = await getUnreadCount()
+    unreadCount.value = res.data || 0
+  } catch (e) {}
+}
+
+onMounted(() => {
+  fetchUnread()
+  pollTimer = setInterval(fetchUnread, 30000)
+})
+
+onUnmounted(() => {
+  if (pollTimer) clearInterval(pollTimer)
+})
 </script>
 
 <style scoped>
@@ -117,6 +143,21 @@ const router = useRouter()
   display: flex;
   align-items: center;
   margin-left: 4px;
+}
+
+.notif-badge {
+  margin: 0 4px;
+}
+
+.notif-btn {
+  color: rgba(255,255,255,0.85) !important;
+  padding: 4px 6px !important;
+  border-radius: 8px !important;
+}
+
+.notif-btn:hover {
+  color: #fff !important;
+  background: rgba(255,255,255,0.15) !important;
 }
 
 :deep(.el-avatar) {
