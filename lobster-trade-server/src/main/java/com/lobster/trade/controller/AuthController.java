@@ -7,6 +7,7 @@ import com.lobster.trade.model.response.ApiResponse;
 import com.lobster.trade.model.response.LoginResponse;
 import com.lobster.trade.service.AuthService;
 import com.lobster.trade.util.PasswordEncoder;
+import com.lobster.trade.util.RateLimitUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +28,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final UserMapper userMapper;
+    private final RateLimitUtil rateLimitUtil;
 
     /**
      * 发送短信验证码
@@ -34,6 +36,9 @@ public class AuthController {
      */
     @PostMapping("/sms/send")
     public ApiResponse<Void> sendSmsCode(@Validated @RequestBody SmsSendRequest request) {
+        if (rateLimitUtil.isSmsLimited(request.getPhone())) {
+            return ApiResponse.fail(429, "发送太频繁，请60秒后重试");
+        }
         authService.sendSmsCode(request);
         return ApiResponse.success("验证码已发送");
     }
@@ -53,9 +58,27 @@ public class AuthController {
      * POST /api/auth/login
      */
     @PostMapping("/login")
-    public ApiResponse<LoginResponse> login(@Validated @RequestBody LoginRequest request) {
-        LoginResponse response = authService.login(request);
+    public ApiResponse<LoginResponse> login(HttpServletRequest request, @Validated @RequestBody LoginRequest loginRequest) {
+        String ip = getClientIp(request);
+        if (rateLimitUtil.isLoginLimited(ip)) {
+            return ApiResponse.fail(429, "操作太频繁，请稍后再试");
+        }
+        LoginResponse response = authService.login(loginRequest);
         return ApiResponse.success("登录成功", response);
+    }
+
+    private String getClientIp(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        if (ip != null && ip.contains(",")) {
+            ip = ip.split(",")[0].trim();
+        }
+        return ip;
     }
 
     /**

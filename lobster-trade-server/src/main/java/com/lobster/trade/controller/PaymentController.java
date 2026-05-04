@@ -4,6 +4,7 @@ import com.lobster.trade.model.entity.PaymentTransaction;
 import com.lobster.trade.model.response.ApiResponse;
 import com.lobster.trade.service.PaymentService;
 import com.lobster.trade.util.PaymentSecurityUtil;
+import com.lobster.trade.util.RateLimitUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class PaymentController {
 
     private final PaymentService paymentService;
+    private final RateLimitUtil rateLimitUtil;
 
     /**
      * 创建充值支付单
@@ -104,7 +106,14 @@ public class PaymentController {
     public ApiResponse<Void> mockPaymentCallback(
             HttpServletRequest request,
             @RequestParam String paymentNo) {
-        
+
+        // 限流检查（每用户每分钟5次）
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId != null && rateLimitUtil.isPaymentLimited(userId)) {
+            log.warn("[PAYMENT_CALLBACK] userId={} 限流", userId);
+            return ApiResponse.fail(429, "请求过于频繁");
+        }
+
         // 签名验证（防止外部恶意调用）
         if (!isLocalRequest(request)) {
             String signature = request.getHeader("X-Payment-Signature");
