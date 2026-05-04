@@ -144,6 +144,12 @@ const routes = [
     meta: { title: '服务商店铺' }
   },
   {
+    path: '/seller/stats',
+    name: 'SellerStats',
+    component: () => import('@/views/seller/SellerStats.vue'),
+    meta: { title: '数据统计', requiresAuth: true }
+  },
+  {
     path: '/product/publish',
     name: 'ProductPublish',
     component: () => import('@/views/product/Publish.vue'),
