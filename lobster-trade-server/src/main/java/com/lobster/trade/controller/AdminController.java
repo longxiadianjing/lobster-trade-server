@@ -1,6 +1,7 @@
 package com.lobster.trade.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lobster.trade.annotation.Audit;
 import com.lobster.trade.annotation.RequirePermission;
@@ -16,9 +17,12 @@ import com.lobster.trade.model.entity.TradeOrder;
 import com.lobster.trade.model.entity.User;
 import com.lobster.trade.model.request.AdminLoginRequest;
 import com.lobster.trade.model.request.AdminProductUpdateRequest;
+import com.lobster.trade.model.request.AuditLogRequest;
 import com.lobster.trade.model.response.AdminProductVO;
 import com.lobster.trade.model.response.AdminVO;
+import com.lobster.trade.model.response.AuditLogVO;
 import com.lobster.trade.service.AdminService;
+import com.lobster.trade.service.AdminAuditService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +36,7 @@ import java.util.Map;
 public class AdminController {
 
     private final AdminService adminService;
+    private final AdminAuditService adminAuditService;
     private final AdminAuditLogMapper adminAuditLogMapper;
 
     @PostMapping("/login")
@@ -340,102 +345,6 @@ public class AdminController {
         return Result.success(null);
     }
 
-    // ==================== 认证管理 ====================
-
-    @GetMapping("/certifications")
-    @RequirePermission(AdminPermission.CERT_VIEW)
-    public Result<Map<String, Object>> listCertifications(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "20") int pageSize,
-            @RequestParam(required = false) String status) {
-        return Result.success(adminService.listCertifications(status, page, pageSize));
-    }
-
-    @Audit(value = "审核实名认证-通过", targetType = "Certification")
-    @PostMapping("/certification/{id}/approve")
-    @RequirePermission(AdminPermission.CERT_HANDLE)
-    public Result<Void> approveCertification(@PathVariable Long id) {
-        adminService.approveCertification(id);
-        return Result.success(null);
-    }
-
-    @Audit(value = "审核实名认证-拒绝", targetType = "Certification")
-    @PostMapping("/certification/{id}/reject")
-    @RequirePermission(AdminPermission.CERT_HANDLE)
-    public Result<Void> rejectCertification(@PathVariable Long id, @RequestBody Map<String, String> body) {
-        adminService.rejectCertification(id, body.get("reason"));
-        return Result.success(null);
-    }
-
-    // ==================== 优惠券管理 ====================
-
-    @GetMapping("/coupons")
-    @RequirePermission(AdminPermission.COUPON_VIEW)
-    public Result<Map<String, Object>> listCoupons(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "20") int pageSize,
-            @RequestParam(required = false) String status) {
-        return Result.success(adminService.listCoupons(status, page, pageSize));
-    }
-
-    @Audit(value = "新增优惠券", targetType = "Coupon")
-    @PostMapping("/coupon")
-    @RequirePermission(AdminPermission.COUPON_EDIT)
-    public Result<Void> createCoupon(@RequestBody Map<String, Object> body) {
-        adminService.createCoupon(body);
-        return Result.success(null);
-    }
-
-    @Audit(value = "修改优惠券", targetType = "Coupon")
-    @PutMapping("/coupon/{id}")
-    @RequirePermission(AdminPermission.COUPON_EDIT)
-    public Result<Void> updateCoupon(@PathVariable Long id, @RequestBody Map<String, Object> body) {
-        adminService.updateCoupon(id, body);
-        return Result.success(null);
-    }
-
-    @Audit(value = "删除优惠券", targetType = "Coupon")
-    @DeleteMapping("/coupon/{id}")
-    @RequirePermission(AdminPermission.COUPON_EDIT)
-    public Result<Void> deleteCoupon(@PathVariable Long id) {
-        adminService.deleteCoupon(id);
-        return Result.success(null);
-    }
-
-    // ==================== 热词管理 ====================
-
-    @GetMapping("/hot-search")
-    @RequirePermission(AdminPermission.HOTSEARCH_VIEW)
-    public Result<Map<String, Object>> listHotSearch(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "20") int pageSize) {
-        return Result.success(adminService.listHotSearch(page, pageSize));
-    }
-
-    @Audit(value = "新增热词", targetType = "HotSearch")
-    @PostMapping("/hot-search")
-    @RequirePermission(AdminPermission.HOTSEARCH_EDIT)
-    public Result<Void> createHotSearch(@RequestBody Map<String, Object> body) {
-        adminService.createHotSearch(body);
-        return Result.success(null);
-    }
-
-    @Audit(value = "修改热词", targetType = "HotSearch")
-    @PutMapping("/hot-search/{id}")
-    @RequirePermission(AdminPermission.HOTSEARCH_EDIT)
-    public Result<Void> updateHotSearch(@PathVariable Long id, @RequestBody Map<String, Object> body) {
-        adminService.updateHotSearch(id, body);
-        return Result.success(null);
-    }
-
-    @Audit(value = "删除热词", targetType = "HotSearch")
-    @DeleteMapping("/hot-search/{id}")
-    @RequirePermission(AdminPermission.HOTSEARCH_EDIT)
-    public Result<Void> deleteHotSearch(@PathVariable Long id) {
-        adminService.deleteHotSearch(id);
-        return Result.success(null);
-    }
-
     // ==================== 审计日志 ====================
 
     /**
@@ -443,19 +352,20 @@ public class AdminController {
      */
     @GetMapping("/audit-logs")
     @RequirePermission(AdminPermission.AUDIT_VIEW)
-    public Result<Page<AdminAuditLog>> getAuditLogs(
+    public Result<IPage<AuditLogVO>> getAuditLogs(
             @RequestParam(required = false) String action,
             @RequestParam(required = false) String targetType,
             @RequestParam(required = false) Long adminId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size) {
-        LambdaQueryWrapper<AdminAuditLog> wrapper = new LambdaQueryWrapper<>();
-        if (action != null && !action.isEmpty()) wrapper.eq(AdminAuditLog::getAction, action);
-        if (targetType != null && !targetType.isEmpty()) wrapper.eq(AdminAuditLog::getTargetType, targetType);
-        if (adminId != null) wrapper.eq(AdminAuditLog::getAdminId, adminId);
-        wrapper.orderByDesc(AdminAuditLog::getCreateTime);
-        Page<AdminAuditLog> pageParam = new Page<>(page, size);
-        return Result.success(adminAuditLogMapper.selectPage(pageParam, wrapper));
+        AuditLogRequest req = new AuditLogRequest();
+        req.setAction(action);
+        req.setEntityType(targetType);
+        req.setAdminId(adminId);
+        req.setPage(page);
+        req.setSize(size);
+        IPage<AuditLogVO> result = adminAuditService.list(req);
+        return Result.success(result);
     }
 
     // ==================== 权限信息 ====================
