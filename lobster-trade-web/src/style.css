@@ -1,0 +1,103 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f5f6fa;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+/* ========== Global Design Tokens ========== */
+:root {
+  --primary: #5B47C2;
+  --primary-light: #7B5FD4;
+  --primary-gradient: linear-gradient(135deg, #5B47C2, #7B5FD4);
+  --border-radius: 12px;
+  --border-radius-sm: 8px;
+  --shadow-sm: 0 2px 8px rgba(91, 71, 194, 0.08);
+  --shadow-md: 0 4px 16px rgba(91, 71, 194, 0.12);
+  --shadow-lg: 0 8px 32px rgba(91, 71, 194, 0.16);
+}
+
+/* ========== Element Plus Overrides ========== */
+.el-button {
+  border-radius: var(--border-radius-sm);
+}
+
+.el-button--primary {
+  background: var(--primary-gradient) !important;
+  border: none !important;
+}
+
+.el-button--primary:hover {
+  opacity: 0.9;
+}
+
+.el-input__wrapper {
+  border-radius: var(--border-radius-sm);
+}
+
+.el-card {
+  border-radius: var(--border-radius);
+  border: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.el-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.el-tag {
+  border-radius: 6px;
+}
+
+/* Active menu item */
+.el-menu-item.is-active {
+  background: var(--primary-gradient) !important;
+  color: #fff !important;
+}
+
+/* ========== Scrollbar ========== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* ========== Transitions ========== */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
