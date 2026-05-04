@@ -1,0 +1,1 @@
+import{o as e}from"./index-cjDuUYFU.js";function t(t){return e({url:`/product/list`,method:`get`,params:t})}function n(t){return e({url:`/product/detail/${t}`,method:`get`})}function r(t){return e({url:`/product`,method:`post`,data:t})}export{t as n,r,n as t};

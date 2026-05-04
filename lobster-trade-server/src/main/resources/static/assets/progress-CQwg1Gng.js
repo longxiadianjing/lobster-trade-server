@@ -1,0 +1,1 @@
+import{o as e}from"./index-cjDuUYFU.js";function t(t){return e.get(`/order/progress/`+t)}function n(t,n){return e.post(`/order/progress/`+t,null,{params:n})}function r(t,n){return e.post(`/order/progress/`+t+`/ack`,null,{params:{ack:n}})}export{t as n,n as r,r as t};

@@ -1,0 +1,33 @@
+# OpenClaw
+/.openclaw/
+/AGENTS.md
+/SOUL.md
+/IDENTITY.md
+/USER.md
+/HEARTBEAT.md
+
+# Temp scripts
+/*.py
+/*.js
+/*.ps1
+/*.bat
+/*.sql
+/*.txt
+/*.log
+
+# Java
+*.class
+*.jar
+*.bak
+
+# Node modules (if any)
+node_modules/
+
+# IDE
+.idea/
+.vscode/
+
+# Other
+memory/
+*.png
+*.jpg

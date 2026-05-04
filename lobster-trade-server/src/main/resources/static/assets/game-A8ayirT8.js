@@ -1,0 +1,1 @@
+import{o as e}from"./index-ByBfm1A4.js";function t(){return e({url:`/games`,method:`get`})}export{t};
