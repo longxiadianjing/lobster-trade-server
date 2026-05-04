@@ -27,4 +27,14 @@ public interface WalletService {
      * 获取钱包流水
      */
     Page<WalletTransaction> getTransactions(Long userId, Integer page, Integer pageSize);
+
+    /**
+     * 支付成功后充值到账（内部调用）
+     */
+    void rechargeMock(Long userId, java.math.BigDecimal amount, String paymentNo);
+
+    /**
+     * 订单支付成功后资金托管（内部调用）
+     */
+    void freezeEscrowForOrder(Long orderId);
 }
