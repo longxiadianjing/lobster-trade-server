@@ -1,0 +1,1 @@
+import{o as e}from"./index-BO8qeoCk.js";function t(t,n){return e({url:`/auth/sms/send`,method:`post`,data:{phone:t,type:n}})}function n(t){return e({url:`/auth/register`,method:`post`,data:t})}function r(t){return e({url:`/auth/login`,method:`post`,data:t})}function i(t){return e({url:`/auth/password/reset`,method:`post`,data:t})}export{t as i,n,i as r,r as t};

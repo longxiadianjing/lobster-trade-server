@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.lobster.trade.mapper.TradeOrderMapper;
 import com.lobster.trade.model.entity.TradeOrder;
 import com.lobster.trade.service.EscrowService;
+import com.lobster.trade.service.SysNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -54,8 +55,42 @@ public class OrderTimeoutTask {
         }
     }
 
+    /** 每30分钟检查买家确认超时（卖家发货后超过72小时未确认，自动放款） */
+    @Scheduled(fixedRate = 1_800_000)
+    @Transactional
+    public void checkBuyerConfirmTimeout() {
+        LocalDateTime deadline = LocalDateTime.now().minusHours(72);
+        LambdaQueryWrapper<TradeOrder> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(TradeOrder::getStatus, "submitted")
+               .eq(TradeOrder::getIsDeleted, 0)
+               .le(TradeOrder::getSubmitTime, deadline);
+        List<TradeOrder> orders = tradeOrderMapper.selectList(wrapper);
+        if (orders.isEmpty()) return;
+        log.info("[BUYER_CONFIRM_TIMEOUT] 扫描到 {} 个买家确认超时订单", orders.size());
+        for (TradeOrder order : orders) {
+            try {
+                order.setStatus("completed");
+                order.setConfirmTime(LocalDateTime.now());
+                tradeOrderMapper.updateById(order);
+                escrowService.releaseEscrow(order);
+                sysNotificationService.createForUser(order.getSellerId(),
+                        "✅ 订单已完成",
+                        "买家超时未确认，系统自动完成交易，款项已到账。订单号：" + order.getOrderNo(),
+                        2, "/order/detail/" + order.getId());
+                sysNotificationService.createForUser(order.getBuyerId(),
+                        "✅ 订单已完成",
+                        "您购买的商品【" + order.getProductTitle() + "】因超时未确认，系统自动完成交易。订单号：" + order.getOrderNo(),
+                        2, "/order/detail/" + order.getId());
+                log.info("[BUYER_CONFIRM_TIMEOUT] 订单 {} 已自动放款完成", order.getOrderNo());
+            } catch (Exception e) {
+                log.error("[BUYER_CONFIRM_TIMEOUT] 订单 {} 自动放款失败: {}", order.getOrderNo(), e.getMessage());
+            }
+        }
+    }
+
     /** 每10分钟检查卖家发货超时（已支付但超过48小时未发货） */
     @Scheduled(fixedRate = 600_000)
+    @Transactional
     public void checkSellerDeliveryTimeout() {
         LocalDateTime deadline = LocalDateTime.now().minusHours(48);
         LambdaQueryWrapper<TradeOrder> wrapper = new LambdaQueryWrapper<>();
@@ -66,9 +101,11 @@ public class OrderTimeoutTask {
         if (orders.isEmpty()) return;
         log.warn("[SELLER_TIMEOUT] 发现 {} 个卖家发货超时订单，请客服关注", orders.size());
         for (TradeOrder order : orders) {
-            log.warn("[SELLER_TIMEOUT] 订单 {} 超时未发货，卖家={}, 支付时间={}",
+            order.setStatus("in_progress");
+            order.setUpdateTime(LocalDateTime.now());
+            tradeOrderMapper.updateById(order);
+            log.warn("[SELLER_TIMEOUT] 订单 {} 超时未发货，已标记为进行中，卖家={}, 支付时间={}",
                 order.getOrderNo(), order.getSellerId(), order.getPaymentTime());
-            // 不自动取消，留给客服处理或买家发起纠纷
         }
     }
 }

@@ -6,6 +6,8 @@ import com.lobster.trade.mapper.TradeOrderMapper;
 import com.lobster.trade.model.entity.TradeOrder;
 import com.lobster.trade.model.request.DisputeRequest;
 import com.lobster.trade.service.DisputeService;
+import com.lobster.trade.service.EscrowService;
+import com.lobster.trade.service.SysNotificationService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import java.util.Map;
 public class DisputeServiceImpl implements DisputeService {
 
     private final TradeOrderMapper orderMapper;
+    private final EscrowService escrowService;
+    private final SysNotificationService sysNotificationService;
 
     @Override
     @Transactional
@@ -97,6 +101,28 @@ public class DisputeServiceImpl implements DisputeService {
         }
 
         orderMapper.updateById(order);
+
+        if (result.contains("退款")) {
+            escrowService.refundEscrow(order);
+            sysNotificationService.createForUser(order.getBuyerId(),
+                    "🔔 仲裁结果：退款",
+                    "您的订单【" + order.getProductTitle() + "】仲裁已完成，款项将退还至您的钱包。订单号：" + order.getOrderNo(),
+                    2, "/order/detail/" + order.getId());
+            sysNotificationService.createForUser(order.getSellerId(),
+                    "🔔 仲裁结果：退款",
+                    "订单【" + order.getProductTitle() + "】仲裁已完成，款项退还买家。订单号：" + order.getOrderNo(),
+                    2, "/order/detail/" + order.getId());
+        } else if (result.contains("放款") || result.contains("完成")) {
+            escrowService.releaseEscrow(order);
+            sysNotificationService.createForUser(order.getSellerId(),
+                    "✅ 仲裁结果：放款",
+                    "订单【" + order.getProductTitle() + "】仲裁已完成，款项已到账。订单号：" + order.getOrderNo(),
+                    2, "/order/detail/" + order.getId());
+            sysNotificationService.createForUser(order.getBuyerId(),
+                    "✅ 仲裁结果：交易完成",
+                    "订单【" + order.getProductTitle() + "】仲裁已完成，交易成功。订单号：" + order.getOrderNo(),
+                    2, "/order/detail/" + order.getId());
+        }
     }
 
     @Override

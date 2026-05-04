@@ -1,0 +1,1 @@
+import{o as e}from"./index-19BTYrlJ.js";function t(t){return e({url:`/certification/apply`,method:`post`,data:t})}function n(){return e({url:`/certification/my`,method:`get`})}function r(t){return e({url:`/certification/list`,method:`get`,params:t})}export{r as n,n as r,t};
