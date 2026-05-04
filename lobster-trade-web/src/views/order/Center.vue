@@ -35,7 +35,7 @@
         </template>
 
         <!-- 角色切换标签 -->
-        <el-tabs v-model="activeTab" @tab-change="loadOrders" class="order-tabs">
+        <el-tabs v-model="activeTab" @tab-change="onTabChange" class="order-tabs">
           <el-tab-pane label="我买到的" name="buyer">
             <template #label>
               <span class="tab-label">
@@ -53,6 +53,21 @@
             </template>
           </el-tab-pane>
         </el-tabs>
+
+        <!-- 筛选栏 -->
+        <div class="filter-bar">
+          <el-select v-model="filterStatus" placeholder="订单状态" clearable size="default" class="filter-select" @change="loadOrders">
+            <el-option label="全部状态" value="" />
+            <el-option label="待付款" value="pending_pay" />
+            <el-option label="已付款" value="paid" />
+            <el-option label="进行中" value="in_progress" />
+            <el-option label="已提交" value="submitted" />
+            <el-option label="已完成" value="completed" />
+            <el-option label="已取消" value="cancelled" />
+            <el-option label="仲裁中" value="disputed" />
+          </el-select>
+          <span class="filter-tip">共 {{ pagination.total }} 条订单</span>
+        </div>
 
         <!-- 订单列表 -->
         <div class="order-list" v-loading="loading">
@@ -145,6 +160,7 @@ import PageLayout from '@/components/PageLayout.vue'
 const router = useRouter()
 const route = useRoute()
 const activeTab = ref('buyer')
+const filterStatus = ref('')
 const loading = ref(false)
 const orders = ref([])
 const pagination = reactive({
@@ -161,6 +177,7 @@ const loadOrders = async () => {
   loading.value = true
   try {
     const params = { page: pagination.page, pageSize: pagination.pageSize }
+    if (filterStatus.value) params.status = filterStatus.value
     let res
     if (activeTab.value === 'buyer') {
       res = await getBuyerOrders(params)
@@ -176,6 +193,11 @@ const loadOrders = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const onTabChange = () => {
+  pagination.page = 1
+  loadOrders()
 }
 
 const getStatusType = (status) => {
@@ -427,5 +449,20 @@ const handleConfirm = async (order) => {
   display: flex;
   justify-content: center;
   padding: 16px 0;
+}
+
+/* 筛选栏 */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0 14px;
+}
+.filter-select {
+  width: 160px;
+}
+.filter-tip {
+  font-size: 13px;
+  color: #999;
 }
 </style>

@@ -99,34 +99,15 @@
 </template>
 
 <script setup>
-  document.title = '充值 - 龙虾道具交易平台';
-
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useWalletStore } from '@/stores/wallet'
 import { ElMessage } from 'element-plus'
 import PageLayout from '@/components/PageLayout.vue'
 import { User, Wallet, List, Goods, InfoFilled, Right } from '@element-plus/icons-vue'
-
-const router = useRouter()
-const route = useRoute()
-const walletStore = useWalletStore()
-
-const amounts = [10, 50, 100, 200, 500, 1000]
-const selectedAmount = ref(100)
-const customAmount = ref('')
-const loading = ref(false)
-
-<script setup>
-  document.title = '充值 - 龙虾道具交易平台';
-
-import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useWalletStore } from '@/stores/wallet'
-import { ElMessage } from 'element-plus'
-import PageLayout from '@/components/PageLayout.vue'
-import { User, Wallet, List, Goods, InfoFilled } from '@element-plus/icons-vue'
 import { createRechargePayment } from '@/api/payment'
+
+document.title = '充值 - 龙虾道具交易平台'
 
 const router = useRouter()
 const route = useRoute()

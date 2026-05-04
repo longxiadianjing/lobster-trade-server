@@ -1,9 +1,11 @@
 package com.lobster.trade.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lobster.trade.exception.BusinessException;
 import com.lobster.trade.mapper.TradeOrderMapper;
+import com.lobster.trade.mapper.UserMapper;
 import com.lobster.trade.mapper.WalletMapper;
 import com.lobster.trade.mapper.WalletTransactionMapper;
 import com.lobster.trade.model.entity.Wallet;
@@ -29,6 +31,7 @@ public class WalletServiceImpl implements WalletService {
     private final WalletMapper walletMapper;
     private final WalletTransactionMapper walletTransactionMapper;
     private final TradeOrderMapper orderMapper;
+    private final UserMapper userMapper;
 
     @Override
     public Wallet getWalletInfo(Long userId) {
@@ -181,7 +184,13 @@ public class WalletServiceImpl implements WalletService {
         trans.setCreateTime(LocalDateTime.now());
         walletTransactionMapper.insert(trans);
 
-        log.info("[ESCROW] 充值到账: userId={}, amount={}, paymentNo={}", userId, amount, paymentNo);
+        // 同步更新 user 表余额
+        LambdaUpdateWrapper<com.lobster.trade.model.entity.User> userWrapper = new LambdaUpdateWrapper<>();
+        userWrapper.eq(com.lobster.trade.model.entity.User::getId, userId)
+                   .set(com.lobster.trade.model.entity.User::getBalance, balanceAfter);
+        userMapper.update(null, userWrapper);
+
+        log.info("[ESCROW] 充值到账: userId={}, amount={}, paymentNo={}, userBalance={}", userId, amount, paymentNo, balanceAfter);
     }
 
     @Override
@@ -228,6 +237,12 @@ public class WalletServiceImpl implements WalletService {
         order.setUpdateTime(LocalDateTime.now());
         orderMapper.updateById(order);
 
+        // 同步更新 user 表余额和冻结余额
+        LambdaUpdateWrapper<com.lobster.trade.model.entity.User> userWrapper = new LambdaUpdateWrapper<>();
+        userWrapper.eq(com.lobster.trade.model.entity.User::getId, order.getBuyerId())
+                   .set(com.lobster.trade.model.entity.User::getBalance, balAfter)
+                   .set(com.lobster.trade.model.entity.User::getFrozenBalance, froAfter);
+        userMapper.update(null, userWrapper);
         log.info("[ESCROW] 订单{}资金托管: buyerId={}, amount={}, balance {}->{}, frozen {}->{}",
             order.getOrderNo(), order.getBuyerId(), amount, balBefore, balAfter, froBefore, froAfter);
     }

@@ -195,7 +195,7 @@ const maxAmount = computed(() => Math.max(...weekData.value.map(d => d.amount)))
 
 onMounted(() => {
   document.title = '我的钱包 - 龙虾道具交易平台'
-  walletStore.fetchInfo()
+  walletStore.fetchWalletInfo()
 })
 </script>
 

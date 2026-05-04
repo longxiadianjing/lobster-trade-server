@@ -3,6 +3,7 @@ com\lobster\trade\mapper\CsSessionMapper.class
 com\lobster\trade\model\entity\ProductCategory.class
 com\lobster\trade\config\AdminAuthFilter.class
 com\lobster\trade\service\impl\JwtAuthServiceImpl.class
+com\lobster\trade\service\PaymentService.class
 com\lobster\trade\model\request\ProductPublishRequest.class
 com\lobster\trade\mapper\AdminAuditLogMapper.class
 com\lobster\trade\model\entity\PlatformAnnouncement.class
@@ -31,6 +32,7 @@ com\lobster\trade\controller\RealNameApiController.class
 com\lobster\trade\controller\AuthController.class
 com\lobster\trade\exception\BusinessException.class
 com\lobster\trade\service\ProductRecommendSlotService.class
+com\lobster\trade\service\impl\PaymentServiceImpl.class
 com\lobster\trade\model\request\AdminLoginRequest.class
 com\lobster\trade\service\AdminAuditService.class
 com\lobster\trade\model\request\OrderRecognizeRequest.class
@@ -68,6 +70,7 @@ com\lobster\trade\mapper\SysNotificationMapper.class
 com\lobster\trade\service\impl\WalletServiceImpl.class
 com\lobster\trade\controller\DisputeController.class
 com\lobster\trade\controller\CsController.class
+com\lobster\trade\controller\PaymentController.class
 com\lobster\trade\model\response\OrderDetailVO.class
 com\lobster\trade\service\impl\SecurityCenterServiceImpl.class
 com\lobster\trade\service\DisputeService.class
@@ -103,6 +106,7 @@ com\lobster\trade\controller\WalletController.class
 com\lobster\trade\service\ImService.class
 com\lobster\trade\service\OrderService.class
 com\lobster\trade\controller\admin\AdminOrderController.class
+com\lobster\trade\mapper\PaymentTransactionMapper.class
 com\lobster\trade\controller\AnnouncementApiController.class
 com\lobster\trade\service\impl\AuthServiceImpl.class
 com\lobster\trade\controller\admin\RealNameAdminController.class
@@ -123,6 +127,7 @@ com\lobster\trade\controller\UserController$RealNameStatusVO.class
 com\lobster\trade\service\impl\CouponServiceImpl.class
 com\lobster\trade\service\impl\SysNotificationServiceImpl.class
 com\lobster\trade\controller\admin\CouponAdminController.class
+com\lobster\trade\model\entity\PaymentTransaction.class
 com\lobster\trade\mapper\WalletTransactionMapper.class
 com\lobster\trade\service\UserService.class
 com\lobster\trade\mapper\TradeOrderMapper.class
