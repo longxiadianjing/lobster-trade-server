@@ -33,6 +33,10 @@ export const useWalletStore = defineStore('wallet', {
       }
     },
 
+    async refresh() {
+      await this.fetchWalletInfo()
+    },
+
     async fetchTransactions(params = {}) {
       this.loading = true
       try {

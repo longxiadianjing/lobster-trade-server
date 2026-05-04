@@ -111,9 +111,11 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Clock, CircleCheckFilled, WarningFilled } from '@element-plus/icons-vue'
 import { createRechargePayment, createOrderPayment, getPaymentStatus, mockPaymentCallback } from '@/api/payment'
+import { useWalletStore } from '@/stores/wallet'
 
 const router = useRouter()
 const route = useRoute()
+const walletStore = useWalletStore()
 
 const loading = ref(false)
 const mockLoading = ref(false)
@@ -249,6 +251,7 @@ const startPolling = () => {
         if (res.data.status === 1) {
           payStatus.value = 1
           clearInterval(pollTimer)
+          walletStore.refresh()
           ElMessage.success('支付成功')
           setTimeout(() => {
             goToTarget()
@@ -264,6 +267,7 @@ const startPolling = () => {
 
 const goToTarget = () => {
   if (paymentType.value === 'recharge') {
+    walletStore.refresh()
     router.push({ path: '/wallet' })
   } else {
     if (orderId.value) {

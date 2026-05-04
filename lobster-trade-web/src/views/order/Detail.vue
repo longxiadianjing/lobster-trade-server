@@ -26,6 +26,33 @@
               </div>
             </div>
 
+
+            <!-- 交易流程步骤条 -->
+            <div class="trade-steps">
+              <div class="step-item" :class="{ active: stepActive(1), done: stepDone(1) }">
+                <div class="step-circle">1</div>
+                <div class="step-label">待付款</div>
+                <div class="step-time" v-if="order.createTime">{{ formatTime(order.createTime) }}</div>
+              </div>
+              <div class="step-line" :class="{ active: stepDone(1) }"></div>
+              <div class="step-item" :class="{ active: stepActive(2), done: stepDone(2) }">
+                <div class="step-circle">2</div>
+                <div class="step-label">已托管</div>
+                <div class="step-time" v-if="order.payTime">{{ formatTime(order.payTime) }}</div>
+              </div>
+              <div class="step-line" :class="{ active: stepDone(2) }"></div>
+              <div class="step-item" :class="{ active: stepActive(3), done: stepDone(3) }">
+                <div class="step-circle">3</div>
+                <div class="step-label">待收货</div>
+                <div class="step-time" v-if="order.submitTime">{{ formatTime(order.submitTime) }}</div>
+              </div>
+              <div class="step-line" :class="{ active: stepDone(3) }"></div>
+              <div class="step-item" :class="{ active: stepActive(4), done: stepDone(4) }">
+                <div class="step-circle">4</div>
+                <div class="step-label">已完成</div>
+                <div class="step-time" v-if="order.confirmTime">{{ formatTime(order.confirmTime) }}</div>
+              </div>
+            </div>
             <!-- 订单信息 -->
             <div class="info-section">
               <h3 class="section-title">订单信息</h3>
@@ -344,6 +371,19 @@ const typeMap = {
 
 const getStatusText = (s) => statusMap[s] || s
 const getStatusDesc = (s) => statusDescMap[s] || ''
+
+const stepActive = (n) => {
+  const orderStatus = order?.status
+  const steps = ['pending_pay','paid','submitted','confirmed','completed']
+  const idx = steps.indexOf(orderStatus)
+  return idx + 1 === n
+}
+const stepDone = (n) => {
+  const orderStatus = order?.status
+  const steps = ['pending_pay','paid','submitted','confirmed','completed']
+  const idx = steps.indexOf(orderStatus)
+  return idx + 1 > n
+}
 
 const progressColor = (pct) => {
   if (!pct) return '#409eff'
@@ -795,3 +835,55 @@ onMounted(() => {
 }
 
 </style>
+
+/* ========== 交易流程步骤条 ========== */
+.trade-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  margin-bottom: 20px;
+  background: #f9f9f9;
+  border-radius: 12px;
+}
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ddd;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+.step-item.done .step-circle { background: #67c23a; }
+.step-item.active .step-circle { background: #667eea; box-shadow: 0 0 0 4px rgba(102,126,234,0.2); }
+.step-label {
+  font-size: 12px;
+  color: #999;
+  font-weight: 500;
+}
+.step-item.done .step-label { color: #67c23a; }
+.step-item.active .step-label { color: #667eea; font-weight: 600; }
+.step-time {
+  font-size: 11px;
+  color: #bbb;
+}
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: #ddd;
+  margin: 0 8px;
+  margin-bottom: 20px;
+  transition: background 0.3s;
+}
+.step-line.active { background: #67c23a; }
