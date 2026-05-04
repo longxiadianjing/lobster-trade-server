@@ -1,3 +1,7 @@
+<style>
+@import '@/styles/mobile.css';
+</style>
+
 <template>
   <router-view />
   <CustomerService />
