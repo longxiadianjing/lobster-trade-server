@@ -296,7 +296,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { Picture, Location, Search, Goods, CircleCheck, Bottom, Warning } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
@@ -366,46 +366,85 @@ const loadProducts = async () => {
 }
 
 const handleOff = async (row) => {
-  try { await request.post(`/admin/product/${row.id}/off`); ElMessage.success('已下架'); loadProducts() }
-  catch (e) { ElMessage.error('操作失败') }
+  try {
+    await ElMessageBox.confirm(
+      `确定要下架商品【${row.title}】吗？`,
+      '确认下架',
+      { confirmButtonText: '确认下架', cancelButtonText: '取消', type: 'warning' }
+    )
+    await request.post(`/admin/product/${row.id}/off`)
+    ElMessage.success('已下架')
+    loadProducts()
+  } catch (e) {}
 }
 const handleOn = async (row) => {
-  try { await request.post(`/admin/product/${row.id}/on`); ElMessage.success('已上架'); loadProducts() }
-  catch (e) { ElMessage.error('操作失败') }
+  try {
+    await ElMessageBox.confirm(
+      `确定要上架商品【${row.title}】吗？`,
+      '确认上架',
+      { confirmButtonText: '确认上架', cancelButtonText: '取消', type: 'info' }
+    )
+    await request.post(`/admin/product/${row.id}/on`)
+    ElMessage.success('已上架')
+    loadProducts()
+  } catch (e) {}
 }
 const handleBan = async (row) => {
-  try { await request.post(`/admin/product/${row.id}/ban`); ElMessage.success('已封禁'); loadProducts() }
-  catch (e) { ElMessage.error('操作失败') }
+  try {
+    await ElMessageBox.confirm(
+      `确定要封禁商品【${row.title}】吗？封禁后商品将无法展示。`,
+      '⚠️ 确认封禁',
+      { confirmButtonText: '确认封禁', cancelButtonText: '取消', type: 'danger' }
+    )
+    await request.post(`/admin/product/${row.id}/ban`)
+    ElMessage.success('已封禁')
+    loadProducts()
+  } catch (e) {}
 }
 
 const batchOn = async () => {
-  const ids = selectedRows.value.filter(r => r.status !== 1).map(r => r.id)
-  if (ids.length === 0) { ElMessage.warning('没有可上架的商品'); return }
+  const rows = selectedRows.value.filter(r => r.status !== 1)
+  if (rows.length === 0) { ElMessage.warning('没有可上架的商品'); return }
   try {
-    await Promise.all(ids.map(id => request.post(`/admin/product/${id}/on`)))
-    ElMessage.success(`成功上架 ${ids.length} 个商品`)
+    await ElMessageBox.confirm(
+      `确定要批量上架 ${rows.length} 个商品吗？`,
+      '确认批量上架',
+      { confirmButtonText: '确认', cancelButtonText: '取消', type: 'info' }
+    )
+    await Promise.all(rows.map(r => request.post(`/admin/product/${r.id}/on`)))
+    ElMessage.success(`成功上架 ${rows.length} 个商品`)
     loadProducts()
-  } catch (e) { ElMessage.error('批量操作失败') }
+  } catch (e) {}
 }
 
 const batchOff = async () => {
-  const ids = selectedRows.value.filter(r => r.status !== 2).map(r => r.id)
-  if (ids.length === 0) { ElMessage.warning('没有可下架的商品'); return }
+  const rows = selectedRows.value.filter(r => r.status !== 2)
+  if (rows.length === 0) { ElMessage.warning('没有可下架的商品'); return }
   try {
-    await Promise.all(ids.map(id => request.post(`/admin/product/${id}/off`)))
-    ElMessage.success(`成功下架 ${ids.length} 个商品`)
+    await ElMessageBox.confirm(
+      `确定要批量下架 ${rows.length} 个商品吗？`,
+      '⚠️ 确认批量下架',
+      { confirmButtonText: '确认下架', cancelButtonText: '取消', type: 'warning' }
+    )
+    await Promise.all(rows.map(r => request.post(`/admin/product/${r.id}/off`)))
+    ElMessage.success(`成功下架 ${rows.length} 个商品`)
     loadProducts()
-  } catch (e) { ElMessage.error('批量操作失败') }
+  } catch (e) {}
 }
 
 const batchBan = async () => {
-  const ids = selectedRows.value.filter(r => r.status !== 3).map(r => r.id)
-  if (ids.length === 0) { ElMessage.warning('没有可封禁的商品'); return }
+  const rows = selectedRows.value.filter(r => r.status !== 3)
+  if (rows.length === 0) { ElMessage.warning('没有可封禁的商品'); return }
   try {
-    await Promise.all(ids.map(id => request.post(`/admin/product/${id}/ban`)))
-    ElMessage.success(`成功封禁 ${ids.length} 个商品`)
+    await ElMessageBox.confirm(
+      `确定要批量封禁 ${rows.length} 个商品吗？此操作不可恢复。`,
+      '⚠️ 确认批量封禁',
+      { confirmButtonText: '确认封禁', cancelButtonText: '取消', type: 'danger' }
+    )
+    await Promise.all(rows.map(r => request.post(`/admin/product/${r.id}/ban`)))
+    ElMessage.success(`成功封禁 ${rows.length} 个商品`)
     loadProducts()
-  } catch (e) { ElMessage.error('批量操作失败') }
+  } catch (e) {}
 }
 
 const viewDetail = (row) => {

@@ -240,7 +240,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/utils/request'
 
 const loading = ref(false)
@@ -342,19 +342,29 @@ onMounted(() => { loadOrders() })
 
 const openDispute = async (row) => {
   try {
+    await ElMessageBox.confirm(
+      `确定要处理订单【${row.orderNo}】的纠纷吗？`,
+      '⚠️ 确认处理纠纷',
+      { confirmButtonText: '确认处理', cancelButtonText: '取消', type: 'warning' }
+    )
     await request.put(`/admin/dispute/resolve/${row.id}`, { result: '管理员处理' })
     ElMessage.success('纠纷已处理')
     loadOrders()
-  } catch (e) {
-    ElMessage.error('处理失败')
-  }
+  } catch (e) {}
 }
 
-const openIntervene = (row) => {
-  interventionOrder.value = row
-  interventionForm.action = 'complete'
-  interventionForm.reason = ''
-  interventionVisible.value = true
+const openIntervene = async (row) => {
+  try {
+    await ElMessageBox.confirm(
+      `确定要对订单【${row.orderNo}】进行人工介入吗？当前状态：${statusMap[row.status] || row.status}`,
+      '⚠️ 确认人工介入',
+      { confirmButtonText: '继续介入', cancelButtonText: '取消', type: 'warning' }
+    )
+    interventionOrder.value = row
+    interventionForm.action = 'complete'
+    interventionForm.reason = ''
+    interventionVisible.value = true
+  } catch (e) {}
 }
 
 const doIntervene = async () => {
