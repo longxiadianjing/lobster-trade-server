@@ -53,11 +53,27 @@ export default defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true
       },
+      '/api/stats': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      },
+      '/api/wallet': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      },
+      '/api/games': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      },
       '/api/announcement': {
         target: 'http://localhost:8080',
         changeOrigin: true
       },
       '/api/notification': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      },
+      '/api/payment': {
         target: 'http://localhost:8080',
         changeOrigin: true
       }
