@@ -25,7 +25,10 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (p) => p.replace(/^\/api\/admin/, '/api/admin')
       },
-      '/api/certification': {
+      '/api/admin/real-name': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      },
         target: 'http://localhost:8080',
         changeOrigin: true
       },

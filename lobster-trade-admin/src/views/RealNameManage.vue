@@ -90,7 +90,7 @@
         <el-descriptions-item label="审核时间">{{ detailData.verifyTime || '-' }}</el-descriptions-item>
         <el-descriptions-item label="驳回原因" :span="2">{{ detailData.rejectReason || '-' }}</el-descriptions-item>
         <el-descriptions-item label="阿里云认证结果" :span="2">
-          <el-input type="textarea" v-if="detailData.aliyunResult" :value="formatJson(detailData.aliyunResult)" readonly :rows="3" />
+          <el-input type="textarea" v-if="detailData.aliyunResult" :model-value="formatJson(detailData.aliyunResult)" readonly :rows="3" />
           <span v-else>-</span>
         </el-descriptions-item>
       </el-descriptions>
@@ -136,6 +136,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import request from '@/utils/request'
 
 const filterStatus = ref('')
 const page = ref(1)
@@ -152,36 +153,38 @@ const currentRow = ref({})
 const approveForm = reactive({ realName: '', idCard: '' })
 const rejectForm = reactive({ reason: '' })
 
-const loadData = (p = 1) => {
+const loadData = async (p = 1) => {
   page.value = p
   loading.value = true
-  const params = new URLSearchParams({ page, size, status: filterStatus.value })
-  if (filterStatus.value) params.set('status', filterStatus.value)
-  fetch(`/admin/real-name/list?${params.toString()}`)
-    .then(r => r.json())
-    .then(r => {
-      if (r.code === 0) {
-        tableData.value = r.data.records || []
-        total.value = r.data.total || 0
-      }
-      loading.value = false
-    })
-    .catch(() => { loading.value = false })
+  try {
+    const params = { page: page.value, size: size.value }
+    if (filterStatus.value !== '') params.status = filterStatus.value
+    const res = await request.get('/admin/real-name/list', { params })
+    if (res.code === 0 || res.code === 200) {
+      tableData.value = res.data.records || []
+      total.value = res.data.total || 0
+    }
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loading.value = false
+  }
 }
 
-const showDetail = (row) => {
-  fetch(`/admin/real-name/detail/${row.userId}`)
-    .then(r => r.json())
-    .then(r => {
-      detailData.value = r.data || {}
-      detailVisible.value = true
-    })
+const showDetail = async (row) => {
+  try {
+    const res = await request.get(`/admin/real-name/detail/${row.userId}`)
+    detailData.value = res.data || {}
+    detailVisible.value = true
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 const showApprove = (row) => {
   currentRow.value = row
-  approveForm.realName = ''
-  approveForm.idCard = ''
+  approveForm.realName = row.realName || ''
+  approveForm.idCard = row.idCard || ''
   approveVisible.value = true
 }
 
@@ -191,43 +194,41 @@ const showReject = (row) => {
   rejectVisible.value = true
 }
 
-const doApprove = () => {
+const doApprove = async () => {
   if (!approveForm.realName || !approveForm.idCard) {
     ElMessage.warning('请填写姓名和身份证号')
     return
   }
   actionLoading.value = true
-  fetch(`/admin/real-name/approve/${currentRow.value.userId}?realName=${encodeURIComponent(approveForm.realName)}&idCard=${encodeURIComponent(approveForm.idCard)}`, { method: 'POST' })
-    .then(r => r.json())
-    .then(r => {
-      if (r.code === 0) {
-        ElMessage.success('已通过认证')
-        approveVisible.value = false
-        loadData(page.value)
-      } else {
-        ElMessage.error(r.message)
-      }
-      actionLoading.value = false
+  try {
+    await request.post(`/admin/real-name/approve/${currentRow.value.userId}`, null, {
+      params: { realName: approveForm.realName, idCard: approveForm.idCard }
     })
-    .catch(() => { actionLoading.value = false })
+    ElMessage.success('已通过认证')
+    approveVisible.value = false
+    loadData(page.value)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    actionLoading.value = false
+  }
 }
 
-const doReject = () => {
+const doReject = async () => {
   if (!rejectForm.reason) { ElMessage.warning('请填写驳回原因'); return }
   actionLoading.value = true
-  fetch(`/admin/real-name/reject/${currentRow.value.userId}?reason=${encodeURIComponent(rejectForm.reason)}`, { method: 'POST' })
-    .then(r => r.json())
-    .then(r => {
-      if (r.code === 0) {
-        ElMessage.success('已驳回')
-        rejectVisible.value = false
-        loadData(page.value)
-      } else {
-        ElMessage.error(r.message)
-      }
-      actionLoading.value = false
+  try {
+    await request.post(`/admin/real-name/reject/${currentRow.value.userId}`, null, {
+      params: { reason: rejectForm.reason }
     })
-    .catch(() => { actionLoading.value = false })
+    ElMessage.success('已驳回')
+    rejectVisible.value = false
+    loadData(page.value)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    actionLoading.value = false
+  }
 }
 
 const maskName = (name) => {

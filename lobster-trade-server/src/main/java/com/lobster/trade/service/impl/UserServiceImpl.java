@@ -3,8 +3,10 @@ package com.lobster.trade.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.lobster.trade.exception.BusinessException;
 import com.lobster.trade.mapper.UserMapper;
+import com.lobster.trade.mapper.UserRealNameMapper;
 import com.lobster.trade.mapper.WalletMapper;
 import com.lobster.trade.model.entity.User;
+import com.lobster.trade.model.entity.UserRealName;
 import com.lobster.trade.model.entity.Wallet;
 import com.lobster.trade.service.UserService;
 import com.lobster.trade.util.PasswordEncoder;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
+    private final UserRealNameMapper userRealNameMapper;
     private final WalletMapper walletMapper;
 
     @Override
@@ -91,11 +94,16 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException("已实名认证，无需重复申请");
         }
 
-        // TODO: 对接公安实名API进行真实认证
-        // 目前模拟：直接审核通过
-        user.setRealName(realName);
-        user.setIdCard(idCard);
-        user.setRealNameStatus(1); // 直接设为已实名（生产环境应设为2审核中）
+        // 写入 user_real_name 表（状态=0 审核中）
+        UserRealName record = new UserRealName();
+        record.setUserId(userId);
+        record.setRealName(realName);
+        record.setIdCard(idCard);
+        record.setStatus(0);
+        userRealNameMapper.insert(record);
+
+        // 用户表设为审核中
+        user.setRealNameStatus(2);
         user.setUpdateTime(LocalDateTime.now());
         userMapper.updateById(user);
     }
@@ -124,6 +132,18 @@ public class UserServiceImpl implements UserService {
             vo.setIdCard(idCard.substring(0, 6) + "********" + idCard.substring(14));
         } else {
             vo.setIdCard(null);
+        }
+
+        // 从 user_real_name 表取最新审核备注
+        if (user.getRealNameStatus() == 2 || user.getRealNameStatus() == 3) {
+            LambdaQueryWrapper<UserRealName> q = new LambdaQueryWrapper<>();
+            q.eq(UserRealName::getUserId, userId)
+             .orderByDesc(UserRealName::getCreateTime)
+             .last("LIMIT 1");
+            UserRealName latest = userRealNameMapper.selectOne(q);
+            if (latest != null) {
+                vo.setAuditRemark(latest.getRejectReason());
+            }
         }
 
         return vo;
