@@ -173,6 +173,7 @@
                 <p class="progress-note" v-if="progressData.progressNote">{{ progressData.progressNote }}</p>
                 <p class="progress-time" v-if="progressData.sellerSubmitTime">更新时间：{{ formatTime(progressData.sellerSubmitTime) }}</p>
                 <div class="progress-actions">
+                  <el-button size="small" type="primary" @click="router.push({ path: `/order/progress/${order.id}` })">查看详细进度</el-button>
                   <el-button size="small" type="success" v-if="isBuyer && progressData.sellerSubmit && !progressData.buyerAck" @click="handleAckProgress">确认进度</el-button>
                   <el-tag v-if="progressData.buyerAck" type="success" size="small">买家已确认</el-tag>
                 </div>

@@ -9,6 +9,7 @@ import com.lobster.trade.mapper.TradeOrderMapper;
 import com.lobster.trade.model.entity.OrderProgress;
 import com.lobster.trade.model.entity.TradeOrder;
 import com.lobster.trade.service.OrderProgressService;
+import com.lobster.trade.service.SysNotificationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,10 +20,13 @@ public class OrderProgressServiceImpl extends ServiceImpl<OrderProgressMapper, O
 
     private final OrderProgressMapper progressMapper;
     private final TradeOrderMapper orderMapper;
+    private final SysNotificationService notificationService;
 
-    public OrderProgressServiceImpl(OrderProgressMapper progressMapper, TradeOrderMapper orderMapper) {
+    public OrderProgressServiceImpl(OrderProgressMapper progressMapper, TradeOrderMapper orderMapper,
+                                    SysNotificationService notificationService) {
         this.progressMapper = progressMapper;
         this.orderMapper = orderMapper;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -72,6 +76,14 @@ public class OrderProgressServiceImpl extends ServiceImpl<OrderProgressMapper, O
             p.setSellerSubmit(1);
             p.setSellerSubmitTime(LocalDateTime.now());
             progressMapper.updateById(p);
+
+            // 当进度达到100%时，通知买家验收
+            if (percent != null && percent == 100) {
+                notificationService.createForUser(order.getBuyerId(),
+                    "代练订单已完成",
+                    "您的代练订单【" + order.getProductTitle() + "】已完成，请验收确认。",
+                    3, null);
+            }
         }
     }
 

@@ -174,6 +174,12 @@ const routes = [
     meta: { title: '发货', requiresAuth: true }
   },
   {
+    path: '/order/progress/:id',
+    name: 'OrderProgress',
+    component: () => import('@/views/order/Progress.vue'),
+    meta: { title: '代练进度', requiresAuth: true }
+  },
+  {
     path: '/im',
     name: 'Im',
     component: () => import('@/views/im/index.vue'),
