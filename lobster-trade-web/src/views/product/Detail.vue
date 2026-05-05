@@ -555,9 +555,9 @@ const startCountdownIfNeeded = () => {
 }
 
 const typeMap = {
-  game_currency: '游戏币',
-  equipment: '装备道具',
-  boosting: '代练服务'
+  goods: '游戏币',
+  goods: '装备道具',
+  boost: '代练服务'
 }
 
 const mockProduct = {
@@ -577,7 +577,7 @@ const mockProduct = {
 }
 
 const getTypeColor = (type) => {
-  const map = { game_currency: '', equipment: 'warning', boosting: 'success' }
+  const map = { goods: '', equipment: 'warning', boost: 'success' }
   return map[type] || ''
 }
 
