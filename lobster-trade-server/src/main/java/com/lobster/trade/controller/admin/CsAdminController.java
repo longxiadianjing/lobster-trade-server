@@ -1,7 +1,9 @@
 package com.lobster.trade.controller.admin;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lobster.trade.annotation.RequirePermission;
 import com.lobster.trade.common.Result;
+import com.lobster.trade.model.entity.AdminPermission;
 import com.lobster.trade.model.response.CsSessionVO;
 import com.lobster.trade.service.CsService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class CsAdminController {
      * List all CS sessions (admin view, no user restriction)
      */
     @GetMapping("/sessions")
+    @RequirePermission(AdminPermission.CS_VIEW)
     public Result<IPage<CsSessionVO>> list(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Integer status,
@@ -36,6 +39,7 @@ public class CsAdminController {
      * Get single session detail (admin, bypass user check)
      */
     @GetMapping("/session/{id}")
+    @RequirePermission(AdminPermission.CS_VIEW)
     public Result<CsSessionVO> get(@PathVariable Long id) {
         return Result.success(csService.getSessionAdmin(id));
     }
@@ -44,6 +48,7 @@ public class CsAdminController {
      * Admin sends a message to a CS session
      */
     @PostMapping("/message")
+    @RequirePermission(AdminPermission.CS_HANDLE)
     public Result<CsSessionVO> sendMessage(
             @RequestParam Long sessionId,
             @RequestParam String content,
@@ -56,6 +61,7 @@ public class CsAdminController {
      * Assign / take over a CS session as operator
      */
     @PostMapping("/assign")
+    @RequirePermission(AdminPermission.CS_HANDLE)
     public Result<Void> assign(@RequestParam Long sessionId, @RequestParam Long operatorId, @RequestParam String operatorName) {
         csService.assignOperator(sessionId, operatorId, operatorName);
         return Result.success(null);
@@ -65,6 +71,7 @@ public class CsAdminController {
      * Close a CS session
      */
     @PostMapping("/close/{sessionId}")
+    @RequirePermission(AdminPermission.CS_HANDLE)
     public Result<Void> close(@PathVariable Long sessionId) {
         csService.closeSessionAdmin(sessionId);
         return Result.success(null);
@@ -74,6 +81,7 @@ public class CsAdminController {
      * Stats for dashboard
      */
     @GetMapping("/stats")
+    @RequirePermission(AdminPermission.CS_VIEW)
     public Result<Map<String, Object>> stats() {
         return Result.success(csService.getCsStats());
     }

@@ -1,9 +1,11 @@
 package com.lobster.trade.controller.admin;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lobster.trade.annotation.RequirePermission;
 import com.lobster.trade.common.Result;
 import com.lobster.trade.mapper.UserMapper;
 import com.lobster.trade.mapper.UserRealNameMapper;
+import com.lobster.trade.model.entity.AdminPermission;
 import com.lobster.trade.model.entity.User;
 import com.lobster.trade.model.entity.UserRealName;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class RealNameAdminController {
     private final UserMapper userMapper;
 
     @GetMapping("/list")
+    @RequirePermission(AdminPermission.REALNAME_VIEW)
     public Result<IPage<UserRealName>> list(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size,
@@ -35,6 +38,7 @@ public class RealNameAdminController {
     }
 
     @GetMapping("/detail/{userId}")
+    @RequirePermission(AdminPermission.REALNAME_VIEW)
     public Result<Map<String, Object>> detail(@PathVariable Long userId) {
         UserRealName r = realNameMapper.selectOne(
                 new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<UserRealName>()
@@ -66,6 +70,7 @@ public class RealNameAdminController {
     }
 
     @PostMapping("/approve/{userId}")
+    @RequirePermission(AdminPermission.REALNAME_HANDLE)
     @Transactional
     public Result<Void> approve(@PathVariable Long userId,
                                  @RequestParam(required = false) String realName,
@@ -98,6 +103,7 @@ public class RealNameAdminController {
     }
 
     @PostMapping("/reject/{userId}")
+    @RequirePermission(AdminPermission.REALNAME_HANDLE)
     @Transactional
     public Result<Void> reject(@PathVariable Long userId, @RequestParam String reason) {
         UserRealName r = realNameMapper.selectOne(

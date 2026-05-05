@@ -49,11 +49,7 @@ public class AdminController {
         return Result.success(adminService.getInfo());
     }
 
-    @GetMapping("/stats/overview")
-    @RequirePermission(AdminPermission.ADMIN_MANAGE)
-    public Result<Map<String, Object>> stats() {
-        return Result.success(adminService.statsOverview());
-    }
+    // Dashboard overview moved to StatsController (/api/admin/dashboard/overview)
 
     // ==================== 用户管理 ====================
 

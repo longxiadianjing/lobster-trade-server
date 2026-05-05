@@ -45,6 +45,10 @@ public final class AdminPermission {
     public static final String CERT_VIEW = "CERT_VIEW";         // 查看认证申请
     public static final String CERT_HANDLE = "CERT_HANDLE";      // 审核认证
 
+    // 实名认证（个人实名）
+    public static final String REALNAME_VIEW = "REALNAME_VIEW";   // 查看实名认证
+    public static final String REALNAME_HANDLE = "REALNAME_HANDLE"; // 审核实名认证
+
     // 系统通知
     public static final String NOTIFICATION_VIEW = "NOTIFICATION_VIEW"; // 查看通知
     public static final String NOTIFICATION_EDIT = "NOTIFICATION_EDIT";  // 发送通知

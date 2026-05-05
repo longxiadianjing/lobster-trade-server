@@ -1,7 +1,9 @@
 package com.lobster.trade.controller.admin;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lobster.trade.annotation.RequirePermission;
 import com.lobster.trade.common.Result;
+import com.lobster.trade.model.entity.AdminPermission;
 import com.lobster.trade.model.entity.TradeReview;
 import com.lobster.trade.service.TradeReviewService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class ReviewController {
     private final TradeReviewService reviewService;
 
     @GetMapping("/list")
+    @RequirePermission(AdminPermission.REVIEW_VIEW)
     public Result<Map<String, Object>> list(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String rating,
@@ -39,6 +42,7 @@ public class ReviewController {
     }
 
     @PutMapping("/hide")
+    @RequirePermission(AdminPermission.REVIEW_EDIT)
     public Result<Void> hide(@RequestBody Map<String, Object> body) {
         Long reviewId = Long.valueOf(body.get("id").toString());
         Boolean hide = Boolean.valueOf(body.get("isHidden").toString());
