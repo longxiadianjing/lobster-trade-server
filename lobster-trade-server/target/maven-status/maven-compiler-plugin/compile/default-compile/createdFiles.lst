@@ -178,6 +178,7 @@ com\lobster\trade\model\entity\Product.class
 com\lobster\trade\service\RealNameVerifyService.class
 com\lobster\trade\service\WalletService.class
 com\lobster\trade\mapper\ImSessionMapper.class
+com\lobster\trade\controller\DemoVerificationController.class
 com\lobster\trade\model\entity\ImSession.class
 com\lobster\trade\model\request\WithdrawRequest.class
 com\lobster\trade\config\RedisConfig.class

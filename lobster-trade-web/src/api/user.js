@@ -29,7 +29,7 @@ export function setPayPassword(payPassword) {
 // 申请实名认证
 export function applyRealName(data) {
   return request({
-    url: '/user/real-name/apply',
+    url: '/real-name/apply',
     method: 'post',
     data
   })
@@ -38,7 +38,7 @@ export function applyRealName(data) {
 // 查询实名状态
 export function getRealNameStatus() {
   return request({
-    url: '/user/real-name/status',
+    url: '/real-name/status',
     method: 'get'
   })
 }

@@ -25,6 +25,12 @@ class RealNameApiController {
         return Result.success(null);
     }
 
+    @PostMapping("/apply")
+    public Result<Void> applyRealName(@RequestAttribute Long userId, @RequestBody Map<String, String> body) {
+        verifyService.applyRealName(userId, body.get("realName"), body.get("idCard"));
+        return Result.success(null);
+    }
+
     @GetMapping("/status")
     public Result<Map<String, Object>> getStatus(@RequestAttribute Long userId) {
         return Result.success(verifyService.getCertificationStatus(userId));

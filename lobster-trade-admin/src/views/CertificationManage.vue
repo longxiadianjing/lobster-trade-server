@@ -152,6 +152,7 @@ const loadPending = async () => {
 const loadApproved = async () => {
     loading.value = true
     try {
+        // loadApproved 已有自己的 filter，status=1 表示已通过
         const resp = await request.get('/certification/list')
         approvedList.value = (resp.data || []).filter(c => c.status === 1)
     } catch (e) {
