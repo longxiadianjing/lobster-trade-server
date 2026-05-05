@@ -3,6 +3,7 @@
     <div class="page-header">
       <h2>优惠券管理</h2>
       <el-button type="primary" @click="openDialog('create')">新建优惠券</el-button>
+      <el-button type="success" @click="handleDistributeAll">发放给所有用户</el-button>
     </div>
 
     <!-- 搜索栏 -->
@@ -319,6 +320,22 @@ const deleteCoupon = async (row) => {
     ElMessage.success('已删除')
     loadCoupons()
   } catch (e) { if (e !== 'cancel') ElMessage.error('删除失败') }
+}
+
+const handleDistributeAll = async () => {
+  if (coupons.value.length === 0) { ElMessage.warning('暂无优惠券'); return }
+  // Find first enabled coupon to distribute
+  const target = coupons.value.find(c => c.status === 1)
+  if (!target) { ElMessage.warning('没有启用的优惠券'); return }
+  try {
+    await ElMessageBox.confirm(
+      `确定向所有用户发放优惠券「${target.name}」？`,
+      '批量发放',
+      { type: 'success', confirmButtonText: '确认发放' }
+    )
+    await request.post('/coupon/distribute-all', { couponId: target.id })
+    ElMessage.success('发放成功')
+  } catch (e) { if (e !== 'cancel') ElMessage.error('发放失败') }
 }
 
 loadCoupons()
