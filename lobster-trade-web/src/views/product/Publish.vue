@@ -55,7 +55,7 @@
                 <el-option
                   v-for="game in gameOptions"
                   :key="game.id"
-                  :label="game.name"
+                  :label="game.gameName"
                   :value="game.id"
                 />
               </el-select>

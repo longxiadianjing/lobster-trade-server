@@ -400,9 +400,9 @@ const topSellers = ref([
 ])
 
 const typeMap = {
-  game_currency: '游戏币',
-  equipment: '装备',
-  boosting: '代练'
+  goods: '游戏币/道具',
+  boost: '代练',
+  accompany: '陪玩陪练'
 }
 
 const mockHotProducts = [
@@ -440,7 +440,7 @@ const loadGames = async () => {
   try {
     const res = await getGameList()
     if (res.data && res.data.length > 0) {
-      games.value = res.data.map(g => ({ id: g.id, name: g.gameName, productCount: g.productCount || Math.floor(Math.random() * 300) + 10 }))
+      games.value = res.data.map(g => ({ id: g.id, gameName: g.gameName, productCount: g.productCount || Math.floor(Math.random() * 300) + 10 }))
     }
   } catch (e) {
     console.error('加载游戏列表失败:', e)
