@@ -577,7 +577,7 @@ const mockProduct = {
 }
 
 const getTypeColor = (type) => {
-  const map = { goods: '', equipment: 'warning', boost: 'success' }
+  const map = { goods: '', boost: 'success', accompany: 'primary' }
   return map[type] || ''
 }
 

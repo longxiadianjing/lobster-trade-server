@@ -620,6 +620,7 @@ onMounted(() => {
 .card-badges { position: absolute; top: 8px; left: 8px; }
 .type-tag { padding: 2px 8px; border-radius: 4px; font-size: 11px; color: #fff; background: #764ba2; }
 .type-tag.boost { background: #67c23a; }
+.type-tag.accompany { background: #409eff; }
 .type-tag.recommended-tag { background: linear-gradient(135deg, #f5a623, #e6762a); }
 .type-tag.goods { background: #f5a623; }
 .card-body { padding: 12px; }
