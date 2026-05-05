@@ -567,7 +567,7 @@ const mockProduct = {
   unit: '万',
   gameName: '三角洲行动',
   gameZone: '烽火区',
-  productType: 'game_currency',
+  productType: 'goods',
   description: '正宗哈夫币代肝服务，专业团队操作，包拿到货。可跑刀可钢枪，按需求定制。\n交易方式：全程平台托管，安全有保障。\n交付时间：一般1-3小时内完成。',
   stock: 99,
   totalOrders: 58,

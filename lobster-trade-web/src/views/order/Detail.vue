@@ -540,7 +540,7 @@ const handleDispute = async () => {
 const mockOrder = {
   id: 1,
   productTitle: '三角洲行动 哈夫币 100万',
-  productType: 'game_currency',
+  productType: 'goods',
   gameName: '三角洲行动',
   gameZone: '烽火区',
   coverImage: '',

@@ -406,22 +406,22 @@ const typeMap = {
 }
 
 const mockHotProducts = [
-  { id: 1, title: '三角洲行动 哈夫币 100万', price: 80, unit: '万', gameName: '三角洲行动', productType: 'game_currency', coverImage: '', sellerNickname: '专业搬砖商', reputationScore: '4.9' },
-  { id: 2, title: '战场段位代练 全程手打不坐牢', price: 200, unit: '局', gameName: '三角洲行动', productType: 'boosting', coverImage: '', sellerNickname: '靠谱代练', reputationScore: '5.0' },
-  { id: 3, title: '烽火保险箱任务代肝', price: 150, unit: '个', gameName: '三角洲行动', productType: 'boosting', coverImage: '', sellerNickname: '三角洲专家', reputationScore: '4.8' },
-  { id: 4, title: '王者荣耀 点券 5000', price: 350, unit: '5000点', gameName: '王者荣耀', productType: 'game_currency', coverImage: '', sellerNickname: '游戏商人', reputationScore: '4.7' },
-  { id: 5, title: '原神 原石 5000个', price: 200, unit: '5000个', gameName: '原神', productType: 'game_currency', coverImage: '', sellerNickname: '原神玩家', reputationScore: '5.0' },
-  { id: 6, title: '史诗级装备礼包', price: 500, unit: '套', gameName: '王者荣耀', productType: 'equipment', coverImage: '', sellerNickname: '装备专家', reputationScore: '4.6' },
-  { id: 7, title: '和平精英 套装皮肤全套', price: 180, unit: '套', gameName: '和平精英', productType: 'equipment', coverImage: '', sellerNickname: '皮肤商', reputationScore: '4.5' },
-  { id: 8, title: '等级/通行证代肝 全程手打', price: 120, unit: '项', gameName: '三角洲行动', productType: 'boosting', coverImage: '', sellerNickname: '靠谱代练', reputationScore: '5.0' },
-  { id: 9, title: '英雄联盟 点券 2000', price: 150, unit: '2000点', gameName: '英雄联盟', productType: 'game_currency', coverImage: '', sellerNickname: 'LOL专家', reputationScore: '4.8' },
-  { id: 10, title: '魔兽世界 金币 10万', price: 250, unit: '10万', gameName: '魔兽世界', productType: 'game_currency', coverImage: '', sellerNickname: '魔兽工作室', reputationScore: '4.9' },
-  { id: 11, title: '炉石传说 卡牌包合集', price: 88, unit: '套', gameName: '炉石传说', productType: 'equipment', coverImage: '', sellerNickname: '炉石玩家', reputationScore: '4.7' },
-  { id: 12, title: 'DNF 深渊派对门票', price: 30, unit: '张', gameName: 'DNF', productType: 'game_currency', coverImage: '', sellerNickname: 'DNF专业户', reputationScore: '4.8' },
-  { id: 13, title: '暗区突围 装备礼包', price: 320, unit: '套', gameName: '暗区突围', productType: 'equipment', coverImage: '', sellerNickname: '暗区商人', reputationScore: '4.6' },
-  { id: 14, title: '穿越火线 英雄级武器', price: 680, unit: '把', gameName: '穿越火线', productType: 'equipment', coverImage: '', sellerNickname: 'CF商人', reputationScore: '4.5' },
-  { id: 15, title: '战场排位代练 从零上战神', price: 800, unit: '单', gameName: '三角洲行动', productType: 'boosting', coverImage: '', sellerNickname: '战神代练', reputationScore: '4.9' },
-  { id: 16, title: '原神 深渊代打 满星通关', price: 300, unit: '次', gameName: '原神', productType: 'boosting', coverImage: '', sellerNickname: '原神代肝', reputationScore: '5.0' }
+  { id: 1, title: '三角洲行动 哈夫币 100万', price: 80, unit: '万', gameName: '三角洲行动', productType: 'goods', coverImage: '', sellerNickname: '专业搬砖商', reputationScore: '4.9' },
+  { id: 2, title: '战场段位代练 全程手打不坐牢', price: 200, unit: '局', gameName: '三角洲行动', productType: 'boost', coverImage: '', sellerNickname: '靠谱代练', reputationScore: '5.0' },
+  { id: 3, title: '烽火保险箱任务代肝', price: 150, unit: '个', gameName: '三角洲行动', productType: 'boost', coverImage: '', sellerNickname: '三角洲专家', reputationScore: '4.8' },
+  { id: 4, title: '王者荣耀 点券 5000', price: 350, unit: '5000点', gameName: '王者荣耀', productType: 'goods', coverImage: '', sellerNickname: '游戏商人', reputationScore: '4.7' },
+  { id: 5, title: '原神 原石 5000个', price: 200, unit: '5000个', gameName: '原神', productType: 'goods', coverImage: '', sellerNickname: '原神玩家', reputationScore: '5.0' },
+  { id: 6, title: '史诗级装备礼包', price: 500, unit: '套', gameName: '王者荣耀', productType: 'goods', coverImage: '', sellerNickname: '装备专家', reputationScore: '4.6' },
+  { id: 7, title: '和平精英 套装皮肤全套', price: 180, unit: '套', gameName: '和平精英', productType: 'goods', coverImage: '', sellerNickname: '皮肤商', reputationScore: '4.5' },
+  { id: 8, title: '等级/通行证代肝 全程手打', price: 120, unit: '项', gameName: '三角洲行动', productType: 'boost', coverImage: '', sellerNickname: '靠谱代练', reputationScore: '5.0' },
+  { id: 9, title: '英雄联盟 点券 2000', price: 150, unit: '2000点', gameName: '英雄联盟', productType: 'goods', coverImage: '', sellerNickname: 'LOL专家', reputationScore: '4.8' },
+  { id: 10, title: '魔兽世界 金币 10万', price: 250, unit: '10万', gameName: '魔兽世界', productType: 'goods', coverImage: '', sellerNickname: '魔兽工作室', reputationScore: '4.9' },
+  { id: 11, title: '炉石传说 卡牌包合集', price: 88, unit: '套', gameName: '炉石传说', productType: 'goods', coverImage: '', sellerNickname: '炉石玩家', reputationScore: '4.7' },
+  { id: 12, title: 'DNF 深渊派对门票', price: 30, unit: '张', gameName: 'DNF', productType: 'goods', coverImage: '', sellerNickname: 'DNF专业户', reputationScore: '4.8' },
+  { id: 13, title: '暗区突围 装备礼包', price: 320, unit: '套', gameName: '暗区突围', productType: 'goods', coverImage: '', sellerNickname: '暗区商人', reputationScore: '4.6' },
+  { id: 14, title: '穿越火线 英雄级武器', price: 680, unit: '把', gameName: '穿越火线', productType: 'goods', coverImage: '', sellerNickname: 'CF商人', reputationScore: '4.5' },
+  { id: 15, title: '战场排位代练 从零上战神', price: 800, unit: '单', gameName: '三角洲行动', productType: 'boost', coverImage: '', sellerNickname: '战神代练', reputationScore: '4.9' },
+  { id: 16, title: '原神 深渊代打 满星通关', price: 300, unit: '次', gameName: '原神', productType: 'boost', coverImage: '', sellerNickname: '原神代肝', reputationScore: '5.0' }
 ]
 
 const selectGame = (id) => {
@@ -619,9 +619,9 @@ onMounted(() => {
 .image-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #ccc; }
 .card-badges { position: absolute; top: 8px; left: 8px; }
 .type-tag { padding: 2px 8px; border-radius: 4px; font-size: 11px; color: #fff; background: #764ba2; }
-.type-tag.boosting { background: #67c23a; }
+.type-tag.boost { background: #67c23a; }
 .type-tag.recommended-tag { background: linear-gradient(135deg, #f5a623, #e6762a); }
-.type-tag.equipment { background: #f5a623; }
+.type-tag.goods { background: #f5a623; }
 .card-body { padding: 12px; }
 .product-title { margin: 0 0 8px; font-size: 13px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
 .product-tags { margin-bottom: 8px; }
