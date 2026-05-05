@@ -1,5 +1,6 @@
 package com.lobster.trade.controller.admin;
 
+import com.lobster.trade.annotation.Audit;
 import com.lobster.trade.annotation.RequirePermission;
 import com.lobster.trade.model.entity.AdminPermission;
 import com.lobster.trade.model.response.ApiResponse;
@@ -22,6 +23,7 @@ public class AdminOrderController {
      */
     @PostMapping("/force-update")
     @RequirePermission(AdminPermission.ORDER_EDIT)
+    @Audit(value = "人工干预订单", targetType = "Order")
     public ApiResponse<Void> forceUpdate(@RequestBody AdminOrderUpdateRequest req) {
         orderService.adminUpdateStatus(req.getOrderId(), req.getStatus(), req.getReason());
         return ApiResponse.success("订单状态已更新");

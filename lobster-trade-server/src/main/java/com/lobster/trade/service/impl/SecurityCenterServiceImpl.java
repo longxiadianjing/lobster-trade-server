@@ -148,4 +148,15 @@ public class SecurityCenterServiceImpl implements SecurityCenterService {
             userMapper.updateById(user);
         }
     }
+
+    @Override
+    public List<UserLoginDevice> getLoginHistory(Long userId) {
+        return deviceMapper.selectList(
+            new LambdaQueryWrapper<UserLoginDevice>()
+                .eq(UserLoginDevice::getUserId, userId)
+                .eq(UserLoginDevice::getIsDeleted, 0)
+                .orderByDesc(UserLoginDevice::getLastActiveTime)
+                .last("LIMIT 50")
+        );
+    }
 }

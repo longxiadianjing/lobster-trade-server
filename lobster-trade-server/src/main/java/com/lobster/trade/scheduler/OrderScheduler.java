@@ -1,6 +1,7 @@
 package com.lobster.trade.scheduler;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.lobster.trade.mapper.ProductMapper;
 import com.lobster.trade.mapper.TradeOrderMapper;
 import com.lobster.trade.model.entity.TradeOrder;
 import lombok.RequiredArgsConstructor;
@@ -19,16 +20,16 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class OrderScheduler {
 
-    /** 订单超时取消时间（小时） */
-    private static final int ORDER_TIMEOUT_HOURS = 24;
+    /** 订单超时取消时间（分钟） */
+    private static final int ORDER_TIMEOUT_MINUTES = 30;
 
     private final TradeOrderMapper orderMapper;
+    private final ProductMapper productMapper;
 
-    // 每 5 分钟扫描一次超时未付款的订单并自动取消
-    // 执行周期: cron = "0 0/5 * * * ?" (每5分钟)
-    @Scheduled(cron = "0 0/5 * * * ?")
+    // 每 1 分钟扫描一次超时未付款的订单并自动取消
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void cancelExpiredOrders() {
-        LocalDateTime expireTime = LocalDateTime.now().minusHours(ORDER_TIMEOUT_HOURS);
+        LocalDateTime expireTime = LocalDateTime.now().minusMinutes(ORDER_TIMEOUT_MINUTES);
 
         LambdaQueryWrapper<TradeOrder> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(TradeOrder::getStatus, "pending_pay")
@@ -48,10 +49,12 @@ public class OrderScheduler {
                 order.setBuyerCancel(0);  // 0=系统取消
                 order.setUpdateTime(LocalDateTime.now());
                 orderMapper.updateById(order);
+                // 还原库存
+                productMapper.incrementStock(order.getProductId(), 1);
                 count++;
-                log.info("[订单超时取消] orderId={}, orderNo={}, 创建时间={}, 已超时{}小时",
+                log.info("[订单超时取消] orderId={}, orderNo={}, 创建时间={}, 已超时{}分钟",
                         order.getId(), order.getOrderNo(),
-                        order.getCreateTime(), ORDER_TIMEOUT_HOURS);
+                        order.getCreateTime(), ORDER_TIMEOUT_MINUTES);
             } catch (Exception e) {
                 log.error("[订单超时取消失败] orderId={}, error={}",
                         order.getId(), e.getMessage());

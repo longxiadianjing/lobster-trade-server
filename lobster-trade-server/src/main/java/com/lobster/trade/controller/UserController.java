@@ -1,7 +1,9 @@
 package com.lobster.trade.controller;
 
 import com.lobster.trade.model.entity.User;
+import com.lobster.trade.model.entity.UserLoginDevice;
 import com.lobster.trade.model.response.ApiResponse;
+import com.lobster.trade.service.SecurityCenterService;
 import com.lobster.trade.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -16,7 +19,17 @@ import javax.validation.constraints.NotBlank;
 public class UserController {
 
     private final UserService userService;
+    private final SecurityCenterService securityCenterService;
 
+    /**
+     * 获取用户登录日志
+     * GET /api/user/login-logs
+     */
+    @GetMapping("/login-logs")
+    public ApiResponse<List<UserLoginDevice>> getLoginLogs(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        return ApiResponse.success(securityCenterService.getLoginHistory(userId));
+    }
     /**
      * 获取用户信息
      * GET /api/user/info

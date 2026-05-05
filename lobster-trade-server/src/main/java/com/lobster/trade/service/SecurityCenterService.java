@@ -22,4 +22,7 @@ public interface SecurityCenterService {
 
     /** 记录设备登录（用户每次登录时调用） */
     void recordDeviceLogin(Long userId, String deviceFingerprint, String deviceName, String ipAddress);
+
+    /** 获取用户登录历史（登录日志） */
+    List<UserLoginDevice> getLoginHistory(Long userId);
 }

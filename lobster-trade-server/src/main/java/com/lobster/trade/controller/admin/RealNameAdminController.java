@@ -1,6 +1,7 @@
 package com.lobster.trade.controller.admin;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lobster.trade.annotation.Audit;
 import com.lobster.trade.annotation.RequirePermission;
 import com.lobster.trade.common.Result;
 import com.lobster.trade.mapper.UserMapper;
@@ -71,6 +72,7 @@ public class RealNameAdminController {
 
     @PostMapping("/approve/{userId}")
     @RequirePermission(AdminPermission.REALNAME_HANDLE)
+    @Audit(value = "实名认证通过", targetType = "RealName")
     @Transactional
     public Result<Void> approve(@PathVariable Long userId,
                                  @RequestParam(required = false) String realName,
@@ -104,6 +106,7 @@ public class RealNameAdminController {
 
     @PostMapping("/reject/{userId}")
     @RequirePermission(AdminPermission.REALNAME_HANDLE)
+    @Audit(value = "实名认证拒绝", targetType = "RealName")
     @Transactional
     public Result<Void> reject(@PathVariable Long userId, @RequestParam String reason) {
         UserRealName r = realNameMapper.selectOne(

@@ -1,6 +1,7 @@
 package com.lobster.trade.controller.admin;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lobster.trade.annotation.Audit;
 import com.lobster.trade.annotation.RequirePermission;
 import com.lobster.trade.common.Result;
 import com.lobster.trade.model.entity.AdminPermission;
@@ -31,6 +32,7 @@ public class TicketController {
 
     @PostMapping("/assign")
     @RequirePermission(AdminPermission.TICKET_HANDLE)
+    @Audit(value = "分配工单", targetType = "Ticket")
     public Result<Void> assign(@RequestParam Long ticketId, @RequestParam Long handlerId, @RequestParam String handlerName) {
         ticketService.assignHandler(ticketId, handlerId, handlerName);
         return Result.success(null);
@@ -38,6 +40,7 @@ public class TicketController {
 
     @PutMapping("/handle")
     @RequirePermission(AdminPermission.TICKET_HANDLE)
+    @Audit(value = "处理工单", targetType = "Ticket")
     public Result<Void> handle(@RequestParam Long ticketId,
                                @RequestParam(required = false) String reply,
                                @RequestParam(required = false) Integer status) {
@@ -47,6 +50,7 @@ public class TicketController {
 
     @PutMapping("/close/{ticketId}")
     @RequirePermission(AdminPermission.TICKET_HANDLE)
+    @Audit(value = "关闭工单", targetType = "Ticket")
     public Result<Void> close(@PathVariable Long ticketId) {
         ticketService.closeTicket(ticketId);
         return Result.success(null);

@@ -42,3 +42,35 @@ export function getRealNameStatus() {
     method: 'get'
   })
 }
+
+// 获取登录日志
+export function getLoginLogs() {
+  return request({
+    url: '/user/login-logs',
+    method: 'get'
+  })
+}
+
+// 获取登录设备列表
+export function getLoginDevices() {
+  return request({
+    url: '/security/devices',
+    method: 'get'
+  })
+}
+
+// 切换设备可信状态
+export function toggleDeviceTrust(deviceId) {
+  return request({
+    url: `/security/devices/${deviceId}/trust`,
+    method: 'put'
+  })
+}
+
+// 移除登录设备
+export function removeLoginDevice(deviceId) {
+  return request({
+    url: `/security/devices/${deviceId}`,
+    method: 'delete'
+  })
+}
