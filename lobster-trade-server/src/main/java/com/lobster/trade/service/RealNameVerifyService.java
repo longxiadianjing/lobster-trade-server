@@ -13,6 +13,9 @@ public interface RealNameVerifyService {
     // 查询认证状态
     Map<String, Object> getCertificationStatus(Long userId);
 
+    // 简单表单申请（用户填姓名+身份证，后台审核）
+    void applyRealName(Long userId, String realName, String idCard);
+
     // 查询认证结果明细
     Map<String, Object> getVerifyResult(Long userId);
 }

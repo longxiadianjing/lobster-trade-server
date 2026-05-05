@@ -28,7 +28,7 @@
         <el-table-column prop="createTime" label="创建时间" width="160" />
         <el-table-column label="操作" width="150" fixed="right">
           <template #default="{ row }">
-            <el-button size="small" type="primary" v-if="row.status !== 1" @click="handleResolve(row.orderId)">处理</el-button>
+            <el-button size="small" type="primary" v-if="row.status !== 1" @click="openResolve(row.orderId)">处理</el-button>
             <el-button size="small" v-else disabled>已解决</el-button>
           </template>
         </el-table-column>
@@ -41,11 +41,30 @@
         @current-change="loadDisputes"
         style="margin-top:16px;justify-content:center" />
     </el-card>
+
+    <!-- 仲裁处理对话框 -->
+    <el-dialog v-model="resolveDialogVisible" title="处理纠纷" width="420px">
+      <el-form :model="resolveForm" label-width="90px">
+        <el-form-item label="仲裁结果">
+          <el-radio-group v-model="resolveForm.result">
+            <el-radio label="退款">退款给买家</el-radio>
+            <el-radio label="放款给卖家">放款给卖家</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="处理备注">
+          <el-input v-model="resolveForm.note" type="textarea" :rows="2" placeholder="可选" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="resolveDialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="resolving" @click="confirmResolve">确认处理</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getDisputes, resolveDispute } from '@/api/admin'
 
@@ -55,6 +74,11 @@ const total = ref(0)
 const page = ref(1)
 const statusFilter = ref('')
 const disputeTypeMap = { 0:'交易纠纷', 1:'发货纠纷', 2:'售后纠纷', 3:'其他' }
+
+// 仲裁处理
+const resolveDialogVisible = ref(false)
+const resolving = ref(false)
+const resolveForm = reactive({ orderId: null, result: '退款', note: '' })
 
 const loadDisputes = async () => {
   loading.value = true
@@ -68,13 +92,26 @@ const loadDisputes = async () => {
   finally { loading.value = false }
 }
 
-const handleResolve = async (orderId) => {
-  await ElMessageBox.confirm('确认解决该纠纷？', '提示')
+const openResolve = (orderId) => {
+  resolveForm.orderId = orderId
+  resolveForm.result = '退款'
+  resolveForm.note = ''
+  resolveDialogVisible.value = true
+}
+
+const confirmResolve = async () => {
+  resolving.value = true
   try {
-    await resolveDispute(orderId)
-    ElMessage.success('已处理')
+    const result = resolveForm.note ? resolveForm.result + '：' + resolveForm.note : resolveForm.result
+    await resolveDispute(resolveForm.orderId, result)
+    ElMessage.success('处理成功')
+    resolveDialogVisible.value = false
     loadDisputes()
-  } catch (e) { ElMessage.error('操作失败') }
+  } catch (e) {
+    ElMessage.error(e.message || '操作失败')
+  } finally {
+    resolving.value = false
+  }
 }
 
 onMounted(() => {

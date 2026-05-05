@@ -63,4 +63,12 @@ public class CouponAdminController {
         couponService.receiveCoupon(userId, couponId);
         return Result.success(null);
     }
+
+    @PostMapping("/distribute-all")
+    @RequirePermission(AdminPermission.COUPON_EDIT)
+    public Result<Void> distributeAll(@RequestBody Map<String, Object> params) {
+        Long couponId = ((Number) params.get("couponId")).longValue();
+        couponService.distributeToAllUsers(couponId);
+        return Result.success(null);
+    }
 }

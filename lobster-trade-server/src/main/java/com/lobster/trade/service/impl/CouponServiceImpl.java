@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lobster.trade.exception.BusinessException;
 import com.lobster.trade.mapper.CouponMapper;
 import com.lobster.trade.mapper.UserCouponMapper;
+import com.lobster.trade.mapper.UserMapper;
 import com.lobster.trade.model.entity.Coupon;
+import com.lobster.trade.model.entity.User;
 import com.lobster.trade.model.entity.UserCoupon;
 import com.lobster.trade.service.CouponService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class CouponServiceImpl implements CouponService {
 
     private final CouponMapper couponMapper;
     private final UserCouponMapper userCouponMapper;
+    private final UserMapper userMapper;
 
     @Override
     public Map<String, Object> listCoupons(int page, int pageSize, String name, Integer status) {
@@ -40,7 +43,7 @@ public class CouponServiceImpl implements CouponService {
         wrapper.last("LIMIT " + ((page - 1) * pageSize) + ", " + pageSize);
         List<Coupon> records = couponMapper.selectList(wrapper);
         Map<String, Object> map = new HashMap<>();
-        map.put("list", records);
+        map.put("records", records);
         map.put("total", total);
         map.put("page", page);
         map.put("pageSize", pageSize);
@@ -164,9 +167,55 @@ public class CouponServiceImpl implements CouponService {
                .last("LIMIT 20");
         return couponMapper.selectList(wrapper);
     }
+    @Override
+    @Transactional
+    public void distributeToAllUsers(Long couponId) {
+        Coupon coupon = couponMapper.selectById(couponId);
+        if (coupon == null) throw new BusinessException("优惠券不存在");
+        if (coupon.getStatus() != 1) throw new BusinessException("优惠券未启用，无法发放");
+
+        LocalDateTime now = LocalDateTime.now();
+        if (coupon.getStartTime() != null && now.isBefore(coupon.getStartTime())) {
+            throw new BusinessException("优惠券尚未开始领取");
+        }
+        if (coupon.getEndTime() != null && now.isAfter(coupon.getEndTime())) {
+            throw new BusinessException("优惠券已过期");
+        }
+
+        // 查出所有用户
+        List<User> allUsers = userMapper.selectList(new LambdaQueryWrapper<User>().eq(User::getIsDeleted, 0));
+        int distributed = 0;
+        for (User user : allUsers) {
+            // 检查每人限领
+            if (coupon.getPerUserLimit() != null && coupon.getPerUserLimit() > 0) {
+                long owned = userCouponMapper.selectCount(new LambdaQueryWrapper<UserCoupon>()
+                    .eq(UserCoupon::getUserId, user.getId())
+                    .eq(UserCoupon::getCouponId, couponId)
+                    .eq(UserCoupon::getIsDeleted, 0)
+                );
+                if (owned >= coupon.getPerUserLimit()) {
+                    continue;
+                }
+            }
+            UserCoupon uc = new UserCoupon();
+            uc.setUserId(user.getId());
+            uc.setCouponId(couponId);
+            uc.setCouponName(coupon.getName());
+            uc.setDiscountValue(coupon.getDiscountValue());
+            uc.setReceiveTime(now);
+            uc.setStatus(0);
+            userCouponMapper.insert(uc);
+            distributed++;
+        }
+
+        // 更新发行数量
+        coupon.setIssuedCount(coupon.getIssuedCount() == null ? distributed : coupon.getIssuedCount() + distributed);
+        couponMapper.updateById(coupon);
+    }
 
     @Override
     public List<Map<String, Object>> getAvailableCouponsForOrder(Long userId, BigDecimal orderAmount) {
+
         List<Map<String, Object>> myCoupons = getMyCoupons(userId, 0);
         List<Map<String, Object>> usable = new ArrayList<>();
         LocalDateTime now = LocalDateTime.now();

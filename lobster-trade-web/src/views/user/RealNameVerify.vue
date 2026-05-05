@@ -18,7 +18,7 @@
             <span>实名认证</span>
           </template>
 
-          <!-- 已认证 -->
+          <!-- 已认证 (status=1) -->
           <div v-if="realNameStatus === 1" class="verified">
             <el-result icon="success" title="已实名认证">
               <template #sub-title>
@@ -28,8 +28,8 @@
             </el-result>
           </div>
 
-          <!-- 审核中 -->
-          <div v-else-if="realNameStatus === 2" class="pending">
+          <!-- 审核中 (status=0) -->
+          <div v-else-if="realNameStatus === 0" class="pending">
             <el-result icon="info" title="实名认证审核中">
               <template #sub-title>
                 <p class="pending-tip">您的实名认证申请正在审核中，请耐心等待。</p>
@@ -38,19 +38,19 @@
             </el-result>
           </div>
 
-          <!-- 未通过 -->
-          <div v-else-if="realNameStatus === 3" class="rejected">
+          <!-- 未通过 (status=2) -->
+          <div v-else-if="realNameStatus === 2" class="rejected">
             <el-result icon="error" title="实名认证未通过">
               <template #sub-title>
                 <p class="rejected-tip">未通过原因：{{ rejectReason || '信息审核不符，请重新提交' }}</p>
               </template>
               <template #extra>
-                <el-button type="primary" size="large" @click="realNameStatus = 0">重新认证</el-button>
+                <el-button type="primary" size="large" @click="realNameStatus = -1">重新认证</el-button>
               </template>
             </el-result>
           </div>
 
-          <!-- 未认证（可申请） -->
+          <!-- 已撤回 (status=3) 或未认证 -->
           <div v-else>
             <el-alert
               title="实名认证后可发布商品、发起提现等操作"
@@ -96,7 +96,7 @@ import { applyRealName, getRealNameStatus } from '@/api/user'
 const router = useRouter()
 const formRef = ref(null)
 const loading = ref(false)
-const realNameStatus = ref(0)
+const realNameStatus = ref(-1) // -1=未认证(可申请)
 const maskedName = ref('')
 const maskedIdCard = ref('')
 const rejectReason = ref('')
@@ -120,10 +120,11 @@ const rules = {
 onMounted(async () => {
   try {
     const res = await getRealNameStatus()
-    realNameStatus.value = res.data?.status || 0
+    // status: 0=审核中, 1=已认证, 2=未通过, 3=已撤回
+    realNameStatus.value = res.data?.status ?? -1
     if (res.data?.realName) maskedName.value = res.data.realName
     if (res.data?.idCard) maskedIdCard.value = res.data.idCard
-    if (res.data?.auditRemark) rejectReason.value = res.data.auditRemark
+    if (res.data?.rejectReason) rejectReason.value = res.data.rejectReason
   } catch (error) {
     console.error('Failed to get real name status:', error)
   }

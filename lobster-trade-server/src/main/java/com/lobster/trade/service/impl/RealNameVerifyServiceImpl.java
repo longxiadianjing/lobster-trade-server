@@ -127,6 +127,39 @@ public class RealNameVerifyServiceImpl implements RealNameVerifyService {
         realNameMapper.updateById(record);
     }
 
+    /**
+     * 简单表单申请实名认证（不经过阿里云，用户手动填姓名+身份证）
+     */
+    @Override
+    @Transactional
+    public void applyRealName(Long userId, String realName, String idCard) {
+        if (userId == null) throw new BusinessException(ErrorCode.PARAM_INVALID, "用户ID不能为空");
+        if (!StringUtils.hasText(realName)) throw new BusinessException(ErrorCode.PARAM_INVALID, "真实姓名不能为空");
+        if (!StringUtils.hasText(idCard)) throw new BusinessException(ErrorCode.PARAM_INVALID, "身份证号不能为空");
+
+        // 检查是否已有记录
+        UserRealName existing = realNameMapper.selectOne(
+                new LambdaQueryWrapper<UserRealName>()
+                        .eq(UserRealName::getUserId, userId)
+                        .orderByDesc(UserRealName::getCreateTime)
+                        .last("LIMIT 1")
+        );
+
+        if (existing != null && existing.getStatus() == 0) {
+            throw new BusinessException(ErrorCode.PARAM_INVALID, "您已有认证申请正在审核中，请耐心等待");
+        }
+
+        // 保存或更新记录
+        UserRealName record = new UserRealName();
+        record.setUserId(userId);
+        record.setRealName(realName);
+        record.setIdCard(idCard);
+        record.setStatus(0); // 审核中
+        record.setCreateTime(LocalDateTime.now());
+        record.setUpdateTime(LocalDateTime.now());
+        realNameMapper.insert(record);
+    }
+
     @Override
     public Map<String, Object> getCertificationStatus(Long userId) {
         Map<String, Object> result = new HashMap<>();
@@ -149,6 +182,14 @@ public class RealNameVerifyServiceImpl implements RealNameVerifyService {
         result.put("createTime", record.getCreateTime());
         result.put("verifyTime", record.getVerifyTime());
         result.put("rejectReason", record.getRejectReason());
+
+        // 返回姓名和身份证（脱敏）供前端展示
+        if (StringUtils.hasText(record.getRealName())) {
+            result.put("realName", record.getRealName());
+        }
+        if (StringUtils.hasText(record.getIdCard())) {
+            result.put("idCard", maskIdCard(record.getIdCard()));
+        }
 
         return result;
     }

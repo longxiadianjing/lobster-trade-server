@@ -31,6 +31,9 @@ public interface CouponService {
     /** 前台：获取当前可领取的优惠券列表 */
     List<Coupon> getAvailableCoupons();
 
+    /** 管理员：向所有用户发放优惠券 */
+    void distributeToAllUsers(Long couponId);
+
     /** 订单支付时：计算可用优惠券 */
     List<Map<String, Object>> getAvailableCouponsForOrder(Long userId, BigDecimal orderAmount);
 
