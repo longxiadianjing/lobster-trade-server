@@ -8,9 +8,17 @@ export function getOrderProgress(orderId) {
 }
 
 export function updateOrderProgress(orderId, data) {
-  return request.post('/order/progress/' + orderId, null, { params: data })
+  return request({
+    url: '/order/progress/' + orderId,
+    method: 'post',
+    params: data
+  })
 }
 
 export function ackOrderProgress(orderId, ack) {
-  return request.post('/order/progress/' + orderId + '/ack', null, { params: { ack } })
+  return request({
+    url: '/order/progress/' + orderId + '/ack',
+    method: 'post',
+    params: { ack: ack ? 1 : 0 }
+  })
 }

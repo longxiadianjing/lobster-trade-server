@@ -101,7 +101,7 @@
           <el-empty v-else description="暂无进度记录" />
 
           <!-- 卖家操作区 -->
-          <div v-if="isSeller && progress && order && order.status === 'paid'" class="action-area">
+          <div v-if="isSeller && progress && order && ['paid','in_progress'].includes(order.status)" class="action-area">
             <el-divider content-position="left">更新进度</el-divider>
             <el-form label-width="100px">
               <el-form-item label="完成百分比">
@@ -295,6 +295,9 @@ const formatTime = (time) => {
 
 onMounted(async () => {
   loading.value = true
+  if (userStore.isLoggedIn && !userStore.userId) {
+    await userStore.fetchUserInfo().catch(() => {})
+  }
   await Promise.all([loadOrder(), loadProgress()])
   loading.value = false
   document.title = '代练进度追踪 - 龙虾道具交易平台'

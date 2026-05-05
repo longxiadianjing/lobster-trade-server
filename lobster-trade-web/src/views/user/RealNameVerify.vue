@@ -121,7 +121,16 @@ onMounted(async () => {
   try {
     const res = await getRealNameStatus()
     // status: 0=审核中, 1=已认证, 2=未通过, 3=已撤回
-    realNameStatus.value = res.data?.status ?? -1
+    const status = res.data?.status ?? -1
+    const createTime = res.data?.createTime
+    // status=0 且无 createTime = 从未申请（显示表单）
+    // status=0 且有 createTime = 审核中
+    // status=1 = 已认证, status=2 = 未通过, status=3 = 已撤回
+    if (status === 0 && createTime) {
+      realNameStatus.value = 0 // 审核中
+    } else {
+      realNameStatus.value = status === 1 || status === 2 ? status : -1
+    }
     if (res.data?.realName) maskedName.value = res.data.realName
     if (res.data?.idCard) maskedIdCard.value = res.data.idCard
     if (res.data?.rejectReason) rejectReason.value = res.data.rejectReason
