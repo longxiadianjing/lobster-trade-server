@@ -15,6 +15,7 @@ public class ProductDetailVO {
     private String sellerNickname;
     private BigDecimal sellerReputationScore;
     private Integer sellerIsVerified;
+    private Integer sellerRealNameVerified;
     private Long gameId;
     private String gameName;
     private String productType;

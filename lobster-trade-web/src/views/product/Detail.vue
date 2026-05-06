@@ -178,6 +178,7 @@
                       <span class="seller-name">{{ product.sellerNickname || '匿名用户' }}</span>
                       <span class="seller-tag">认证服务商</span>
                       <span v-if="product.sellerIsVerified === 1" class="verified-badge">🏅 官方认证</span>
+                      <span v-if="product.sellerRealNameVerified === 1" class="realname-badge">✅ 已实名</span>
                     </div>
                     <div class="seller-rep-row">
                       <span class="rep-label">信誉</span>
@@ -1244,6 +1245,15 @@ onUnmounted(() => {
   padding: 1px 6px;
   border-radius: 3px;
   border: 1px solid #c8e6c9;
+}
+
+.realname-badge {
+  font-size: 11px;
+  background: #e3f2fd;
+  color: #2196f3;
+  padding: 1px 6px;
+  border-radius: 3px;
+  border: 1px solid #bbdefb;
 }
 
 .seller-rep-row {

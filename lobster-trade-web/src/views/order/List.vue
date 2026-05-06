@@ -12,6 +12,20 @@
       </el-select>
     </div>
 
+    <div class="status-tip" v-if="status">
+      <el-alert type="info" :closable="false" show-icon>
+        <template #title>
+          <span v-if="status === 'pending_pay'">💡 请尽快完成付款，付款后订单将自动发货</span>
+          <span v-else-if="status === 'paid'">⏳ 卖家正在准备商品，请耐心等待发货</span>
+          <span v-else-if="status === 'in_progress'">🔧 卖家正在处理中，请稍候</span>
+          <span v-else-if="status === 'submitted'">✅ 卖家已发货，请确认收货并核对商品</span>
+          <span v-else-if="status === 'completed'">🎉 交易已完成，感谢您的信任</span>
+          <span v-else-if="status === 'disputed'">🛡️ 平台正在处理争议，请保持联系畅通</span>
+          <span v-else-if="status === 'cancelled'">📋 订单已取消，如有疑问请联系客服</span>
+        </template>
+      </el-alert>
+    </div>
+
     <el-table :data="orders" v-loading="loading">
       <el-table-column prop="orderNo" label="订单号" width="180" />
       <el-table-column prop="productTitle" label="商品" />
@@ -33,6 +47,7 @@
       </el-table-column>
     </el-table>
 
+    <el-empty v-if="!loading && orders.length === 0" description="暂无相关订单" />
     <el-pagination
       v-model:current-page="page"
       :page-size="20"
@@ -105,4 +120,5 @@ async function handleConfirm(row) {
 <style scoped>
 .order-list { padding: 0; }
 .filter-bar { margin-bottom: 12px; }
+.status-tip { margin-bottom: 12px; }
 </style>

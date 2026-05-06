@@ -85,6 +85,7 @@ public class ProductServiceImpl implements ProductService {
                 vo.setSellerNickname(u.getNickname());
                 vo.setSellerReputationScore(u.getReputationScore());
                 vo.setSellerIsVerified(u.getIsVerified());
+                vo.setSellerRealNameVerified(u.getRealNameStatus() != null && u.getRealNameStatus() == 1 ? 1 : 0);
             }
             records.add(vo);
         }
@@ -126,6 +127,7 @@ public class ProductServiceImpl implements ProductService {
                 vo.setSellerNickname(u.getNickname());
                 vo.setSellerReputationScore(u.getReputationScore());
                 vo.setSellerIsVerified(u.getIsVerified());
+                vo.setSellerRealNameVerified(u.getRealNameStatus() != null && u.getRealNameStatus() == 1 ? 1 : 0);
             }
             records.add(vo);
         }
@@ -146,6 +148,7 @@ public class ProductServiceImpl implements ProductService {
             vo.setSellerNickname(u.getNickname());
             vo.setSellerReputationScore(u.getReputationScore());
             vo.setSellerIsVerified(u.getIsVerified());
+                vo.setSellerRealNameVerified(u.getRealNameStatus() != null && u.getRealNameStatus() == 1 ? 1 : 0);
         }
         return vo;
     }
@@ -197,6 +200,7 @@ public class ProductServiceImpl implements ProductService {
                 vo.setSellerNickname(u.getNickname());
                 vo.setSellerReputationScore(u.getReputationScore());
                 vo.setSellerIsVerified(u.getIsVerified());
+                vo.setSellerRealNameVerified(u.getRealNameStatus() != null && u.getRealNameStatus() == 1 ? 1 : 0);
             }
             records.add(vo);
         }
