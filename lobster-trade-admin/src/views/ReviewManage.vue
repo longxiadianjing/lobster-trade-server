@@ -100,7 +100,7 @@ const loadData = async () => {
 
 const hideRow = async (row, hide) => {
   try {
-    await request.put('/admin/review/hide', null, { params: { reviewId: row.id, hide } })
+    await request.put('/admin/review/hide', { id: row.id, isHidden: hide })
     ElMessage.success(hide ? '已隐藏' : '已显示')
     loadData()
   } catch (e) { /* handled */ }
