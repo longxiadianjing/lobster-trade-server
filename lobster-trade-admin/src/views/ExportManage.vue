@@ -95,6 +95,7 @@
 </template>
 
 <script setup>
+document.title = '导出管理 - 龙虾道具交易平台'
 import { ref, reactive } from 'vue'
 import { Document, User, Download } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'

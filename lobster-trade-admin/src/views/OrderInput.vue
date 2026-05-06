@@ -142,6 +142,7 @@
 </template>
 
 <script setup>
+document.title = '订单录入 - 龙虾道具交易平台'
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Operation } from '@element-plus/icons-vue'

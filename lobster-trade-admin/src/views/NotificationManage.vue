@@ -109,6 +109,7 @@
 </template>
 
 <script setup>
+document.title = '通知管理 - 龙虾道具交易平台'
 import { ref, reactive, onMounted } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'

@@ -37,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
     private final SysNotificationService sysNotificationService;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public OrderDetailVO create(OrderCreateRequest req, Long buyerId) {
         Product product = productMapper.selectById(req.getProductId());
         if (product == null || product.getIsDeleted() == 1 || product.getStatus() != 1) {
@@ -222,7 +222,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void pay(Long orderId, Long userId, String paymentMethod) {
         TradeOrder order = tradeOrderMapper.selectById(orderId);
         if (order == null || order.getIsDeleted() == 1) {
@@ -249,7 +249,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void submitDelivery(Long orderId, Long sellerId, String deliveryImages, String deliveryRemark) {
         TradeOrder order = tradeOrderMapper.selectById(orderId);
         if (order == null || order.getIsDeleted() == 1) {
@@ -274,7 +274,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void confirmDelivery(Long orderId, Long buyerId) {
         TradeOrder order = tradeOrderMapper.selectById(orderId);
         if (order == null || order.getIsDeleted() == 1) {
@@ -304,7 +304,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void cancel(Long orderId, Long userId, String reason) {
         TradeOrder order = tradeOrderMapper.selectById(orderId);
         if (order == null || order.getIsDeleted() == 1) {

@@ -51,7 +51,7 @@ public class ImServiceImpl implements ImService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ImSessionVO getOrCreateSession(Long userId, Long orderId) {
         // 验证订单存在且属于当前用户
         TradeOrder order = orderMapper.selectById(orderId);
@@ -88,7 +88,7 @@ public class ImServiceImpl implements ImService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ImSessionVO getOrCreateSessionByProduct(Long userId, Long productId) {
         // 1. 获取商品信息
         Product product = productMapper.selectById(productId);
@@ -129,7 +129,7 @@ public class ImServiceImpl implements ImService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ImSessionVO sendMessage(Long userId, ImSendMessageRequest req) {
         ImSession session = imSessionMapper.selectById(req.getSessionId());
         if (session == null || session.getIsDeleted() == 1) {
@@ -174,7 +174,7 @@ public class ImServiceImpl implements ImService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void markRead(Long userId, Long sessionId) {
         ImSession session = imSessionMapper.selectById(sessionId);
         if (session == null || session.getIsDeleted() == 1) return;
@@ -206,7 +206,7 @@ public class ImServiceImpl implements ImService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void createSessionForOrder(Long orderId, Long buyerId, Long sellerId) {
         // 检查是否已存在
         if (findSessionByOrderId(orderId) != null) return;

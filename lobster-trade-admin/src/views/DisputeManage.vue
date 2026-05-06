@@ -236,6 +236,7 @@
 </template>
 
 <script setup>
+document.title = '纠纷管理 - 龙虾道具交易平台'
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import request from '@/utils/request'

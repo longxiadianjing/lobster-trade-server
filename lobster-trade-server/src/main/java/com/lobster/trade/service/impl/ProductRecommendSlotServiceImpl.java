@@ -48,7 +48,7 @@ public class ProductRecommendSlotServiceImpl implements ProductRecommendSlotServ
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void create(ProductRecommendSlot slot) {
         if (slot.getSlotKey() == null || slot.getProductId() == null) {
             throw new BusinessException(ErrorCode.PARAM_INVALID, "推荐位标识和商品ID不能为空");
@@ -64,7 +64,7 @@ public class ProductRecommendSlotServiceImpl implements ProductRecommendSlotServ
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void update(Long id, ProductRecommendSlot slot) {
         ProductRecommendSlot existing = slotMapper.selectById(id);
         if (existing == null || existing.getIsDeleted() == 1) {
@@ -86,13 +86,13 @@ public class ProductRecommendSlotServiceImpl implements ProductRecommendSlotServ
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
         slotMapper.deleteById(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void toggleStatus(Long id) {
         ProductRecommendSlot slot = slotMapper.selectById(id);
         if (slot == null || slot.getIsDeleted() == 1) {

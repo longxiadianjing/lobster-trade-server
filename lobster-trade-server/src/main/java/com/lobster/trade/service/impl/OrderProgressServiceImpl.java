@@ -30,7 +30,7 @@ public class OrderProgressServiceImpl extends ServiceImpl<OrderProgressMapper, O
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateProgress(Long orderId, Long sellerId, Integer percent, String note, String screenshots) {
         TradeOrder order = orderMapper.selectById(orderId);
         if (order == null || order.getIsDeleted() == 1) {
@@ -97,7 +97,7 @@ public class OrderProgressServiceImpl extends ServiceImpl<OrderProgressMapper, O
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void buyerAck(Long orderId, Long buyerId, Integer ack) {
         TradeOrder order = orderMapper.selectById(orderId);
         if (order == null || order.getIsDeleted() == 1) {

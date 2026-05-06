@@ -206,7 +206,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateStatus(Long productId, Integer status, String reason) {
         Product p = productMapper.selectById(productId);
         if (p == null || p.getIsDeleted() == 1) {
@@ -218,7 +218,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void batchUpdateStatus(List<Long> productIds, Integer status, String reason) {
         for (Long id : productIds) {
             updateStatus(id, status, reason);

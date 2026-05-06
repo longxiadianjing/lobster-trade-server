@@ -36,7 +36,7 @@ public class ServiceTicketServiceImpl implements ServiceTicketService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ServiceTicket createTicket(Long userId, ServiceTicket ticket) {
         String ticketNo = "TK" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + String.format("%05d", ticketSeq.getAndIncrement());
         ticket.setTicketNo(ticketNo);
@@ -50,7 +50,7 @@ public class ServiceTicketServiceImpl implements ServiceTicketService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void reply(Long userId, Long ticketId, String reply) {
         ServiceTicket t = ticketMapper.selectById(ticketId);
         if (t == null || t.getIsDeleted() == 1) {
@@ -69,7 +69,7 @@ public class ServiceTicketServiceImpl implements ServiceTicketService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void close(Long userId, Long ticketId, Integer satisfaction, String feedback) {
         ServiceTicket t = ticketMapper.selectById(ticketId);
         if (t == null || t.getIsDeleted() == 1) {
@@ -101,7 +101,7 @@ public class ServiceTicketServiceImpl implements ServiceTicketService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void assignHandler(Long ticketId, Long handlerId, String handlerName) {
         ServiceTicket t = ticketMapper.selectById(ticketId);
         if (t == null || t.getIsDeleted() == 1) {
@@ -115,7 +115,7 @@ public class ServiceTicketServiceImpl implements ServiceTicketService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void handle(Long ticketId, String reply, Integer status) {
         ServiceTicket t = ticketMapper.selectById(ticketId);
         if (t == null || t.getIsDeleted() == 1) {
@@ -130,7 +130,7 @@ public class ServiceTicketServiceImpl implements ServiceTicketService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void closeTicket(Long ticketId) {
         ServiceTicket t = ticketMapper.selectById(ticketId);
         if (t == null || t.getIsDeleted() == 1) {

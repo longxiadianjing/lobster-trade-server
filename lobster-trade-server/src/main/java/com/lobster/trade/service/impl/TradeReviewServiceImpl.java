@@ -32,7 +32,7 @@ public class TradeReviewServiceImpl implements TradeReviewService {
     private final UserMapper userMapper;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public TradeReview createReview(Long userId, Long orderId, Integer role, Integer rating, String content, Integer isAnonymous) {
         TradeOrder order = orderMapper.selectById(orderId);
         if (order == null) {
@@ -119,7 +119,7 @@ public class TradeReviewServiceImpl implements TradeReviewService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void hideReview(Long reviewId, boolean hide) {
         TradeReview r = reviewMapper.selectById(reviewId);
         if (r == null) throw new BusinessException(ErrorCode.PARAM_INVALID, "评价不存在");
@@ -164,7 +164,7 @@ public class TradeReviewServiceImpl implements TradeReviewService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void replyReview(Long reviewId, Long replierId, String replyContent) {
         if (reviewId == null || replierId == null || replyContent == null || replyContent.isEmpty()) {
             throw new BusinessException(ErrorCode.PARAM_INVALID, "参数错误");

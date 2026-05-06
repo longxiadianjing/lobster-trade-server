@@ -32,7 +32,7 @@ public class SecurityCenterServiceImpl implements SecurityCenterService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void toggleTrustDevice(Long userId, Long deviceId) {
         UserLoginDevice device = deviceMapper.selectById(deviceId);
         if (device == null || device.getIsDeleted() == 1 || !device.getUserId().equals(userId)) {
@@ -43,7 +43,7 @@ public class SecurityCenterServiceImpl implements SecurityCenterService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void removeDevice(Long userId, Long deviceId) {
         UserLoginDevice device = deviceMapper.selectById(deviceId);
         if (device != null && device.getUserId().equals(userId)) {
@@ -109,7 +109,7 @@ public class SecurityCenterServiceImpl implements SecurityCenterService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void recordDeviceLogin(Long userId, String deviceFingerprint, String deviceName, String ipAddress) {
         // 检查是否已有该设备记录
         LambdaQueryWrapper<UserLoginDevice> wrapper = new LambdaQueryWrapper<>();

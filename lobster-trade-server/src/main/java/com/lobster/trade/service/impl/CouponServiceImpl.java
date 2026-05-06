@@ -51,7 +51,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void createCoupon(Coupon coupon) {
         coupon.setIssuedCount(0);
         coupon.setStatus(1);
@@ -59,20 +59,20 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateCoupon(Coupon coupon) {
         if (coupon.getId() == null) throw new BusinessException("优惠券ID不能为空");
         couponMapper.updateById(coupon);
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void deleteCoupon(Long id) {
         couponMapper.deleteById(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void toggleStatus(Long id) {
         Coupon coupon = couponMapper.selectById(id);
         if (coupon == null) throw new BusinessException("优惠券不存在");
@@ -81,7 +81,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void receiveCoupon(Long userId, Long couponId) {
         Coupon coupon = couponMapper.selectById(couponId);
         if (coupon == null) throw new BusinessException("优惠券不存在");
@@ -168,7 +168,7 @@ public class CouponServiceImpl implements CouponService {
         return couponMapper.selectList(wrapper);
     }
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void distributeToAllUsers(Long couponId) {
         Coupon coupon = couponMapper.selectById(couponId);
         if (coupon == null) throw new BusinessException("优惠券不存在");
@@ -241,7 +241,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void useCoupon(Long userId, Long userCouponId, Long orderId) {
         UserCoupon uc = userCouponMapper.selectById(userCouponId);
         if (uc == null || uc.getIsDeleted() == 1) throw new BusinessException("优惠券不存在");

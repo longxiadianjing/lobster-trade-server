@@ -36,7 +36,7 @@ public class PlatformAnnouncementServiceImpl implements PlatformAnnouncementServ
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void create(PlatformAnnouncement announcement) {
         if (announcement.getPriority() == null) announcement.setPriority(3);
         if (announcement.getStatus() == null) announcement.setStatus(0);
@@ -50,7 +50,7 @@ public class PlatformAnnouncementServiceImpl implements PlatformAnnouncementServ
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void update(Long id, PlatformAnnouncement announcement) {
         PlatformAnnouncement existing = announcementMapper.selectById(id);
         if (existing == null || existing.getIsDeleted() == 1) {
@@ -68,13 +68,13 @@ public class PlatformAnnouncementServiceImpl implements PlatformAnnouncementServ
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
         announcementMapper.deleteById(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void publish(Long id) {
         PlatformAnnouncement a = announcementMapper.selectById(id);
         if (a == null || a.getIsDeleted() == 1) {
@@ -87,7 +87,7 @@ public class PlatformAnnouncementServiceImpl implements PlatformAnnouncementServ
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void unpublish(Long id) {
         PlatformAnnouncement a = announcementMapper.selectById(id);
         if (a == null || a.getIsDeleted() == 1) {

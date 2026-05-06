@@ -32,7 +32,7 @@ public class CsServiceImpl implements CsService {
     private final UserMapper userMapper;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public CsSessionVO startSession(Long userId, CsStartRequest req) {
         if (userId == null) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED, "请先登录");
@@ -62,7 +62,7 @@ public class CsServiceImpl implements CsService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public CsSessionVO sendMessage(Long userId, CsMessageRequest req) {
         CsSession session = csSessionMapper.selectById(req.getSessionId());
         if (session == null || session.getIsDeleted() == 1) {
@@ -88,7 +88,7 @@ public class CsServiceImpl implements CsService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void closeSession(Long userId, Long sessionId) {
         CsSession session = csSessionMapper.selectById(sessionId);
         if (session == null || session.getIsDeleted() == 1) {
@@ -124,7 +124,7 @@ public class CsServiceImpl implements CsService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public CsSessionVO sendMessageAdmin(Long sessionId, String content, String messageType, String attachmentUrl) {
         CsSession session = csSessionMapper.selectById(sessionId);
         if (session == null || session.getIsDeleted() == 1) {
@@ -150,7 +150,7 @@ public class CsServiceImpl implements CsService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void assignOperator(Long sessionId, Long operatorId, String operatorName) {
         CsSession session = csSessionMapper.selectById(sessionId);
         if (session == null || session.getIsDeleted() == 1) {
@@ -164,7 +164,7 @@ public class CsServiceImpl implements CsService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void closeSessionAdmin(Long sessionId) {
         CsSession session = csSessionMapper.selectById(sessionId);
         if (session == null || session.getIsDeleted() == 1) {

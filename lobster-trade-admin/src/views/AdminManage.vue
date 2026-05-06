@@ -139,6 +139,7 @@
 </template>
 
 <script setup>
+document.title = '管理员管理 - 龙虾道具交易平台'
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Warning, Plus } from '@element-plus/icons-vue'

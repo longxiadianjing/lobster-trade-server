@@ -29,13 +29,13 @@ public class DisputeServiceImpl implements DisputeService {
     private final SysNotificationService sysNotificationService;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void createDispute(Long userId, DisputeRequest req) {
         createDispute(userId, String.valueOf(req.getOrderId()), req.getReason(), null, req.getEvidence());
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void createDispute(Long userId, String orderIdStr, String reason, String description, String images) {
         if (orderIdStr == null || orderIdStr.isEmpty()) {
             throw new BusinessException(ErrorCode.PARAM_INVALID, "订单ID不能为空");
@@ -78,7 +78,7 @@ public class DisputeServiceImpl implements DisputeService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void resolveDispute(Long adminId, Long orderId, String result) {
         TradeOrder order = orderMapper.selectById(orderId);
         if (order == null || order.getIsDeleted() == 1) {
@@ -130,7 +130,7 @@ public class DisputeServiceImpl implements DisputeService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void cancelDispute(Long userId, Long orderId) {
         TradeOrder order = orderMapper.selectById(orderId);
         if (order == null || order.getIsDeleted() == 1) {

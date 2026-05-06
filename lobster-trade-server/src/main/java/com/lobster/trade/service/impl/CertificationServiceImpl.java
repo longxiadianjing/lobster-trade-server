@@ -24,7 +24,7 @@ public class CertificationServiceImpl implements CertificationService {
     private final UserMapper userMapper;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void applyCertification(Long userId, String certType, Long gameId,
                                     String description, String regions,
                                     BigDecimal hourlyRate, Integer providerLevel, String credentials) {
@@ -80,7 +80,7 @@ public class CertificationServiceImpl implements CertificationService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void reviewCertification(Long certId, Integer status, String rejectReason, Integer providerLevel) {
         ServiceProviderCertification cert = certMapper.selectById(certId);
         if (cert == null) throw new BusinessException("认证申请不存在");

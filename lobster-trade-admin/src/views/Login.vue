@@ -47,6 +47,7 @@
 </template>
 
 <script setup>
+document.title = '管理员登录 - 龙虾道具交易平台'
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAdminStore } from '@/stores/admin'

@@ -35,7 +35,7 @@ public class SysNotificationServiceImpl implements SysNotificationService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void createNotification(SysNotification notification) {
         if (notification.getLevel() == null) notification.setLevel(3);
         if (notification.getStatus() == null) notification.setStatus(0);
@@ -45,7 +45,7 @@ public class SysNotificationServiceImpl implements SysNotificationService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void deleteNotification(Long id) {
         notificationMapper.deleteById(id);
     }
@@ -67,7 +67,7 @@ public class SysNotificationServiceImpl implements SysNotificationService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void markAsRead(Long userId, Long notificationId) {
         SysNotification n = notificationMapper.selectById(notificationId);
         if (n == null || n.getIsDeleted() == 1) {
@@ -83,7 +83,7 @@ public class SysNotificationServiceImpl implements SysNotificationService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void markAllAsRead(Long userId) {
         SysNotification dummy = new SysNotification();
         dummy.setStatus(1);
@@ -103,7 +103,7 @@ public class SysNotificationServiceImpl implements SysNotificationService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void createForUser(Long userId, String title, String content, Integer type, String linkUrl) {
         SysNotification n = new SysNotification();
         n.setUserId(userId);

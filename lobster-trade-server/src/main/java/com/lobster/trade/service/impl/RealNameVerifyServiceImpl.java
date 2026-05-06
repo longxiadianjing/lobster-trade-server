@@ -42,7 +42,7 @@ public class RealNameVerifyServiceImpl implements RealNameVerifyService {
     private static final String VERIFY_URL = "https://faceverify.cn-shanghai.aliyuncs.com";
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Map<String, String> initCertification(Long userId) {
         // 生成认证token（实际场景调用阿里云API获取certifyId）
         String certifyToken = UUID.randomUUID().toString().replace("-", "");
@@ -82,7 +82,7 @@ public class RealNameVerifyServiceImpl implements RealNameVerifyService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void handleAliyunCallback(Map<String, Object> body) {
         log.info("阿里云实人认证回调: {}", JSON.toJSONString(body));
 
@@ -131,7 +131,7 @@ public class RealNameVerifyServiceImpl implements RealNameVerifyService {
      * 简单表单申请实名认证（不经过阿里云，用户手动填姓名+身份证）
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void applyRealName(Long userId, String realName, String idCard) {
         if (userId == null) throw new BusinessException(ErrorCode.PARAM_INVALID, "用户ID不能为空");
         if (!StringUtils.hasText(realName)) throw new BusinessException(ErrorCode.PARAM_INVALID, "真实姓名不能为空");

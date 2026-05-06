@@ -128,6 +128,7 @@
 </template>
 
 <script setup>
+document.title = '工单管理 - 龙虾道具交易平台'
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import request from '@/utils/request'

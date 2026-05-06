@@ -34,7 +34,7 @@ public class HotSearchWordServiceImpl implements HotSearchWordService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void create(HotSearchWord word) {
         if (word.getSortOrder() == null) word.setSortOrder(100);
         if (word.getStatus() == null) word.setStatus(1);
@@ -45,7 +45,7 @@ public class HotSearchWordServiceImpl implements HotSearchWordService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void update(Long id, HotSearchWord word) {
         HotSearchWord existing = hotSearchWordMapper.selectById(id);
         if (existing == null || existing.getIsDeleted() == 1) {
@@ -59,13 +59,13 @@ public class HotSearchWordServiceImpl implements HotSearchWordService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
         hotSearchWordMapper.deleteById(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void toggleStatus(Long id) {
         HotSearchWord word = hotSearchWordMapper.selectById(id);
         if (word == null || word.getIsDeleted() == 1) {

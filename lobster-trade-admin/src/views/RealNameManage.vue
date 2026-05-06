@@ -134,6 +134,7 @@
 </template>
 
 <script setup>
+document.title = '实名管理 - 龙虾道具交易平台'
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/utils/request'

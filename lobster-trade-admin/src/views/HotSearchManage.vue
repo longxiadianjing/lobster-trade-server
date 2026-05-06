@@ -83,6 +83,7 @@
 </template>
 
 <script setup>
+document.title = '热搜词管理 - 龙虾道具交易平台'
 import { ref, onMounted } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import request from '@/utils/request'

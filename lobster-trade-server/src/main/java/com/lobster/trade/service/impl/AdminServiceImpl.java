@@ -112,7 +112,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void banUser(Long userId) {
         User user = userMapper.selectById(userId);
         if (user == null || user.getIsDeleted() == 1) {
@@ -124,7 +124,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void unbanUser(Long userId) {
         User user = userMapper.selectById(userId);
         if (user == null || user.getIsDeleted() == 1) {
@@ -136,7 +136,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateUser(Long id, Map<String, Object> body) {
         User user = userMapper.selectById(id);
         if (user == null || user.getIsDeleted() == 1) {
@@ -167,7 +167,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateOrder(Long id, Map<String, Object> body) {
         TradeOrder order = orderMapper.selectById(id);
         if (order == null || order.getIsDeleted() == 1) {
@@ -301,7 +301,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void productOff(Long productId) {
         Product product = productMapper.selectById(productId);
         if (product == null || product.getIsDeleted() == 1) {
@@ -313,7 +313,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void productOn(Long productId) {
         Product product = productMapper.selectById(productId);
         if (product == null || product.getIsDeleted() == 1) {
@@ -325,7 +325,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void productBan(Long productId) {
         Product product = productMapper.selectById(productId);
         if (product == null || product.getIsDeleted() == 1) {
@@ -337,7 +337,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateProduct(Long id, AdminProductUpdateRequest req) {
         Product product = productMapper.selectById(id);
         if (product == null || product.getIsDeleted() == 1) {
@@ -372,7 +372,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void resolveDispute(Long orderId, String result) {
         Long adminId = AdminContext.get();
         TradeOrder order = orderMapper.selectById(orderId);
@@ -396,7 +396,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateDispute(Long orderId, Map<String, Object> body) {
         TradeOrder order = orderMapper.selectById(orderId);
         if (order == null || order.getIsDeleted() == 1) {
@@ -419,7 +419,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void createGame(GameCategory game) {
         game.setCreateTime(LocalDateTime.now());
         game.setUpdateTime(LocalDateTime.now());
@@ -430,7 +430,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateGame(Long id, GameCategory game) {
         GameCategory existing = gameCategoryMapper.selectById(id);
         if (existing == null || existing.getIsDeleted() == 1) {
@@ -442,7 +442,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void toggleGameStatus(Long id, int status) {
         GameCategory game = gameCategoryMapper.selectById(id);
         if (game == null || game.getIsDeleted() == 1) {

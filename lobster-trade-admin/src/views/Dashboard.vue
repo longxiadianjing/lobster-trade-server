@@ -108,6 +108,7 @@
 </template>
 
 <script setup>
+document.title = '管理后台 - 龙虾道具交易平台'
 import { ref, onMounted, watch, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { User, List, Goods, Coin } from '@element-plus/icons-vue'

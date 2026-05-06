@@ -295,6 +295,7 @@
 </template>
 
 <script setup>
+document.title = '商品管理 - 龙虾道具交易平台'
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Picture, Location, Search, Goods, CircleCheck, Bottom, Warning } from '@element-plus/icons-vue'
