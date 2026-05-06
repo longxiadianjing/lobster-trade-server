@@ -143,6 +143,17 @@ const doRechargeWithChannel = async (channel) => {
   try {
     const res = await createRechargePayment(amount, channel)
     if (res.data && res.data.paymentNo) {
+      if (channel === 'alipay' && res.data.payAction === 'form' && res.data.alipayForm) {
+        // 支付宝：动态创建form并自动提交跳转到支付宝收银台
+        ElMessage.info('正在跳转支付宝...')
+        const div = document.createElement('div')
+        div.innerHTML = res.data.alipayForm
+        div.style.display = 'none'
+        document.body.appendChild(div)
+        document.forms[0].submit()
+        return
+      }
+      // 非支付宝或其他：跳转到支付中间页
       ElMessage.info('正在跳转支付页面...')
       router.push({ path: '/payment/pay', query: { no: res.data.paymentNo, type: 'recharge' } })
     } else {

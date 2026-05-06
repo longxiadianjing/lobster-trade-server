@@ -24,6 +24,7 @@
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <jwt.version>0.9.1</jwt.version>
         <fastjson.version>2.0.25</fastjson.version>
+        <alipay-sdk.version>4.35.47.3</alipay-sdk.version>
     </properties>
 
     <dependencies>
@@ -105,6 +106,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Alipay SDK -->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>4.40.771.ALL</version>
         </dependency>
 
         <!-- AOP -->

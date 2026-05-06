@@ -2,6 +2,7 @@ package com.lobster.trade.controller;
 
 import com.lobster.trade.model.entity.PaymentTransaction;
 import com.lobster.trade.model.response.ApiResponse;
+import com.lobster.trade.service.AlipayService;
 import com.lobster.trade.service.PaymentService;
 import com.lobster.trade.util.PaymentSecurityUtil;
 import com.lobster.trade.util.RateLimitUtil;
@@ -21,7 +22,31 @@ import java.util.Map;
 public class PaymentController {
 
     private final PaymentService paymentService;
+    private final AlipayService alipayService;
     private final RateLimitUtil rateLimitUtil;
+
+    /**
+     * 支付宝异步回调
+     * POST /api/payment/alipay/notify
+     */
+    @PostMapping("/alipay/notify")
+    public String alipayNotify(HttpServletRequest request) {
+        try {
+            Map<String, String> params = new HashMap<>();
+            Map<String, String[]> requestParams = request.getParameterMap();
+            for (Map.Entry<String, String[]> entry : requestParams.entrySet()) {
+                String name = entry.getKey();
+                String[] values = entry.getValue();
+                String valueStr = values.length > 0 ? values[0] : "";
+                params.put(name, valueStr);
+            }
+            String result = alipayService.handleNotify(params);
+            return result;
+        } catch (Exception e) {
+            log.error("[ALIPAY_NOTIFY] 处理异常", e);
+            return "fail";
+        }
+    }
 
     /**
      * 创建充值支付单
@@ -41,9 +66,17 @@ public class PaymentController {
         result.put("amount", payment.getAmount());
         result.put("channel", payment.getChannel());
         result.put("expireTime", payment.getExpireTime());
-        // Mock二维码URL（实际生产应该是真实二维码）
-        result.put("qrCodeUrl", "/qr/mock?text=" + payment.getPaymentNo());
-        result.put("mockPageUrl", "/payment/mock-pay?paymentNo=" + payment.getPaymentNo());
+
+        // 支付宝：返回跳转表单
+        if ("alipay".equals(channel)) {
+            String form = alipayService.createRechargePayment(userId, amount, payment.getPaymentNo());
+            result.put("alipayForm", form);
+            result.put("payAction", "form"); // 前端需要提交form
+        } else {
+            result.put("qrCodeUrl", "/qr/mock?text=" + payment.getPaymentNo());
+            result.put("mockPageUrl", "/payment/mock-pay?paymentNo=" + payment.getPaymentNo());
+            result.put("payAction", "mock");
+        }
 
         return ApiResponse.success(result);
     }

@@ -15,10 +15,9 @@
 /*.txt
 /*.log
 
-# Java
-*.class
-*.jar
-*.bak
+# Build output
+**/dist/
+**/target/
 
 # Node modules (if any)
 node_modules/
