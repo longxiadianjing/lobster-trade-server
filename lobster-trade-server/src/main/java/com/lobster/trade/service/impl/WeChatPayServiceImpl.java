@@ -11,6 +11,8 @@ import org.springframework.web.client.RestTemplate;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,11 +21,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class WeChatPayServiceImpl implements WeChatPayService {
 
-    private static final String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
-    private static final String HTTPS_PREFIX = "https://";
+    private static final String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/v3/pay/transactions/native";
+    private static final String PLATFORM_CERT_URL = "https://api.mch.weixin.qq.com/v3/certificates";
 
     private final WeChatConfig weChatConfig;
-    private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
     public String createNativeOrder(PaymentTransaction transaction, String description) {
@@ -31,36 +32,49 @@ public class WeChatPayServiceImpl implements WeChatPayService {
             log.warn("[WECHAT_PAY] 微信支付未启用");
             return null;
         }
+        if (weChatConfig.getPrivateKey() == null || weChatConfig.getPrivateKey().isEmpty()) {
+            log.error("[WECHAT_PAY] 私钥未配置，请设置 WECHAT_PRIVATE_KEY");
+            return null;
+        }
 
         try {
-            // 构建参数（按 ASCII 排序）
-            Map<String, String> params = new TreeMap<>();
-            params.put("appid", weChatConfig.getAppId());
-            params.put("mch_id", weChatConfig.getMchId());
-            params.put("nonce_str", generateNonceStr());
-            params.put("body", description);
-            params.put("out_trade_no", transaction.getPaymentNo());
-            // 金额：元 → 分（微信支付单位是分）
-            params.put("total_fee", transaction.getAmount().multiply(new java.math.BigDecimal("100")).intValue() + "");
-            params.put("spbill_create_ip", "0.0.0.0");
-            params.put("notify_url", weChatConfig.getNotifyUrl());
-            params.put("trade_type", "NATIVE");
+            long timestamp = System.currentTimeMillis() / 1000;
+            String nonce = generateNonceStr();
 
-            // 生成签名
-            String sign = buildSign(params, weChatConfig.getApiKey());
-            params.put("sign", sign);
+            // 构建请求 body（JSON）
+            Map<String, Object> reqBody = new TreeMap<>();
+            reqBody.put("mchid", weChatConfig.getMchId());
+            reqBody.put("appid", weChatConfig.getAppId());
+            reqBody.put("description", description);
+            reqBody.put("out_trade_no", transaction.getPaymentNo());
+            reqBody.put("time_expire", java.time.LocalDateTime.now()
+                .plusMinutes(30).format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "+08:00");
+            Map<String, Object> amount = new TreeMap<>();
+            // 微信支付单位是分
+            amount.put("total", transaction.getAmount().multiply(new java.math.BigDecimal("100")).intValue());
+            amount.put("currency", "CNY");
+            reqBody.put("amount", amount);
+            reqBody.put("notify_url", weChatConfig.getNotifyUrl());
+
+            String jsonBody = toJson(reqBody);
+
+            // 构建签名串
+            String signStr = buildSignString("POST", "/v3/pay/transactions/native", timestamp, nonce, jsonBody);
+            String signature = rsaSign(signStr, weChatConfig.getPrivateKey());
+
+            // 构建 Authorization 头
+            String token = String.format("mchid=\"%s\",nonce_str=\"%s\",timestamp=\"%d\",serial_no=\"%s\",signature=\"%s\"",
+                weChatConfig.getMchId(), nonce, timestamp, weChatConfig.getCertSerialNo(), signature);
 
             // 发送请求
-            String respXml = postXml(UNIFIED_ORDER_URL, params);
-            log.info("[WECHAT_PAY] 统位下单响应: {}", respXml);
+            String respJson = doV3Request("POST", UNIFIED_ORDER_URL, jsonBody, token);
+            log.info("[WECHAT_PAY] 统位下单响应: {}", respJson);
 
-            // 解析 XML 响应
-            Map<String, String> resp = parseXml(respXml);
-            if ("SUCCESS".equals(resp.get("return_code")) && "SUCCESS".equals(resp.get("result_code"))) {
-                return resp.get("code_url");
+            Map<String, Object> resp = parseJson(respJson);
+            if (resp.containsKey("code_url")) {
+                return (String) resp.get("code_url");
             } else {
-                log.error("[WECHAT_PAY] 微信下单失败: return_code={}, return_msg={}, err_code={}, err_code_des={}",
-                    resp.get("return_code"), resp.get("return_msg"), resp.get("err_code"), resp.get("err_code_des"));
+                log.error("[WECHAT_PAY] 微信下单失败: {}", respJson);
                 return null;
             }
         } catch (Exception e) {
@@ -72,12 +86,10 @@ public class WeChatPayServiceImpl implements WeChatPayService {
     @Override
     public Map<String, String> parseNotifyResult(Map<String, String> params) {
         Map<String, String> result = new HashMap<>();
-        // 微信回调参数本身就是 flat 的 k=v&...
-        // 返回状态码、交易单号、第三方交易号
         result.put("return_code", params.get("return_code"));
         result.put("transaction_id", params.get("transaction_id"));
         result.put("out_trade_no", params.get("out_trade_no"));
-        result.put("amount", params.get("total_fee")); // 单位：分
+        result.put("amount", params.get("amount")); // 回调里的amount结构
         result.put("paid_time", params.get("time_end"));
         return result;
     }
@@ -89,71 +101,98 @@ public class WeChatPayServiceImpl implements WeChatPayService {
     }
 
     /**
-     * 构建 APIv2 签名（HMAC-SHA256）
+     * 构建 APIv3 签名串
+     * HTTP method + "\n" + URL path + "\n" + timestamp + "\n" + nonce + "\n" + body + "\n"
      */
-    private String buildSign(Map<String, String> params, String apiKey) {
-        // 拼接 stringA
-        String stringA = params.entrySet().stream()
-            .filter(e -> !"sign".equals(e.getKey()) && e.getValue() != null && !"".equals(e.getValue()))
-            .map(e -> e.getKey() + "=" + e.getValue())
-            .collect(Collectors.joining("&"));
-        String stringSignTemp = stringA + "&key=" + apiKey;
-        // HMAC-SHA256 → hex → uppercase
+    private String buildSignString(String method, String path, long timestamp, String nonce, String body) {
+        return method + "\n" + path + "\n" + timestamp + "\n" + nonce + "\n" + body + "\n";
+    }
+
+    /**
+     * RSA SHA256 签名（使用 PKCS#8 私钥）
+     */
+    private String rsaSign(String data, String privateKeyPem) throws Exception {
+        // 去掉 PEM 头尾和空白
+        String key = privateKeyPem
+            .replace("-----BEGIN PRIVATE KEY-----", "")
+            .replace("-----END PRIVATE KEY-----", "")
+            .replaceAll("\\s", "");
+        byte[] keyBytes = Base64.getDecoder().decode(key);
+
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+        PrivateKey pk = kf.generatePrivate(keySpec);
+
+        Signature sig = Signature.getInstance("SHA256withRSA");
+        sig.initSign(pk);
+        sig.update(data.getBytes(StandardCharsets.UTF_8));
+        byte[] signatureBytes = sig.sign();
+        return Base64.getEncoder().encodeToString(signatureBytes);
+    }
+
+    /**
+     * 发送 V3 API 请求（JSON）
+     */
+    private String doV3Request(String method, String url, String body, String token) {
         try {
-            Mac mac = Mac.getInstance("HmacSHA256");
-            mac.init(new SecretKeySpec(apiKey.getBytes(java.nio.charset.StandardCharsets.UTF_8), "HmacSHA256"));
-            byte[] hash = mac.doFinal(stringSignTemp.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hash) sb.append(String.format("%02x", b));
-            return sb.toString().toUpperCase();
+            java.net.HttpURLConnection conn = (java.net.HttpURLConnection) new java.net.URL(url).openConnection();
+            conn.setRequestMethod(method);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", "WECHATPAY2-SHA256-RSA2048 " + token);
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setDoOutput(true);
+            conn.getOutputStream().write(body.getBytes(StandardCharsets.UTF_8));
+            conn.getOutputStream().flush();
+
+            int code = conn.getResponseCode();
+            java.io.BufferedReader reader = new java.io.BufferedReader(
+                new java.io.InputStreamReader(
+                    code >= 400 ? conn.getErrorStream() : conn.getInputStream(), StandardCharsets.UTF_8));
+            StringBuilder resp = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) resp.append(line);
+            reader.close();
+
+            if (code != 200 && code != 204) {
+                log.warn("[WECHAT_PAY] HTTP {}: {}", code, resp);
+            }
+            return resp.toString();
         } catch (Exception e) {
-            throw new RuntimeException("HMAC-SHA256签名失败", e);
+            log.error("[WECHAT_PAY] 请求失败: {}", e.getMessage());
+            throw new RuntimeException("微信API请求失败", e);
         }
     }
 
-    /**
-     * 发送 XML POST 请求
-     */
-    private String postXml(String url, Map<String, String> params) {
-        String xml = buildXml(params);
-        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
-        headers.setContentType(org.springframework.http.MediaType.parseMediaType("text/xml;charset=UTF-8"));
-        org.springframework.http.HttpEntity<String> entity = new org.springframework.http.HttpEntity<>(xml, headers);
-        return restTemplate.postForObject(url, entity, String.class);
-    }
-
-    /**
-     * 构建 XML
-     */
-    private String buildXml(Map<String, String> params) {
-        StringBuilder sb = new StringBuilder("<xml>");
-        for (Map.Entry<String, String> e : params.entrySet()) {
-            sb.append("<").append(e.getKey()).append("><![CDATA[")
-              .append(e.getValue() != null ? e.getValue() : "")
-              .append("]]></").append(e.getKey()).append(">");
+    private String toJson(Map<String, Object> map) {
+        StringBuilder sb = new StringBuilder("{");
+        boolean first = true;
+        for (Map.Entry<String, Object> e : map.entrySet()) {
+            if (!first) sb.append(",");
+            first = false;
+            sb.append("\"").append(e.getKey()).append("\":");
+            Object v = e.getValue();
+            if (v instanceof Map) {
+                sb.append(toJson((Map<String, Object>) v));
+            } else if (v instanceof Number) {
+                sb.append(v);
+            } else {
+                sb.append("\"").append(escapeJson(String.valueOf(v))).append("\"");
+            }
         }
-        sb.append("</xml>");
+        sb.append("}");
         return sb.toString();
     }
 
-    /**
-     * 简单解析 XML（提取一级子节点文本）
-     */
-    private Map<String, String> parseXml(String xml) {
-        Map<String, String> result = new HashMap<>();
-        // 提取 <key><![CDATA[value]]></key> 格式
-        java.util.regex.Pattern p = java.util.regex.Pattern.compile("<(\\w+)><!\\[CDATA\\[([^\\]]*)\\]\\]></\\1>");
-        java.util.regex.Matcher m = p.matcher(xml);
-        while (m.find()) {
-            result.put(m.group(1), m.group(2));
-        }
-        // 兼容不带 CDATA 的
-        java.util.regex.Pattern p2 = java.util.regex.Pattern.compile("<(\\w+)>([^<]*)</\\1>");
-        java.util.regex.Matcher m2 = p2.matcher(xml);
-        while (m2.find()) {
-            if (!result.containsKey(m2.group(1))) {
-                result.put(m2.group(1), m2.group(2).trim());
-            }
+    private String escapeJson(String s) {
+        return s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> parseJson(String json) {
+        com.alibaba.fastjson2.JSONObject obj = com.alibaba.fastjson2.JSON.parseObject(json);
+        Map<String, Object> result = new HashMap<>();
+        for (String key : obj.keySet()) {
+            result.put(key, obj.get(key));
         }
         return result;
     }

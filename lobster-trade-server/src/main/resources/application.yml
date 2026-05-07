@@ -55,12 +55,13 @@ payment:
     notifyUrl: ${ALIPAY_NOTIFY_URL:http://localhost:8080/api/payment/alipay/notify}
     sandbox: ${ALIPAY_SANDBOX:false}
   wechat:
-    appId: ${WECHAT_APP_ID:}
-    mchId: ${WECHAT_MCH_ID:1715080856}
-    apiKey: ${WECHAT_API_KEY:}
-    certPath: ${WECHAT_CERT_PATH:}
-    notifyUrl: ${WECHAT_NOTIFY_URL:http://localhost:8080/api/payment/wechat/notify}
-    enabled: ${WECHAT_ENABLED:false}
+    appId: wx305b929f776078d8
+    mchId: "1715080856"
+    # 私钥从 classpath:wechat_private_key.pem 自动加载
+    privateKeyPath: classpath:wechat_private_key.pem
+    certSerialNo: 5E7EAD6F807398EE2B39958E5E1B3CDDE63AB803
+    notifyUrl: http://localhost:8080/api/payment/wechat/notify
+    enabled: true
 
 server:
   port: 8080
