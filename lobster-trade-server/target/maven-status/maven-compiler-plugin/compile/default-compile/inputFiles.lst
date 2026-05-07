@@ -119,6 +119,7 @@ C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobste
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\impl\ProductRecommendSlotServiceImpl.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\impl\ProductCategoryServiceImpl.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\response\SellerStatsResponse.java
+C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\impl\AlipayServiceImpl.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\mapper\ServiceTicketMapper.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\controller\CouponApiController.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\controller\admin\StatsController.java
@@ -160,6 +161,7 @@ C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobste
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\entity\User.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\response\CsSessionVO.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\config\RedisConfig.java
+C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\config\AlipayConfig.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\mapper\UserMapper.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\entity\HotSearchWord.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\entity\UserLoginDevice.java
@@ -186,6 +188,7 @@ C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobste
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\config\WebMvcConfig.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\request\OrderRecognizeRequest.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\request\LoginRequest.java
+C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\AlipayService.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\impl\DisputeServiceImpl.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\impl\HotSearchWordServiceImpl.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\response\LoginResponse.java

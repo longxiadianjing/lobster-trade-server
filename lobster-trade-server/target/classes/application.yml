@@ -7,7 +7,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/lobster_trade?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+    url: jdbc:mysql://localhost:3306/lobster_trade?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
     username: root
     password: root
 
@@ -43,11 +43,17 @@ mybatis-plus:
   type-aliases-package: com.lobster.trade.model.entity
 
 jwt:
-  secret: ${JWT_SECRET:lobster-trade-secret-key-2026}
+  secret: ${JWT_SECRET:}
   expire: ${JWT_EXPIRE:86400000}
 
 payment:
   secret: ${PAYMENT_SECRET:mock-payment-secret-key-2026}
+  alipay:
+    appId: ${ALIPAY_APP_ID:2021006151687443}
+    privateKey: ${ALIPAY_PRIVATE_KEY:MIIEuwIBADANBgkqhkiG9w0BAQEFAASCBKUwggShAgEAAoIBAQCRszh6sFrKGoscw3T1nw1Y1pKDXYtTkKsZGTdrTya5aXmIIUg6Em1CIO/ySe+ENCuYa9o2gdLH3J0OajF75cnCz1+T9Iun7oM1rc7aRBO+5HcZ6TvBT1863oqmLkGAbr7aFniTCGgLCfueGuz8ke4Rm3aCRCVgn9CTOboesf6AKkItoG+r8N3dLTlGvJ/XlNbUAwsafoVurJV4cPA8jmTAszDoBaXhc0QpsKu2UwlWCF8jm7Y8Kq4Juf4N/aEROeXLg9V1Hwm+ljDKs0DWKCdS1z+dVb2U2kgb9mIa+IWWrAsljG27odf/QjHRUb3BWAqAPrEK0DdbDTw+JlxgRP8hAgMBAAECgf9lTjf3FqgJ3mrblQu9vNmK66bzsBcwA2b0DJR8CIzkXnIiNQIDXsyZLk2oKcBgK+YkFNmlDJ+CV+LcIvpFK4Ed8xKBzYdNPIn+yNsK6ErScAhf+8uQnZ+ZTyMYaREiO953xSgRE8dD5a0OQaqF8vGVTIMaEEfs5zIfLAQ9U4Whlqv2LSE6Q1d7amy+p2XrZl9XirXikuIkZrSMHc9cDIoVIuW5W4QABruWSQp92fRqqoUW+BkdgPtNdWRfWwWGp1g31e2bVPUsd6pbsHlu9Wqrgy5sdFe7251KsvmHQ0DlaERf0a35JIIYlp8RnWsNuuDAGGOR72Z1AgJ9O4GnRWECgYEA9fiJuLyp6xiJOKSNW7DgDnkWKd0Z3q0QjGMzmrWYZr5poa21b5Mn4hvb/m4XvZPQP7nngcGfhW/khlncEdrEfXjir2g1twEm9qMI5jqGDIb6wQpasoeFa4FN8rUbbwKOiY32V09v8mwQKrY8HTgYfaMjZy9ur7CZBQesFAnEQbUCgYEAl6QMhARJAYRFNw3vx6QeyiomVR7IOGxYqMwlzxb74+6ecTnyYmA2MbYTDfZorSvA19qeXKCCY9h7TMzxiDEsPsyeD9dS8DcR+a/IzAyg4c1mxpOBIcrivi/HsTpgRz+/ydD9j4fGxweNCnmqf+8lwtMT5aoEFuwGPbBgZrROWz0CgYAs/i2TEU+zpWVUayVAZHZXr2aSedNFnDqus2a5IgaipKoF3RSXOD/PaHExdUn6b5NkVMk4PwbDDdirirxqt63Bld9BXrqUoy1RaDk0g/gJSpeLwC0fAxMwuxJbFy3RfJI+Ly2kgu9jVMkQRw1v+tbgBHtxYIfKs28KMIEVmUPBEQKBgBBrOs+whxca80OaxrOfGZZaKfxdcOBrGs5sDEv3+R4c4BryY0QzlqqbRETmwT6+1gqJKUxuNLAK6I7QQfa1HE1Qamzcq6ZG0DNwzRUK6QCJ9O7bWcgG57YgBkcyQup0BJgdgNbhpKw4LRVNRyDDDBukLytW1UqGE8bqKgX0z+chAoGBALqFXL2lNQeathe3tGbhrPy+TReiHIxH51gIlb/YT7kz4d/Y27pNXLbt0/zUOV+06f6c9RF4twZSu1T/d9LfJw9nz/KNw+v7Ck5qnUVAX53LEeX73Y5CzlB5L1Ark3SnmRJGZ8NgcEUm9br6ukRlC9WlODrmr9/83AtQmj6b2clN}
+    alipayPublicKey: ${ALIPAY_PUBLIC_KEY:MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo/I4PFPUT07O7PEMId0fT/5DvQmtKtrxyPTeHO4Lcw8mJqed3RlQSJltu3kAnZq4G3rD307SvzdBYJqWsbGvbD6JQlLxsi6iFoF7FmqCICtwyqIyDG7OWolBDbzKgN69yXzCiBNy5tAIhxj9HhnL9iAFdYGZVLVVitfbkvm/yE1RMpIQVnSMxUW1crne3G2cftRkAvVt1V8zfYoyD+VAQfffuU+0FLqNftpi32/GHFLQkgZ0OZUy7KIXJgvtYE4LmvGwDZDOLGscQkHc+cs2l6JwzDR2XRIkcSg7pvqZ0vsQs2ZvtbLzyyUysq3e3FWQKLmw9DUghRoFdSRyPkpAKQIDAQAB}
+    notifyUrl: ${ALIPAY_NOTIFY_URL:http://localhost:8080/api/payment/alipay/notify}
+    sandbox: ${ALIPAY_SANDBOX:false}
 
 server:
   port: 8080

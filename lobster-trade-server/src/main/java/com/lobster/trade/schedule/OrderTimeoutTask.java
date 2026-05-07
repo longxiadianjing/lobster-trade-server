@@ -55,8 +55,15 @@ public class OrderTimeoutTask {
                 log.info("[ORDER_TIMEOUT] 订单 {} 已超时取消，库存已还原", order.getOrderNo());
             } catch (Exception e) {
                 log.error("[ORDER_TIMEOUT] 取消订单 {} 失败: {}", order.getOrderNo(), e.getMessage());
+                sendAlert("订单超时任务异常", e.getMessage());
             }
         }
+    }
+
+    private void sendAlert(String title, String content) {
+        log.warn("🚨 [ALERT] {}: {}", title, content);
+        // 如果后续接了钉钉/邮件，在此调用真实告警逻辑
+        // 目前先用日志 WARN 级别输出，方便运维发现
     }
 
     /** 每30分钟检查买家确认超时（卖家发货后超过72小时未确认，自动放款） */
@@ -88,6 +95,7 @@ public class OrderTimeoutTask {
                 log.info("[BUYER_CONFIRM_TIMEOUT] 订单 {} 已自动放款完成", order.getOrderNo());
             } catch (Exception e) {
                 log.error("[BUYER_CONFIRM_TIMEOUT] 订单 {} 自动放款失败: {}", order.getOrderNo(), e.getMessage());
+                sendAlert("订单超时任务异常", e.getMessage());
             }
         }
     }
@@ -105,11 +113,16 @@ public class OrderTimeoutTask {
         if (orders.isEmpty()) return;
         log.warn("[SELLER_TIMEOUT] 发现 {} 个卖家发货超时订单，请客服关注", orders.size());
         for (TradeOrder order : orders) {
-            order.setStatus("in_progress");
-            order.setUpdateTime(LocalDateTime.now());
-            tradeOrderMapper.updateById(order);
-            log.warn("[SELLER_TIMEOUT] 订单 {} 超时未发货，已标记为进行中，卖家={}, 支付时间={}",
-                order.getOrderNo(), order.getSellerId(), order.getPaymentTime());
+            try {
+                order.setStatus("in_progress");
+                order.setUpdateTime(LocalDateTime.now());
+                tradeOrderMapper.updateById(order);
+                log.warn("[SELLER_TIMEOUT] 订单 {} 超时未发货，已标记为进行中，卖家={}, 支付时间={}",
+                    order.getOrderNo(), order.getSellerId(), order.getPaymentTime());
+            } catch (Exception e) {
+                log.error("[SELLER_TIMEOUT] 标记订单 {} 发货超时失败: {}", order.getOrderNo(), e.getMessage());
+                sendAlert("订单超时任务异常", e.getMessage());
+            }
         }
     }
 }

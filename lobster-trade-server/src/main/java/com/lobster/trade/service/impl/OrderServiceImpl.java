@@ -433,26 +433,26 @@ public class OrderServiceImpl implements OrderService {
                 .eq(TradeOrder::getIsDeleted, 0)
         );
 
-        // 累计收入
+        // 累计收入（使用实际净收入sellerReceived，扣除平台抽成5%）
         BigDecimal totalRevenue = allCompleted.stream()
-                .map(TradeOrder::getEscrowAmount)
+                .map(TradeOrder::getSellerReceived)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         LocalDate today = LocalDate.now();
         LocalDate monthStart = today.withDayOfMonth(1);
 
-        // 今日收入
+        // 今日收入（使用实际净收入sellerReceived）
         BigDecimal todayRevenue = allCompleted.stream()
                 .filter(o -> o.getConfirmTime() != null && !o.getConfirmTime().toLocalDate().isBefore(today))
-                .map(TradeOrder::getEscrowAmount)
+                .map(TradeOrder::getSellerReceived)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // 本月收入
+        // 本月收入（使用实际净收入sellerReceived）
         BigDecimal monthRevenue = allCompleted.stream()
                 .filter(o -> o.getConfirmTime() != null && !o.getConfirmTime().toLocalDate().isBefore(monthStart))
-                .map(TradeOrder::getEscrowAmount)
+                .map(TradeOrder::getSellerReceived)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -463,7 +463,7 @@ public class OrderServiceImpl implements OrderService {
             String key = d.toString();
             BigDecimal dayAmt = allCompleted.stream()
                     .filter(o -> o.getConfirmTime() != null && o.getConfirmTime().toLocalDate().equals(d))
-                    .map(TradeOrder::getEscrowAmount)
+                    .map(TradeOrder::getSellerReceived)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
             recent7Days.put(key, dayAmt);

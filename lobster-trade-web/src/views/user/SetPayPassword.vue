@@ -87,6 +87,7 @@ const validateConfirm = (rule, value, callback) => {
 const rules = {
   payPassword: [
     { required: true, message: '请输入支付密码', trigger: 'blur' },
+    { min: 6, message: '支付密码至少6位', trigger: 'blur' },
     { pattern: /^\d{6}$/, message: '支付密码必须为6位数字', trigger: 'blur' }
   ],
   confirmPassword: [
