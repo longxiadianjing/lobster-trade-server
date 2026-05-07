@@ -4,6 +4,7 @@ import com.lobster.trade.model.entity.PaymentTransaction;
 import com.lobster.trade.model.response.ApiResponse;
 import com.lobster.trade.service.AlipayService;
 import com.lobster.trade.service.PaymentService;
+import com.lobster.trade.service.WeChatPayService;
 import com.lobster.trade.util.PaymentSecurityUtil;
 import com.lobster.trade.util.RateLimitUtil;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class PaymentController {
 
     private final PaymentService paymentService;
     private final AlipayService alipayService;
+    private final WeChatPayService weChatPayService;
     private final RateLimitUtil rateLimitUtil;
 
     /**
@@ -72,6 +74,19 @@ public class PaymentController {
             String form = alipayService.createRechargePayment(userId, amount, payment.getPaymentNo());
             result.put("alipayForm", form);
             result.put("payAction", "form"); // 前端需要提交form
+        } else if ("wechat".equals(channel)) {
+            // 微信支付：调用统位下单获取二维码链接
+            String description = "龙虾平台-" + (payment.getPaymentType().equals("recharge") ? "余额充值" : "订单支付");
+            String codeUrl = weChatPayService.createNativeOrder(payment, description);
+            if (codeUrl != null) {
+                result.put("codeUrl", codeUrl); // 微信支付二维码内容
+                result.put("qrCodeUrl", "/qr/wechat?codeUrl=" + java.net.URLEncoder.encode(codeUrl, java.nio.charset.StandardCharsets.UTF_8));
+                result.put("mockPageUrl", "/payment/mock-pay?paymentNo=" + payment.getPaymentNo());
+                result.put("payAction", "qr");
+            } else {
+                result.put("payAction", "mock");
+                result.put("mockPageUrl", "/payment/mock-pay?paymentNo=" + payment.getPaymentNo());
+            }
         } else {
             result.put("qrCodeUrl", "/qr/mock?text=" + payment.getPaymentNo());
             result.put("mockPageUrl", "/payment/mock-pay?paymentNo=" + payment.getPaymentNo());
@@ -99,8 +114,23 @@ public class PaymentController {
         result.put("amount", payment.getAmount());
         result.put("channel", payment.getChannel());
         result.put("expireTime", payment.getExpireTime());
-        result.put("qrCodeUrl", "/qr/mock?text=" + payment.getPaymentNo());
-        result.put("mockPageUrl", "/payment/mock-pay?paymentNo=" + payment.getPaymentNo());
+        if ("wechat".equals(channel)) {
+            String description = "龙虾平台-订单支付-" + orderId;
+            String codeUrl = weChatPayService.createNativeOrder(payment, description);
+            if (codeUrl != null) {
+                result.put("codeUrl", codeUrl);
+                result.put("qrCodeUrl", "/qr/wechat?codeUrl=" + java.net.URLEncoder.encode(codeUrl, java.nio.charset.StandardCharsets.UTF_8));
+                result.put("mockPageUrl", "/payment/mock-pay?paymentNo=" + payment.getPaymentNo());
+                result.put("payAction", "qr");
+            } else {
+                result.put("payAction", "mock");
+                result.put("mockPageUrl", "/payment/mock-pay?paymentNo=" + payment.getPaymentNo());
+            }
+        } else {
+            result.put("qrCodeUrl", "/qr/mock?text=" + payment.getPaymentNo());
+            result.put("mockPageUrl", "/payment/mock-pay?paymentNo=" + payment.getPaymentNo());
+            result.put("payAction", "mock");
+        }
 
         return ApiResponse.success(result);
     }
@@ -191,6 +221,30 @@ public class PaymentController {
         result.put("channelName", getChannelName(payment.getChannel()));
         result.put("status", payment.getStatus());
         return ApiResponse.success(result);
+    }
+
+    /**
+     * 微信支付异步回调
+     * POST /api/payment/wechat/notify
+     */
+    @PostMapping("/wechat/notify")
+    public String wechatNotify(HttpServletRequest request) {
+        try {
+            Map<String, String> params = new HashMap<>();
+            Map<String, String[]> requestParams = request.getParameterMap();
+            for (Map.Entry<String, String[]> entry : requestParams.entrySet()) {
+                String name = entry.getKey();
+                String[] values = entry.getValue();
+                String valueStr = values.length > 0 ? values[0] : "";
+                params.put(name, valueStr);
+            }
+            log.info("[WECHAT_NOTIFY] 收到回调: {}", params);
+            paymentService.handleWechatNotify(params);
+            return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+        } catch (Exception e) {
+            log.error("[WECHAT_NOTIFY] 处理异常", e);
+            return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[FAIL]]></return_msg></xml>";
+        }
     }
 
     private String getChannelName(String channel) {

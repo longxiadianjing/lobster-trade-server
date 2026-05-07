@@ -84,6 +84,12 @@ const routes = [
     meta: { title: '设置支付密码', requiresAuth: true }
   },
   {
+    path: '/security/center',
+    name: 'SecurityCenter',
+    component: () => import('@/views/security/SecurityCenter.vue'),
+    meta: { title: '账户安全', requiresAuth: true }
+  },
+  {
     path: '/user/security-center',
     name: 'SecurityCenter',
     component: () => import('@/views/user/SecurityCenter.vue'),

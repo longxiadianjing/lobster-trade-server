@@ -15,6 +15,7 @@ com\lobster\trade\mapper\AdminMapper.class
 com\lobster\trade\mapper\AdminRoleMapper.class
 com\lobster\trade\config\SecurityConfig.class
 com\lobster\trade\model\response\ApiResponse.class
+com\lobster\trade\controller\UserSecurityController.class
 com\lobster\trade\controller\CertificationController.class
 com\lobster\trade\controller\UserController.class
 com\lobster\trade\service\StatsService.class
@@ -31,6 +32,7 @@ com\lobster\trade\util\PasswordEncoder.class
 com\lobster\trade\controller\StatsApiController.class
 com\lobster\trade\controller\RealNameApiController.class
 com\lobster\trade\controller\AuthController.class
+com\lobster\trade\config\WeChatConfig.class
 com\lobster\trade\exception\BusinessException.class
 com\lobster\trade\service\ProductRecommendSlotService.class
 com\lobster\trade\util\PaymentSecurityUtil.class
@@ -102,6 +104,7 @@ com\lobster\trade\service\JwtAuthService.class
 com\lobster\trade\model\entity\AdminRole.class
 com\lobster\trade\service\TradeReviewService.class
 com\lobster\trade\model\response\SellerStatsResponse.class
+com\lobster\trade\service\WeChatPayService.class
 com\lobster\trade\config\AdminContext.class
 com\lobster\trade\model\request\ResetPasswordRequest.class
 com\lobster\trade\model\entity\ServiceProviderCertification.class
@@ -211,6 +214,7 @@ com\lobster\trade\model\entity\GameCategory.class
 com\lobster\trade\annotation\RequirePermission.class
 com\lobster\trade\model\response\AdminVO.class
 com\lobster\trade\model\request\AuditLogRequest.class
+com\lobster\trade\service\impl\WeChatPayServiceImpl.class
 com\lobster\trade\config\JwtAuthenticationFilter.class
 com\lobster\trade\schedule\OrderTimeoutTask.class
 com\lobster\trade\model\response\ImSessionVO$ImMessageVO.class

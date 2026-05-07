@@ -28,4 +28,9 @@ public interface PaymentService {
      * 根据paymentNo查询
      */
     PaymentTransaction getByPaymentNo(String paymentNo);
+
+    /**
+     * 处理微信支付异步回调
+     */
+    void handleWechatNotify(java.util.Map<String, String> params);
 }

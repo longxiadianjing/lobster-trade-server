@@ -5,11 +5,7 @@ import com.lobster.trade.model.entity.PaymentTransaction;
 import com.lobster.trade.service.WeChatPayService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.codec.digest.HmacUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.Mac;
@@ -103,7 +99,16 @@ public class WeChatPayServiceImpl implements WeChatPayService {
             .collect(Collectors.joining("&"));
         String stringSignTemp = stringA + "&key=" + apiKey;
         // HMAC-SHA256 → hex → uppercase
-        return HmacUtils.hmacSha256Hex(apiKey, stringSignTemp).toUpperCase();
+        try {
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(new SecretKeySpec(apiKey.getBytes(java.nio.charset.StandardCharsets.UTF_8), "HmacSHA256"));
+            byte[] hash = mac.doFinal(stringSignTemp.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hash) sb.append(String.format("%02x", b));
+            return sb.toString().toUpperCase();
+        } catch (Exception e) {
+            throw new RuntimeException("HMAC-SHA256签名失败", e);
+        }
     }
 
     /**

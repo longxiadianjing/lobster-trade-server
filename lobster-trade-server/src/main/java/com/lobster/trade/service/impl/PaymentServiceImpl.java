@@ -162,4 +162,49 @@ public class PaymentServiceImpl implements PaymentService {
         walletService.freezeEscrowForOrder(payment.getOrderId());
         log.info("[PAYMENT] 订单支付成功: orderId={}, paymentNo={}", payment.getOrderId(), payment.getPaymentNo());
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void handleWechatNotify(java.util.Map<String, String> params) {
+        String returnCode = params.get("return_code");
+        String resultCode = params.get("result_code");
+        String outTradeNo = params.get("out_trade_no");
+        String transactionId = params.get("transaction_id");
+        String totalFee = params.get("total_fee");
+        String timeEnd = params.get("time_end");
+
+        log.info("[WECHAT_NOTIFY] 解析结果: return_code={}, result_code={}, out_trade_no={}, transaction_id={}, total_fee={}",
+            returnCode, resultCode, outTradeNo, transactionId, totalFee);
+
+        if (!"SUCCESS".equals(returnCode) || !"SUCCESS".equals(resultCode)) {
+            log.warn("[WECHAT_NOTIFY] 微信回调失败: return_code={}, result_code={}", returnCode, resultCode);
+            return;
+        }
+
+        PaymentTransaction payment = getByPaymentNo(outTradeNo);
+        if (payment == null) {
+            log.warn("[WECHAT_NOTIFY] 支付单不存在: {}", outTradeNo);
+            return;
+        }
+        if (payment.getStatus() != PaymentTransaction.STATUS_PENDING) {
+            log.warn("[WECHAT_NOTIFY] 支付单状态不是待支付，跳过: {}, status={}", outTradeNo, payment.getStatus());
+            return;
+        }
+
+        // 标记成功
+        payment.setStatus(PaymentTransaction.STATUS_SUCCESS);
+        payment.setTransactionId(transactionId);
+        payment.setPaidTime(timeEnd != null ? java.time.LocalDateTime.now() : payment.getPaidTime());
+        payment.setUpdateTime(java.time.LocalDateTime.now());
+        paymentMapper.updateById(payment);
+
+        log.info("[WECHAT_NOTIFY] 微信支付成功: {}, amount={}分", outTradeNo, totalFee);
+
+        // 业务处理
+        if (PaymentTransaction.TYPE_RECHARGE.equals(payment.getPaymentType())) {
+            handleRechargeSuccess(payment);
+        } else if (PaymentTransaction.TYPE_ORDER.equals(payment.getPaymentType())) {
+            handleOrderPaySuccess(payment);
+        }
+    }
 }

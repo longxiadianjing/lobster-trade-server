@@ -120,13 +120,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-
-        <!-- WeChat Pay SDK (HMAC-SHA256 APIv2) -->
-        <dependency>
-            <groupId>com.github.wechatpay-apache-httpclient</groupId>
-            <artifactId>wechatpay-apache-httpclient</artifactId>
-            <version>0.4.9</version>
-        </dependency>
     </dependencies>
 
     <build>

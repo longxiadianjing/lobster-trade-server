@@ -54,6 +54,13 @@ payment:
     alipayPublicKey: ${ALIPAY_PUBLIC_KEY:MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo/I4PFPUT07O7PEMId0fT/5DvQmtKtrxyPTeHO4Lcw8mJqed3RlQSJltu3kAnZq4G3rD307SvzdBYJqWsbGvbD6JQlLxsi6iFoF7FmqCICtwyqIyDG7OWolBDbzKgN69yXzCiBNy5tAIhxj9HhnL9iAFdYGZVLVVitfbkvm/yE1RMpIQVnSMxUW1crne3G2cftRkAvVt1V8zfYoyD+VAQfffuU+0FLqNftpi32/GHFLQkgZ0OZUy7KIXJgvtYE4LmvGwDZDOLGscQkHc+cs2l6JwzDR2XRIkcSg7pvqZ0vsQs2ZvtbLzyyUysq3e3FWQKLmw9DUghRoFdSRyPkpAKQIDAQAB}
     notifyUrl: ${ALIPAY_NOTIFY_URL:http://localhost:8080/api/payment/alipay/notify}
     sandbox: ${ALIPAY_SANDBOX:false}
+  wechat:
+    appId: ${WECHAT_APP_ID:}
+    mchId: ${WECHAT_MCH_ID:1715080856}
+    apiKey: ${WECHAT_API_KEY:}
+    certPath: ${WECHAT_CERT_PATH:}
+    notifyUrl: ${WECHAT_NOTIFY_URL:http://localhost:8080/api/payment/wechat/notify}
+    enabled: ${WECHAT_ENABLED:false}
 
 server:
   port: 8080
