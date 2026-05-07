@@ -323,14 +323,14 @@ const fetchMessages = async () => {
   loading.value = true
   try {
     const typeMap = { all: null, system: 1, order: 2, cs: 3 }
-    const type = typeMap[activeTab.value] !== undefined ? typeMap[activeTab.value] : null
+    const type = typeMap[activeTab.value] !== undefined ? typeMap[activeTab.value] : undefined
     const params = { page: currentPage.value, size: pageSize.value }
-    if (type !== null) params.type = type
+    if (type !== undefined) params.type = type
 
     const res = await getNotificationList(params)
-    // 后端返回 IPage: { records: [], total: N, pages: N, current: N }
-    messageList.value = res.records || []
-    total.value = res.total || 0
+    // 后端返回 {code:0, message:"success", data: {records:[], total:N}} → axios interceptor 返回 response.data
+    messageList.value = res.data?.records || []
+    total.value = res.data?.total || 0
   } catch (e) {
     console.error('fetchMessages error', e)
   } finally {
@@ -356,7 +356,7 @@ const fetchAllMessagesForUnreadMap = async () => {
     const results = await Promise.all(promises)
     const map = {}
     results.forEach(res => {
-      ;(res.records || []).forEach(m => { map[m.id] = m })
+      ;(res.data?.records || []).forEach(m => { map[m.id] = m })
     })
     allMessagesMap.value = map
   } catch (e) {
