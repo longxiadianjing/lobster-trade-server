@@ -72,6 +72,12 @@ const routes = [
     meta: { title: '实名认证', requiresAuth: true }
   },
   {
+    path: '/realname/verify',
+    name: 'RealNameVerifyNew',
+    component: () => import('@/views/realname/RealNameVerify.vue'),
+    meta: { title: '实名认证', requiresAuth: true }
+  },
+  {
     path: '/user/set-pay-password',
     name: 'SetPayPassword',
     component: () => import('@/views/user/SetPayPassword.vue'),

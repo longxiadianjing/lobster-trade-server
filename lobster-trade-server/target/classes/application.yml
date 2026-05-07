@@ -43,7 +43,7 @@ mybatis-plus:
   type-aliases-package: com.lobster.trade.model.entity
 
 jwt:
-  secret: ${JWT_SECRET:}
+  secret: ${JWT_SECRET}
   expire: ${JWT_EXPIRE:86400000}
 
 payment:
