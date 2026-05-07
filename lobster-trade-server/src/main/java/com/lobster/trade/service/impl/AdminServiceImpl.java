@@ -18,6 +18,8 @@ import com.lobster.trade.model.request.AdminProductUpdateRequest;
 import com.lobster.trade.model.response.AdminProductVO;
 import com.lobster.trade.model.response.AdminVO;
 import com.lobster.trade.service.AdminService;
+import com.lobster.trade.service.EscrowService;
+import com.lobster.trade.service.SysNotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +45,8 @@ public class AdminServiceImpl implements AdminService {
     private final TradeOrderMapper orderMapper;
     private final ProductMapper productMapper;
     private final GameCategoryMapper gameCategoryMapper;
+    private final EscrowService escrowService;
+    private final SysNotificationService sysNotificationService;
 
     @Override
     public Map<String, Object> login(AdminLoginRequest req) {
@@ -154,6 +158,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Page<TradeOrder> listOrders(String keyword, String status, String tradeType, int page, int size) {
+        // MyBatis-Plus selectPage + wrapper内含or()会导致count查询返回0，改用selectList全量+Java分页
         LambdaQueryWrapper<TradeOrder> q = new LambdaQueryWrapper<>();
         q.eq(StringUtils.hasText(status), TradeOrder::getStatus, status);
         q.eq(StringUtils.hasText(tradeType), TradeOrder::getTradeType, tradeType);
@@ -162,8 +167,16 @@ public class AdminServiceImpl implements AdminService {
                    .or().like(TradeOrder::getProductTitle, keyword)
         );
         q.orderByDesc(TradeOrder::getCreateTime);
+        List<TradeOrder> all = orderMapper.selectList(q);
+        int total = all.size();
+        int fromIndex = (page - 1) * size;
+        int toIndex = Math.min(fromIndex + size, total);
+        List<TradeOrder> records = fromIndex < total ? all.subList(fromIndex, toIndex) : List.of();
         Page<TradeOrder> p = new Page<>(page, size);
-        return orderMapper.selectPage(p, q);
+        p.setRecords(records);
+        p.setTotal(total);
+        p.setPages((total + size - 1) / size);
+        return p;
     }
 
     @Override
@@ -173,10 +186,20 @@ public class AdminServiceImpl implements AdminService {
         if (order == null || order.getIsDeleted() == 1) {
             throw new BusinessException(ErrorCode.PARAM_INVALID, "订单不存在");
         }
+        String oldStatus = order.getStatus();
+
+        // 【安全加固】禁止管理员修改订单核心身份字段
+        if (body.get("sellerId") != null || body.get("buyerId") != null) {
+            throw new BusinessException(ErrorCode.FORBIDDEN, "禁止修改订单买卖双方身份");
+        }
+        // 【安全加固】禁止管理员修改金额相关字段（金额由系统计算）
+        if (body.get("orderAmount") != null || body.get("escrowAmount") != null
+                || body.get("sellerReceived") != null || body.get("platformFee") != null
+                || body.get("commissionRate") != null) {
+            throw new BusinessException(ErrorCode.FORBIDDEN, "禁止修改订单金额相关字段");
+        }
+
         if (body.get("status") != null) order.setStatus((String) body.get("status"));
-        if (body.get("orderAmount") != null) order.setOrderAmount(new BigDecimal(body.get("orderAmount").toString()));
-        if (body.get("escrowAmount") != null) order.setEscrowAmount(new BigDecimal(body.get("escrowAmount").toString()));
-        if (body.get("sellerReceived") != null) order.setSellerReceived(new BigDecimal(body.get("sellerReceived").toString()));
         if (body.get("deliveryRemark") != null) order.setDeliveryRemark((String) body.get("deliveryRemark"));
         if (body.get("disputeStatus") != null) order.setDisputeStatus((Integer) body.get("disputeStatus"));
         if (body.get("disputeReason") != null) order.setDisputeReason((String) body.get("disputeReason"));
@@ -185,12 +208,8 @@ public class AdminServiceImpl implements AdminService {
         if (body.get("productTitle") != null) order.setProductTitle((String) body.get("productTitle"));
         if (body.get("gameId") != null) order.setGameId(toLong(body.get("gameId")));
         if (body.get("categoryId") != null) order.setCategoryId(toLong(body.get("categoryId")));
-        if (body.get("sellerId") != null) order.setSellerId(toLong(body.get("sellerId")));
-        if (body.get("buyerId") != null) order.setBuyerId(toLong(body.get("buyerId")));
         if (body.get("depositSeller") != null) order.setDepositSeller(new BigDecimal(body.get("depositSeller").toString()));
         if (body.get("depositBuyer") != null) order.setDepositBuyer(new BigDecimal(body.get("depositBuyer").toString()));
-        if (body.get("commissionRate") != null) order.setCommissionRate(new BigDecimal(body.get("commissionRate").toString()));
-        if (body.get("platformFee") != null) order.setPlatformFee(new BigDecimal(body.get("platformFee").toString()));
         if (body.get("escrowStatus") != null) order.setEscrowStatus((Integer) body.get("escrowStatus"));
         if (body.get("paymentStatus") != null) order.setPaymentStatus((Integer) body.get("paymentStatus"));
         if (body.get("buyerCancel") != null) order.setBuyerCancel((Integer) body.get("buyerCancel"));
@@ -199,6 +218,28 @@ public class AdminServiceImpl implements AdminService {
         if (body.get("boostRequirement") != null) order.setBoostRequirement((String) body.get("boostRequirement"));
         order.setUpdateTime(LocalDateTime.now());
         orderMapper.updateById(order);
+
+        // 【资金处理】状态变更为已完成 → 释放托管资金给卖家
+        String newStatus = order.getStatus();
+        if (!oldStatus.equals(newStatus) && "completed".equals(newStatus)) {
+            escrowService.releaseEscrow(order);
+            sysNotificationService.createForUser(order.getSellerId(),
+                    "✅ 订单已完成（管理员介入）",
+                    "商品【" + order.getProductTitle() + "】订单已完成，款项已到账。订单号：" + order.getOrderNo(),
+                    2, "/order/detail/" + order.getId());
+            sysNotificationService.createForUser(order.getBuyerId(),
+                    "✅ 订单已完成（管理员介入）",
+                    "您购买的商品【" + order.getProductTitle() + "】交易已完成，欢迎评价。订单号：" + order.getOrderNo(),
+                    2, "/order/detail/" + order.getId());
+        }
+        // 【资金处理】状态变更为已取消 → 退款给买家
+        if (!oldStatus.equals(newStatus) && "cancelled".equals(newStatus)) {
+            escrowService.refundEscrow(order);
+            sysNotificationService.createForUser(order.getBuyerId(),
+                    "❌ 订单已取消（管理员介入）",
+                    "您的订单【" + order.getProductTitle() + "】已由管理员取消，款项已退还至钱包。订单号：" + order.getOrderNo(),
+                    2, "/order/detail/" + order.getId());
+        }
     }
 
     private Long toLong(Object val) {

@@ -30,6 +30,12 @@ public class Wallet {
     private String bankName;
     private String bankUsername;
 
+    /** 支付密码连续失败次数 */
+    private Integer passwordFailCount;
+
+    /** 支付密码锁定截止时间（null=未锁定） */
+    private LocalDateTime passwordLockUntil;
+
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 

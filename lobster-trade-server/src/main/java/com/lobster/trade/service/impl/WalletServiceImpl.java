@@ -128,8 +128,28 @@ public class WalletServiceImpl implements WalletService {
 
         Wallet wallet = getWalletByUserId(userId);
 
+        // 【安全】支付密码暴力破解防护
+        if (wallet.getPasswordLockUntil() != null
+                && wallet.getPasswordLockUntil().isAfter(LocalDateTime.now())) {
+            throw new BusinessException("支付密码已锁定，请" + java.time.Duration.between(LocalDateTime.now(), wallet.getPasswordLockUntil()).toMinutes() + "分钟后再试");
+        }
         if (wallet.getPasswordSet() == 0 || !PasswordEncoder.matches(wallet.getPassword(), payPassword)) {
-            throw new BusinessException("支付密码错误");
+            // 密码错误：计数+锁定
+            int failCount = (wallet.getPasswordFailCount() == null ? 0 : wallet.getPasswordFailCount()) + 1;
+            wallet.setPasswordFailCount(failCount);
+            if (failCount >= 5) {
+                wallet.setPasswordLockUntil(LocalDateTime.now().plusMinutes(15));
+                walletMapper.updateById(wallet);
+                throw new BusinessException("支付密码连续错误5次，已锁定15分钟");
+            }
+            walletMapper.updateById(wallet);
+            throw new BusinessException("支付密码错误，剩余尝试次数：" + (5 - failCount));
+        }
+        // 密码正确：重置失败计数
+        if (wallet.getPasswordFailCount() != null || wallet.getPasswordLockUntil() != null) {
+            wallet.setPasswordFailCount(0);
+            wallet.setPasswordLockUntil(null);
+            walletMapper.updateById(wallet);
         }
 
         BigDecimal fee = new BigDecimal("1.00");

@@ -167,8 +167,9 @@ public class CouponServiceImpl implements CouponService {
                .last("LIMIT 20");
         return couponMapper.selectList(wrapper);
     }
+    private static final int BATCH_SIZE = 500;
+
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void distributeToAllUsers(Long couponId) {
         Coupon coupon = couponMapper.selectById(couponId);
         if (coupon == null) throw new BusinessException("优惠券不存在");
@@ -182,35 +183,49 @@ public class CouponServiceImpl implements CouponService {
             throw new BusinessException("优惠券已过期");
         }
 
-        // 查出所有用户
-        List<User> allUsers = userMapper.selectList(new LambdaQueryWrapper<User>().eq(User::getIsDeleted, 0));
-        int distributed = 0;
-        for (User user : allUsers) {
-            // 检查每人限领
+        // 先查出用户总数，分批处理避免事务超时
+        long totalUsers = userMapper.selectCount(new LambdaQueryWrapper<User>().eq(User::getIsDeleted, 0));
+        int totalPages = (int) Math.ceil((double) totalUsers / BATCH_SIZE);
+        int totalDistributed = 0;
+
+        for (int page = 1; page <= totalPages; page++) {
+            List<User> userBatch = userMapper.selectList(
+                new LambdaQueryWrapper<User>()
+                    .eq(User::getIsDeleted, 0)
+                    .last("LIMIT " + BATCH_SIZE + " OFFSET " + (page - 1) * BATCH_SIZE)
+            );
+            int batchDistributed = distributeBatch(coupon, userBatch, now);
+            totalDistributed += batchDistributed;
+        }
+
+        // 更新发行数量
+        coupon.setIssuedCount(coupon.getIssuedCount() == null ? totalDistributed : coupon.getIssuedCount() + totalDistributed);
+        couponMapper.updateById(coupon);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int distributeBatch(Coupon coupon, List<User> userBatch, LocalDateTime now) {
+        int count = 0;
+        for (User user : userBatch) {
             if (coupon.getPerUserLimit() != null && coupon.getPerUserLimit() > 0) {
                 long owned = userCouponMapper.selectCount(new LambdaQueryWrapper<UserCoupon>()
                     .eq(UserCoupon::getUserId, user.getId())
-                    .eq(UserCoupon::getCouponId, couponId)
+                    .eq(UserCoupon::getCouponId, coupon.getId())
                     .eq(UserCoupon::getIsDeleted, 0)
                 );
-                if (owned >= coupon.getPerUserLimit()) {
-                    continue;
-                }
+                if (owned >= coupon.getPerUserLimit()) continue;
             }
             UserCoupon uc = new UserCoupon();
             uc.setUserId(user.getId());
-            uc.setCouponId(couponId);
+            uc.setCouponId(coupon.getId());
             uc.setCouponName(coupon.getName());
             uc.setDiscountValue(coupon.getDiscountValue());
             uc.setReceiveTime(now);
             uc.setStatus(0);
             userCouponMapper.insert(uc);
-            distributed++;
+            count++;
         }
-
-        // 更新发行数量
-        coupon.setIssuedCount(coupon.getIssuedCount() == null ? distributed : coupon.getIssuedCount() + distributed);
-        couponMapper.updateById(coupon);
+        return count;
     }
 
     @Override
