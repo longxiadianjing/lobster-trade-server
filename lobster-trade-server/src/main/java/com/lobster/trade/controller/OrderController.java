@@ -70,6 +70,17 @@ public class OrderController {
         return ApiResponse.success(null);
     }
 
+    // 兼容前端 /order/delivery/{id} 路由
+    @PostMapping("/delivery/{id}")
+    public ApiResponse<Void> submitDeliveryAlias(@PathVariable Long id,
+                                                  @RequestParam(required = false) String deliveryImages,
+                                                  @RequestParam(required = false) String deliveryRemark,
+                                                  @RequestHeader("Authorization") String token) {
+        Long sellerId = jwtAuthService.getUserIdFromToken(token.replace("Bearer ", ""));
+        orderService.submitDelivery(id, sellerId, deliveryImages, deliveryRemark);
+        return ApiResponse.success(null);
+    }
+
     @PostMapping("/confirm/{id}")
     public ApiResponse<Void> confirmDelivery(@PathVariable Long id,
                                               @RequestHeader("Authorization") String token) {

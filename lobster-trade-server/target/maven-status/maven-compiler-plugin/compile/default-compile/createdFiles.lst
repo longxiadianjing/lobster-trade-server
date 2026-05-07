@@ -15,7 +15,6 @@ com\lobster\trade\mapper\AdminMapper.class
 com\lobster\trade\mapper\AdminRoleMapper.class
 com\lobster\trade\config\SecurityConfig.class
 com\lobster\trade\model\response\ApiResponse.class
-com\lobster\trade\controller\UserSecurityController.class
 com\lobster\trade\controller\CertificationController.class
 com\lobster\trade\controller\UserController.class
 com\lobster\trade\service\StatsService.class

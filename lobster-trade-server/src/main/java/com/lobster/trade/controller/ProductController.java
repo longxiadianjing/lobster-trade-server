@@ -8,7 +8,9 @@ import com.lobster.trade.model.request.ProductPublishRequest;
 import com.lobster.trade.model.entity.Product;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,7 +22,7 @@ public class ProductController {
     private final JwtAuthService jwtAuthService;
 
     @PostMapping
-    public ApiResponse<Long> publish(@RequestBody ProductPublishRequest req,
+    public ApiResponse<Long> publish(@Valid @RequestBody ProductPublishRequest req,
                                    @RequestHeader("Authorization") String token) {
         Long sellerId = jwtAuthService.getUserIdFromToken(token.replace("Bearer ", ""));
         return ApiResponse.success(productService.publish(req, sellerId));

@@ -170,6 +170,10 @@ const pagination = reactive({
 })
 
 onMounted(() => {
+  // 支持 ?role=seller 或 ?role=buyer 从 URL 初始化标签页
+  if (route.query.role === 'seller' || route.query.role === 'buyer') {
+    activeTab.value = route.query.role
+  }
   loadOrders()
 })
 

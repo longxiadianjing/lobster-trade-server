@@ -16,7 +16,7 @@ public class PaymentTransaction {
     private String paymentNo;
 
     /** 关联用户 */
-    private Long userId;
+    public long userId;
 
     /** 关联订单ID（充值时为null，订单支付时为orderId） */
     private Long orderId;
