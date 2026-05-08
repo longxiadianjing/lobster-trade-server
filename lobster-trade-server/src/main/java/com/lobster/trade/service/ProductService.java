@@ -12,7 +12,7 @@ public interface ProductService {
 
     Page<ProductDetailVO> list(String keyword, Long gameId, String productType, int page, int size);
 
-    Page<ProductDetailVO> search(String keyword, Long gameId, String productType, int page, int size);
+    Page<ProductDetailVO> search(String keyword, Long gameId, String productType, Long sellerId, int page, int size);
     ProductDetailVO getDetail(Long productId);
     void increaseView(Long productId);
     List<Product> getMyProducts(Long sellerId);

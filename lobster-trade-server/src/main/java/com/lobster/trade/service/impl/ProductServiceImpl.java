@@ -171,7 +171,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDetailVO> search(String keyword, Long gameId, String productType, int page, int size) {
+    public Page<ProductDetailVO> search(String keyword, Long gameId, String productType, Long sellerId, int page, int size) {
         LambdaQueryWrapper<Product> wrapper = new LambdaQueryWrapper<Product>()
             .eq(Product::getStatus, 1)
             .eq(Product::getIsDeleted, 0);
@@ -181,6 +181,7 @@ public class ProductServiceImpl implements ProductService {
         }
         if (gameId != null) wrapper.eq(Product::getGameId, gameId);
         if (productType != null && !productType.isEmpty()) wrapper.eq(Product::getProductType, productType);
+        if (sellerId != null) wrapper.eq(Product::getSellerId, sellerId);
         wrapper.orderByDesc(Product::getViewCount);
 
         java.util.List<Product> allProducts = productMapper.selectList(wrapper);

@@ -55,8 +55,9 @@ public class ProductController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long gameId,
             @RequestParam(required = false) String productType,
+            @RequestParam(required = false) Long sellerId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size) {
-        return ApiResponse.success(productService.search(keyword, gameId, productType, page, size));
+        return ApiResponse.success(productService.search(keyword, gameId, productType, sellerId, page, size));
     }
 }
