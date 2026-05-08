@@ -155,6 +155,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import PageLayout from '@/components/PageLayout.vue'
 import { User, Wallet, List, Star, ChatDotRound, Delete, Picture, Location, Clock, InfoFilled } from '@element-plus/icons-vue'
+import { getMyFavorites, removeFavorite } from '@/api/favorite'
 
 const router = useRouter()
 const route = useRoute()
@@ -169,39 +170,19 @@ const typeMap = {
   boosting: '代练'
 }
 
-// Mock收藏数据
-const favorites = ref([
-  {
-    id: 101, title: '三角洲行动 哈夫币 100万', price: 80, unit: '万', gameName: '三角洲行动',
-    productType: 'game_currency', coverImage: '', sellerNickname: '专业搬砖商',
-    reputationScore: '4.9', favoriteTime: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: 102, title: '战场段位代练 全程手打不坐牢', price: 200, unit: '局', gameName: '三角洲行动',
-    productType: 'boosting', coverImage: '', sellerNickname: '靠谱代练',
-    reputationScore: '5.0', favoriteTime: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: 103, title: '烽火保险箱任务代肝', price: 150, unit: '个', gameName: '三角洲行动',
-    productType: 'boosting', coverImage: '', sellerNickname: '三角洲专家',
-    reputationScore: '4.8', favoriteTime: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: 104, title: '王者荣耀 点券 5000', price: 350, unit: '5000点', gameName: '王者荣耀',
-    productType: 'game_currency', coverImage: '', sellerNickname: '游戏商人',
-    reputationScore: '4.7', favoriteTime: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: 105, title: '原神 原石 5000个', price: 200, unit: '5000个', gameName: '原神',
-    productType: 'game_currency', coverImage: '', sellerNickname: '原神玩家',
-    reputationScore: '5.0', favoriteTime: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: 106, title: '史诗级装备礼包', price: 500, unit: '套', gameName: '王者荣耀',
-    productType: 'equipment', coverImage: '', sellerNickname: '装备专家',
-    reputationScore: '4.6', favoriteTime: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
-  },
-])
+const favorites = ref([])
+
+const loadFavorites = async () => {
+  try {
+    const res = await getMyFavorites()
+    if (res.code === 200 || res.code === 0) {
+      favorites.value = res.data || []
+    }
+  } catch (e) {
+    console.error('加载收藏失败:', e)
+  }
+}
+
 
 const gameOptions = computed(() => [...new Set(favorites.value.map(f => f.gameName))])
 
@@ -243,11 +224,12 @@ const toggleSelect = (id) => {
 
 const handleRemove = async (item) => {
   try {
-    await ElMessageBox.confirm(`确定取消收藏「${item.title}」吗？`, '提示', {
+    await ElMessageBox.confirm('确定取消收藏【' + item.title + '】吗？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     })
+    await removeFavorite(item.id)
     const idx = favorites.value.findIndex(f => f.id === item.id)
     if (idx > -1) favorites.value.splice(idx, 1)
     ElMessage.success('已取消收藏')
@@ -273,6 +255,7 @@ const handleBuy = (item) => {
 
 onMounted(() => {
   document.title = '我的收藏 - 龙虾道具交易平台'
+  loadFavorites()
 })
 </script>
 

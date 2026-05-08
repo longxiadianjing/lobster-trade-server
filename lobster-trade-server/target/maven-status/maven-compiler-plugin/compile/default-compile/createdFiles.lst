@@ -48,6 +48,7 @@ com\lobster\trade\controller\SecurityCenterController.class
 com\lobster\trade\controller\admin\CsAdminController.class
 com\lobster\trade\controller\OrderRecognitionController.class
 com\lobster\trade\service\GameService.class
+com\lobster\trade\model\entity\UserFavorite.class
 com\lobster\trade\service\AuthService.class
 com\lobster\trade\mapper\ProductCategoryMapper.class
 com\lobster\trade\service\ProductCategoryService.class
@@ -58,6 +59,7 @@ com\lobster\trade\service\impl\UserServiceImpl.class
 com\lobster\trade\model\request\LoginRequest.class
 com\lobster\trade\common\AdminPermission.class
 com\lobster\trade\controller\admin\AdminOrderController$AdminOrderUpdateRequest.class
+com\lobster\trade\service\FavoriteService.class
 com\lobster\trade\common\BaseContext.class
 com\lobster\trade\controller\ProductCategoryController.class
 com\lobster\trade\mapper\GameCategoryMapper.class
@@ -99,6 +101,7 @@ com\lobster\trade\controller\ImController.class
 com\lobster\trade\LobsterTradeApplication.class
 com\lobster\trade\service\impl\RealNameVerifyServiceImpl.class
 com\lobster\trade\mapper\HotSearchWordMapper.class
+com\lobster\trade\service\impl\FavoriteServiceImpl.class
 com\lobster\trade\service\JwtAuthService.class
 com\lobster\trade\model\entity\AdminRole.class
 com\lobster\trade\service\TradeReviewService.class
@@ -209,6 +212,7 @@ com\lobster\trade\service\impl\ProductCategoryServiceImpl.class
 com\lobster\trade\model\response\LoginResponse.class
 com\lobster\trade\controller\CertificationController$CertificationApplyRequest.class
 com\lobster\trade\model\request\AdminProductUpdateRequest.class
+com\lobster\trade\mapper\UserFavoriteMapper.class
 com\lobster\trade\model\entity\GameCategory.class
 com\lobster\trade\annotation\RequirePermission.class
 com\lobster\trade\model\response\AdminVO.class
@@ -226,3 +230,4 @@ com\lobster\trade\service\CertificationService.class
 com\lobster\trade\model\response\AuditLogVO.class
 com\lobster\trade\service\impl\ImServiceImpl.class
 com\lobster\trade\service\impl\HotSearchWordServiceImpl.class
+com\lobster\trade\controller\FavoriteController.class

@@ -470,8 +470,9 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Picture, Star, ChatDotRound, ArrowRight, ShoppingCart, Share, ZoomIn, Timer, QuestionFilled, InfoFilled, ChatLineRound, Check } from '@element-plus/icons-vue'
-import { getOrCreateSessionByProduct } from '@/api/im'
 import { getProductDetail, getProductList } from '@/api/product'
+import { addFavorite, removeFavorite } from '@/api/favorite'
+import { getOrCreateSessionByProduct } from '@/api/im'
 import { getProductReviews, getSellerReviews } from '@/api/review'
 import { getRecommendedSlots } from '@/api/recommend'
 import { createOrder } from '@/api/order'
@@ -486,6 +487,7 @@ const loading = ref(false)
 const product = ref(null)
 const currentImage = ref('')
 const reviewStats = ref({ totalReviews: 0, avgRating: 0, fiveStar: 0, fourStar: 0, threeStar: 0, twoStar: 0, oneStar: 0 })
+const isFavorited = ref(false)
 const reviews = ref([])
 const reviewLoading = ref(false)
 const sideRecommendations = ref([])
@@ -701,8 +703,30 @@ const getStockClass = (stock) => {
   return 'in-stock'
 }
 
-const handleFavorite = () => {
-  ElMessage.success('已添加到收藏')
+const handleFavorite = async () => {
+  const userStore = useUserStore()
+  if (!userStore.isLoggedIn) {
+    ElMessage.warning('请先登录')
+    router.push({ path: '/login' })
+    return
+  }
+  if (userStore.userId === product.value?.sellerId) {
+    ElMessage.info('不能收藏自已商品')
+    return
+  }
+  try {
+    if (isFavorited.value) {
+      await removeFavorite(product.value.id)
+      isFavorited.value = false
+      ElMessage.success('已取消收藏')
+    } else {
+      await addFavorite(product.value.id)
+      isFavorited.value = true
+      ElMessage.success('已添加到收藏')
+    }
+  } catch (e) {
+    ElMessage.error(e?.message || '操作失败')
+  }
 }
 
 const formatTime = (time) => {
@@ -737,6 +761,15 @@ const loadProduct = async () => {
     } else {
       product.value = mockProduct
       currentImage.value = ''
+      const userStore = useUserStore()
+      if (userStore.isLoggedIn) {
+        try {
+          const fres = await fetch('/api/favorite/check?productId=' + route.params.id, {
+            headers: { Authorization: 'Bearer ' + (userStore.token || '') }
+          }).then(r => r.json())
+          if (fres.code === 200 || fres.code === 0) isFavorited.value = fres.data === true
+        } catch {}
+      }
     }
   } catch (e) {
     console.error('加载商品详情失败:', e)
