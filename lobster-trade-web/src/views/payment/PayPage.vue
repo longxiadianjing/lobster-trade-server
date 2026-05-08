@@ -198,13 +198,23 @@ const loadPayment = async () => {
       return
     }
     const res = await getPaymentStatus(no)
-    if (res.data) {
+    // getPaymentStatus 通过 request.js interceptor，res 已经是 response.data
+    // 但 axios interceptor 对非 200 会 reject 并 throw，这里要用 try/catch
+    if (res && res.data) {
       paymentInfo.value = res.data
       payStatus.value = res.data.status
       if (res.data.expireTime) {
         expireTime.value = res.data.expireTime
         startCountdown()
       }
+      // 如果后端返回的status已经是成功（可能被其他途径触发），直接跳转
+      if (res.data.status === 1) {
+        payStatus.value = 1
+        setTimeout(() => goToTarget(), 1500)
+      }
+    } else if (res && res.code === 200 && res.data == null) {
+      // 支付单不存在
+      paymentInfo.value = null
     }
   } catch (e) {
     console.error('加载支付单失败:', e)
@@ -232,11 +242,11 @@ const handleMockPay = async () => {
   mockLoading.value = true
   try {
     await mockPaymentCallback(paymentInfo.value.paymentNo)
-    ElMessage.success('模拟支付成功')
-    // 开始轮询直到状态变为已支付
+    ElMessage.success('模拟支付成功，正在确认结果...')
+    // 立即开始轮询，等待后端处理完成
     startPolling()
   } catch (e) {
-    ElMessage.error('支付失败')
+    ElMessage.error('支付失败，请重试')
   } finally {
     mockLoading.value = false
   }
@@ -247,7 +257,9 @@ const startPolling = () => {
   pollTimer = setInterval(async () => {
     try {
       const res = await getPaymentStatus(paymentInfo.value.paymentNo)
-      if (res.data) {
+      // res 是 API 返回体，axios interceptor 已经把 response.data 解包
+      // 非 200 会 throw，所以正常流程 res 一定有 data
+      if (res && res.data) {
         if (res.data.status === 1) {
           payStatus.value = 1
           clearInterval(pollTimer)
@@ -261,7 +273,10 @@ const startPolling = () => {
           clearInterval(pollTimer)
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      // 网络抖动/接口报错不中断轮询，继续等待
+      console.warn('[PayPage] 轮询失败，继续等待:', e?.message)
+    }
   }, 2000)
 }
 
