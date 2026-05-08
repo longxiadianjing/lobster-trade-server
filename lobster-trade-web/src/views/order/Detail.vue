@@ -106,7 +106,7 @@
                 </div>
                 <div class="party-item">
                   <p class="party-role">卖家</p>
-                  <p class="party-name">{{ order.sellerNickname }}</p>
+                  <p class="party-name clickable" @click="router.push({ path: '/seller/' + order.sellerId })">{{ order.sellerNickname }}</p>
                 </div>
               </div>
             </div>
@@ -686,6 +686,8 @@ onMounted(() => {
 .party-item { text-align: center; }
 .party-role { margin: 0 0 4px; font-size: 12px; color: #999; }
 .party-name { margin: 0; font-size: 14px; color: #333; }
+.party-name.clickable { cursor: pointer; color: #409eff; }
+.party-name.clickable:hover { text-decoration: underline; }
 .party-arrow { color: #ccc; }
 
 /* ========== 金额 ========== */
