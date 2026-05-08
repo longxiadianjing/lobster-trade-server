@@ -177,7 +177,7 @@
                 </div>
               </div>
               <div class="seller-row">
-                <span class="seller-name">{{ item.sellerNickname || '匿名' }}</span>
+                <span class="seller-name clickable" @click.stop="router.push(`/seller/${item.sellerId}`)">{{ item.sellerNickname || '匿名' }}</span>
                 <div class="rating-wrap">
                   <el-icon class="star-icon"><Star /></el-icon>
                   <span>{{ item.reputationScore || '5.0' }}</span>
@@ -233,7 +233,7 @@
                 </div>
               </div>
               <div class="seller-row">
-                <span class="seller-name">{{ item.sellerNickname || '匿名' }}</span>
+                <span class="seller-name clickable" @click.stop="router.push(`/seller/${item.sellerId}`)">{{ item.sellerNickname || '匿名' }}</span>
                 <div class="rating-wrap">
                   <el-icon class="star-icon"><Star /></el-icon>
                   <span>{{ item.reputationScore || '5.0' }}</span>
@@ -634,6 +634,8 @@ onMounted(() => {
 .unit { font-size: 12px; color: #999; margin-left: 2px; }
 .seller-row { display: flex; align-items: center; justify-content: space-between; }
 .seller-name { font-size: 12px; color: #999; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100px; }
+.seller-name.clickable { cursor: pointer; color: #409eff; }
+.seller-name.clickable:hover { text-decoration: underline; }
 .rating-wrap { display: flex; align-items: center; gap: 2px; font-size: 12px; color: #f5a623; }
 .star-icon { font-size: 12px; }
 
