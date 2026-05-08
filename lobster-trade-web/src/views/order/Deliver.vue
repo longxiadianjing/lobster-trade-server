@@ -258,8 +258,12 @@ const handlePictureCardPreview = (file) => {
 }
 
 const handleRemove = (file, fileList) => {
-  imageList.value = fileList
-  deliveryImageList.value = fileList
+  // 根据当前 fileList 判断是哪个列表被操作
+  if (fileList.length === imageList.value.length || (fileList.length < imageList.value.length && imageList.value.some(f => f.uid === file.uid))) {
+    imageList.value = fileList
+  } else {
+    deliveryImageList.value = fileList
+  }
 }
 
 const handleUpdateProgress = async () => {

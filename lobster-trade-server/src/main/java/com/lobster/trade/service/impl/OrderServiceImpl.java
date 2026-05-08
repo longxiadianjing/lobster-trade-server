@@ -398,6 +398,8 @@ public class OrderServiceImpl implements OrderService {
         if (bu != null) vo.setBuyerNickname(bu.getNickname());
         GameCategory g = gameCategoryMapper.selectById(o.getGameId());
         if (g != null) vo.setGameName(g.getGameName());
+        Product p = productMapper.selectById(o.getProductId());
+        if (p != null) vo.setUnit(p.getUnit());
         vo.setCouponDiscount(BigDecimal.ZERO);
         return vo;
     }

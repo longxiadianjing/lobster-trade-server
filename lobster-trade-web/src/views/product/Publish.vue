@@ -113,7 +113,7 @@
               <span class="unit-text">元</span>
             </el-form-item>
 
-            <el-form-item label="单位" prop="unit" v-if="form.productType !== 'boosting'">
+            <el-form-item label="单位" prop="unit" v-if="form.productType === 'goods' || form.productType === 'accompany'">
               <el-input v-model="form.unit" placeholder="如：万、个、套" style="width: 120px;" />
             </el-form-item>
 
@@ -232,10 +232,13 @@ const form = reactive({
 
 const rules = {
   gameId: [{ required: true, message: '请选择游戏', trigger: 'change' }],
+  categoryId: [{ required: true, message: '请选择商品分类', trigger: 'change' }],
   productType: [{ required: true, message: '请选择商品类型', trigger: 'change' }],
   title: [{ required: true, message: '请输入商品标题', trigger: 'blur' }],
   description: [{ required: true, message: '请输入商品描述', trigger: 'blur' }],
-  price: [{ required: true, message: '请输入价格', trigger: 'blur' }]
+  price: [{ required: true, message: '请输入价格', trigger: 'blur' }],
+  stock: [{ required: true, message: '请设置库存', trigger: 'blur' }],
+  priceType: [{ required: true, message: '请选择价格类型', trigger: 'change' }]
 }
 
 // 模拟分类（实际从API获取）

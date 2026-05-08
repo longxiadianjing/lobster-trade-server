@@ -49,4 +49,6 @@ public class OrderDetailVO {
     private Integer myReviewRating;
     // 优惠券折扣金额
     private BigDecimal couponDiscount;
+    /** 商品单位（从product关联查询） */
+    private String unit;
 }
