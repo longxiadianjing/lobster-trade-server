@@ -154,7 +154,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Page<OrderDetailVO> queryOrders(Long userId, String role, String status, int page, int size) {
-        Page<TradeOrder> pageParam = new Page<>(page, size);
+        LambdaQueryWrapper<TradeOrder> countWrapper = new LambdaQueryWrapper<TradeOrder>()
+            .eq(TradeOrder::getIsDeleted, 0);
+        if ("buyer_id".equals(role)) countWrapper.eq(TradeOrder::getBuyerId, userId);
+        else countWrapper.eq(TradeOrder::getSellerId, userId);
+        if (status != null && !status.isEmpty()) countWrapper.eq(TradeOrder::getStatus, status);
+        long total = tradeOrderMapper.selectCount(countWrapper);
+
+        Page<TradeOrder> pageParam = new Page<>(page, size, false);
+        pageParam.setSearchCount(false);
         LambdaQueryWrapper<TradeOrder> wrapper = new LambdaQueryWrapper<TradeOrder>()
             .eq(TradeOrder::getIsDeleted, 0);
         if ("buyer_id".equals(role)) wrapper.eq(TradeOrder::getBuyerId, userId);
@@ -165,7 +173,7 @@ public class OrderServiceImpl implements OrderService {
         Page<TradeOrder> result = tradeOrderMapper.selectPage(pageParam, wrapper);
         List<OrderDetailVO> records = new ArrayList<>();
         for (TradeOrder o : result.getRecords()) records.add(toVO(o));
-        Page<OrderDetailVO> voPage = new Page<>(result.getCurrent(), result.getSize(), result.getTotal());
+        Page<OrderDetailVO> voPage = new Page<>(result.getCurrent(), result.getSize(), total);
         voPage.setRecords(records);
         return voPage;
     }

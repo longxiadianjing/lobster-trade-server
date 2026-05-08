@@ -117,7 +117,7 @@
                 <template v-if="order.status === 'paid' && activeTab === 'seller'">
                   <el-button type="success" size="small" @click.stop="handleDeliver(order)">发货</el-button>
                 </template>
-                <template v-if="(order.status === 'submitted' || order.status === 'paid') && activeTab === 'buyer'">
+                <template v-if="order.status === 'submitted' && activeTab === 'buyer'">
                   <el-button type="primary" size="small" @click.stop="handleConfirm(order)">确认收货</el-button>
                 </template>
                 <template v-if="order.status === 'submitted' && activeTab === 'seller'">
@@ -190,7 +190,7 @@ const loadOrders = async () => {
     }
     if (res.data) {
       orders.value = res.data.records || res.data.list || []
-      pagination.total = res.data.total || 0
+      pagination.total = res.data.total || res.data.records?.length || 0
     }
   } catch (e) {
     console.error('加载订单失败', e)
