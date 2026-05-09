@@ -1,5 +1,6 @@
 package com.lobster.trade.config;
 
+import com.lobster.trade.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -33,13 +34,13 @@ public class DataInitializer implements ApplicationRunner {
                 "is_deleted INT DEFAULT 0" +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
-        // 超级管理员拥有全部权限
+        // 超级管理员拥有全部权限（密码 BCrypt 加密）
         jdbcTemplate.execute("INSERT IGNORE INTO admin (username, password, nickname, role, permissions, status) " +
-                "VALUES ('admin', 'admin123', '超级管理员', 'SUPER_ADMIN', '*', 1)");
+                "VALUES ('admin', '" + PasswordEncoder.encode("admin123") + "', '超级管理员', 'SUPER_ADMIN', '*', 1)");
 
         // 创建操作员账号（无 ADMIN_MANAGE 权限）
         jdbcTemplate.execute("INSERT IGNORE INTO admin (username, password, nickname, role, permissions, status) " +
-                "VALUES ('operator', 'operator123', '运营管理员', 'OPERATOR', 'USER_VIEW,USER_EDIT,ORDER_VIEW,ORDER_EDIT,PRODUCT_VIEW,PRODUCT_EDIT,ANNOUNCEMENT_VIEW,ANNOUNCEMENT_EDIT,COUPON_VIEW,COUPON_EDIT,HOTSEARCH_VIEW,HOTSEARCH_EDIT', 1)");
+                "VALUES ('operator', '" + PasswordEncoder.encode("operator123") + "', '运营管理员', 'OPERATOR', 'USER_VIEW,USER_EDIT,ORDER_VIEW,ORDER_EDIT,PRODUCT_VIEW,PRODUCT_EDIT,ANNOUNCEMENT_VIEW,ANNOUNCEMENT_EDIT,COUPON_VIEW,COUPON_EDIT,HOTSEARCH_VIEW,HOTSEARCH_EDIT,DASHBOARD_VIEW,EXPORT_DATA,CERTIFICATION_VIEW,CERTIFICATION_AUDIT', 1)");
 
         // admin_role 预置角色表
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS admin_role (" +
@@ -58,7 +59,7 @@ public class DataInitializer implements ApplicationRunner {
         jdbcTemplate.execute("INSERT IGNORE INTO admin_role (role_code, role_name, permissions, description, status) VALUES " +
                 "('SUPER_ADMIN', 'SUPER_ADMIN', '*', 'All permissions', 1)");
         jdbcTemplate.execute("INSERT IGNORE INTO admin_role (role_code, role_name, permissions, description, status) VALUES " +
-                "('OPERATOR', 'OPERATOR', 'USER_VIEW,USER_EDIT,ORDER_VIEW,ORDER_EDIT,PRODUCT_VIEW,PRODUCT_EDIT,ANNOUNCEMENT_VIEW,ANNOUNCEMENT_EDIT,COUPON_VIEW,COUPON_EDIT,HOTSEARCH_VIEW,HOTSEARCH_EDIT,RECSLOT_VIEW,RECSLOT_EDIT', 'Operator role', 1)");
+                "('OPERATOR', 'OPERATOR', 'USER_VIEW,USER_EDIT,ORDER_VIEW,ORDER_EDIT,PRODUCT_VIEW,PRODUCT_EDIT,ANNOUNCEMENT_VIEW,ANNOUNCEMENT_EDIT,COUPON_VIEW,COUPON_EDIT,HOTSEARCH_VIEW,HOTSEARCH_EDIT,RECSLOT_VIEW,RECSLOT_EDIT,DASHBOARD_VIEW,EXPORT_DATA,CERTIFICATION_VIEW,CERTIFICATION_AUDIT', 'Operator role', 1)");
         jdbcTemplate.execute("INSERT IGNORE INTO admin_role (role_code, role_name, permissions, description, status) VALUES " +
                 "('CS_AGENT', 'CS_AGENT', 'CS_VIEW,CS_HANDLE,TICKET_VIEW,TICKET_HANDLE,NOTIFICATION_VIEW,NOTIFICATION_EDIT', 'Customer service role', 1)");
 

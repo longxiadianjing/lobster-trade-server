@@ -62,6 +62,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-empty v-if="!loading && orders.length === 0" description="暂无订单数据" />
 
       <div class="pagination-wrap">
         <el-pagination
@@ -261,6 +262,16 @@ const interventionForm = reactive({ action: 'complete', reason: '' })
 const typeMap = { game_currency: '游戏币', equipment: '装备', boosting: '代练', accompanying: '陪玩', escort: '护航', goods: '商品' }
 const statusMap = { pending_pay: '待付款', paid: '已付款', in_progress: '进行中', submitted: '已发货', confirmed: '已确认', completed: '已完成', disputed: '仲裁中', cancelled: '已取消' }
 const statusTypeMap = { pending_pay: 'warning', paid: 'primary', in_progress: '', submitted: 'success', confirmed: 'warning', completed: 'info', disputed: 'danger', cancelled: 'info' }
+const allowedTransitions = {
+  pending_pay: ['in_progress', 'cancelled'],
+  paid: ['submitted', 'cancelled'],
+  in_progress: ['completed', 'disputed', 'cancelled'],
+  submitted: ['confirmed'],
+  confirmed: ['completed'],
+  completed: [],
+  cancelled: [],
+  disputed: ['completed', 'cancelled'],
+}
 
 const loadOrders = async () => {
   loading.value = true
@@ -285,6 +296,7 @@ const viewDetail = (row) => {
 }
 
 const editId = ref(null)
+const editOriginalStatus = ref(null)
 const editVisible = ref(false)
 const editLoading = ref(false)
 const editForm = reactive({
@@ -297,6 +309,7 @@ const editForm = reactive({
 
 const handleEdit = (row) => {
   editId.value = row.id
+  editOriginalStatus.value = row.status || ''
   editForm.tradeType = row.tradeType || ''
   editForm.productTitle = row.productTitle || ''
   editForm.gameId = row.gameId || null
@@ -323,6 +336,13 @@ const handleEdit = (row) => {
 
 const doEdit = async () => {
   if (!editId.value) return
+  if (editOriginalStatus.value && editForm.status) {
+    const allowed = allowedTransitions[editOriginalStatus.value]
+    if (allowed && !allowed.includes(editForm.status)) {
+      ElMessage.error(`订单状态不允许从【${statusMap[editOriginalStatus.value]}】变更为【${statusMap[editForm.status]}】`)
+      return
+    }
+  }
   editLoading.value = true
   try {
     await request.put(`/admin/order/${editId.value}`, editForm)

@@ -95,7 +95,7 @@ const loadData = async () => {
     })
     list.value = res.data.records || []
     total.value = res.data.total || 0
-  } catch (e) { /* handled */ }
+  } catch (e) { ElMessage.error('加载失败：' + (e.message || '网络错误')) }
   finally { loading.value = false }
 }
 
@@ -104,7 +104,7 @@ const hideRow = async (row, hide) => {
     await request.put('/admin/review/hide', { id: row.id, isHidden: hide })
     ElMessage.success(hide ? '已隐藏' : '已显示')
     loadData()
-  } catch (e) { /* handled */ }
+  } catch (e) { ElMessage.error('操作失败：' + (e.message || '网络错误')) }
 }
 
 onMounted(() => { loadData() })

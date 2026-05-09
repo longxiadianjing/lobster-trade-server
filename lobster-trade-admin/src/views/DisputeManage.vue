@@ -40,10 +40,12 @@
             <el-button size="small" type="primary" plain @click="openDetail(row)">详情</el-button>
             <el-button size="small" type="info" @click="handleEdit(row)">编辑</el-button>
             <el-button v-if="row.disputeStatus === 1" type="danger" size="small" @click="openResolve(row)">处理</el-button>
+            <el-button v-else-if="row.disputeStatus === 2" size="small" type="warning" disabled>已处理</el-button>
             <el-button v-else size="small" @click="openResolve(row)">重审</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <el-empty v-if="!loading && disputes.length === 0" description="暂无仲裁数据" />
 
       <div class="pagination-wrap">
         <el-pagination
@@ -291,6 +293,7 @@ const openResolve = (row) => {
 }
 
 const handleResolve = async () => {
+  if (currentDispute.value?.disputeStatus === 2) { ElMessage.warning('该仲裁已处理完成，无需重复处理'); return }
   if (!resolveForm.result) { ElMessage.warning('请选择处理结果'); return }
   submitting.value = true
   try {

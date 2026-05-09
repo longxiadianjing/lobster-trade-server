@@ -20,6 +20,7 @@ import com.lobster.trade.model.response.AdminVO;
 import com.lobster.trade.service.AdminService;
 import com.lobster.trade.service.EscrowService;
 import com.lobster.trade.service.SysNotificationService;
+import com.lobster.trade.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +55,7 @@ public class AdminServiceImpl implements AdminService {
         if (admin == null) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED, "管理员账号不存在");
         }
-        if (!admin.getPassword().equals(req.getPassword())) {
+        if (!PasswordEncoder.matches(req.getPassword(), admin.getPassword())) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED, "密码错误");
         }
         if (admin.getStatus() != 1) {
@@ -428,10 +429,12 @@ public class AdminServiceImpl implements AdminService {
         if (result.contains("退款")) {
             order.setEscrowStatus(3); // 已退款
             order.setStatus("cancelled");
+            escrowService.refundEscrow(order);
         } else if (result.contains("打款") || result.contains("放款")) {
-            order.setEscrowStatus(3); // 释放
+            order.setEscrowStatus(2); // 已释放（不是3）
             order.setSellerReceived(order.getEscrowAmount());
             order.setStatus("completed");
+            escrowService.releaseEscrow(order);
         }
         orderMapper.updateById(order);
     }
@@ -716,7 +719,7 @@ public class AdminServiceImpl implements AdminService {
             throw new BusinessException(ErrorCode.BAD_REQUEST, "用户名已存在");
         }
         admin.setId(null);
-        admin.setPassword(admin.getPassword()); // 明文存储（演示用）
+        admin.setPassword(PasswordEncoder.encode(admin.getPassword()));
         if (admin.getPermissions() == null) admin.setPermissions("");
         if (admin.getRole() == null) admin.setRole("ADMIN");
         if (admin.getStatus() == null) admin.setStatus(1);

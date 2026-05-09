@@ -78,5 +78,12 @@ public final class AdminPermission {
     // 管理员管理
     public static final String ADMIN_MANAGE = "ADMIN_MANAGE";       // 管理其他管理员（包括权限分配）
 
+    // 导出（新增）
+    public static final String EXPORT_DATA = "EXPORT_DATA";        // 导出数据
+
+    // 服务商认证（新增）
+    public static final String CERTIFICATION_VIEW = "CERTIFICATION_VIEW";   // 查看认证申请
+    public static final String CERTIFICATION_AUDIT = "CERTIFICATION_AUDIT"; // 审核认证
+
     private AdminPermission() {}
 }

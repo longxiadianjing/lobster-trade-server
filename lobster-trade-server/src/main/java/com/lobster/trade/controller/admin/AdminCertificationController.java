@@ -1,6 +1,8 @@
 package com.lobster.trade.controller.admin;
 
 import com.lobster.trade.annotation.Audit;
+import com.lobster.trade.annotation.RequirePermission;
+import com.lobster.trade.model.entity.AdminPermission;
 import com.lobster.trade.common.Result;
 import com.lobster.trade.model.entity.ServiceProviderCertification;
 import com.lobster.trade.service.CertificationService;
@@ -19,11 +21,13 @@ public class AdminCertificationController {
     private final CertificationService certificationService;
 
     @GetMapping("/pending")
+    @RequirePermission(AdminPermission.CERTIFICATION_VIEW)
     public Result<List<ServiceProviderCertification>> pendingList() {
         return Result.success(certificationService.getPendingCertifications());
     }
 
     @PostMapping("/review")
+    @RequirePermission(AdminPermission.CERTIFICATION_AUDIT)
     @Audit(value = "审核服务商认证", targetType = "Certification")
     public Result<String> review(@RequestBody CertificationReviewRequest req) {
         certificationService.reviewCertification(req.getCertId(), req.getStatus(), req.getRejectReason(), req.getProviderLevel());

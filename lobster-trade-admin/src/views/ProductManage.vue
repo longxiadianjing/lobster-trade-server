@@ -152,6 +152,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-empty v-if="!loading && products.length === 0" description="暂无商品数据" />
 
       <div class="pagination-wrap">
         <span class="total-hint">共 {{ pagination.total }} 条</span>

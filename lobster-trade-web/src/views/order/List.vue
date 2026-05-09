@@ -81,7 +81,9 @@ const statusMap = {
 
 onMounted(() => loadOrders())
 
-async function loadOrders() {
+async function loadOrders(p = 1) {
+  p = Math.max(1, p)
+  page.value = p
   loading.value = true
   try {
     const res = props.role === 'buyer'

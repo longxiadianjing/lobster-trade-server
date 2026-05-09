@@ -162,7 +162,7 @@ const loadStats = async () => {
       { label: '已解决', value: d.resolved || 0 },
       { label: '已关闭', value: d.closed || 0 }
     ]
-  } catch (e) { /* handled */ }
+  } catch (e) { statsData.value = [{ label: '总数', value: 0 }, { label: '待处理', value: 0 }, { label: '处理中', value: 0 }, { label: '已解决', value: 0 }, { label: '已关闭', value: 0 }] }
 }
 
 const loadData = async () => {
@@ -173,7 +173,7 @@ const loadData = async () => {
     })
     list.value = res.data.records || []
     total.value = res.data.total || 0
-  } catch (e) { /* handled */ }
+  } catch (e) { ElMessage.error('加载失败：' + (e.message || '网络错误')) }
   finally { loading.value = false }
 }
 
@@ -198,7 +198,7 @@ const doReply = async () => {
     replyVisible.value = false
     loadData()
     loadStats()
-  } catch (e) { /* handled */ }
+  } catch (e) { ElMessage.error('处理失败：' + (e.message || '网络错误')) }
   finally { submitting.value = false }
 }
 

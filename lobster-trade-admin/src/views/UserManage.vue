@@ -54,6 +54,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-empty v-if="!loading && users.length === 0" description="暂无用户数据" />
 
       <div class="pagination-wrap">
         <el-pagination

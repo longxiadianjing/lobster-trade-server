@@ -379,7 +379,9 @@ const fetchRecentOrders = async () => {
   }
 }
 
-const fetchProducts = async () => {
+const fetchProducts = async (p = 1) => {
+  p = Math.max(1, p)
+  page.value = p
   try {
     const params = { page: page.value, pageSize: 20 }
     if (activeGame.value) params.gameId = activeGame.value

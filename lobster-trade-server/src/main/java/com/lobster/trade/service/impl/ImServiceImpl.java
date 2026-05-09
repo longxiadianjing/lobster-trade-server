@@ -112,7 +112,6 @@ public class ImServiceImpl implements ImService {
         // 3. 创建新会话
         ImSession session = new ImSession();
         session.setSessionNo("IM" + SnowflakeIdUtil.generateOrderNo());
-        session.setOrderId(null);  // 无订单
         session.setBuyerId(userId);
         session.setSellerId(sellerId);
         session.setUnreadBuyer(0);

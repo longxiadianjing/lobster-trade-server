@@ -55,8 +55,9 @@ public class DisputeServiceImpl implements DisputeService {
             throw new BusinessException(ErrorCode.FORBIDDEN, "无权发起仲裁");
         }
 
-        if (!"paid".equals(order.getStatus()) && !"submitted".equals(order.getStatus()) && !"confirmed".equals(order.getStatus())) {
-            throw new BusinessException(ErrorCode.PARAM_INVALID, "当前状态不支持发起仲裁");
+        // 【安全】仅允许以下状态发起仲裁
+        if (!"paid".equals(order.getStatus()) && !"submitted".equals(order.getStatus()) && !"in_progress".equals(order.getStatus())) {
+            throw new BusinessException(ErrorCode.PARAM_INVALID, "当前状态不允许发起仲裁");
         }
 
         if (order.getDisputeStatus() != null && order.getDisputeStatus() == 1) {
@@ -145,6 +146,7 @@ public class DisputeServiceImpl implements DisputeService {
 
         order.setDisputeStatus(0);
         order.setDisputeReason(null);
+        order.setStatus("paid"); // 还原为已付款状态
         order.setUpdateTime(LocalDateTime.now());
         orderMapper.updateById(order);
     }

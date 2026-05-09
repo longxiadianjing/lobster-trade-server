@@ -35,6 +35,9 @@ request.interceptors.response.use(
       localStorage.removeItem('admin_info')
       router.push('/login')
       ElMessage.error('登录已过期，请重新登录')
+    } else if (error.response && error.response.status === 403) {
+      router.push('/login')
+      ElMessage.error('无权限访问，请联系管理员')
     } else {
       ElMessage.error(error.message || '网络错误')
     }

@@ -39,7 +39,7 @@ const routes = [
     path: '/admin',
     name: 'Admin',
     component: () => import('@/views/admin/index.vue'),
-    meta: { title: '管理后台' }
+    meta: { title: '管理后台', requiresAuth: true }
   },
   {
     path: '/user/center',
@@ -91,7 +91,7 @@ const routes = [
   },
   {
     path: '/user/security-center',
-    name: 'SecurityCenter',
+    name: 'SecurityCenterUser',
     component: () => import('@/views/user/SecurityCenter.vue'),
     meta: { title: '安全中心', requiresAuth: true }
   },

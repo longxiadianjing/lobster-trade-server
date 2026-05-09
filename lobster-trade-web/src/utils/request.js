@@ -50,6 +50,9 @@ service.interceptors.response.use(
           router.push('/login')
         }
         ElMessage.error('登录已过期，请重新登录')
+      } else if (status === 403) {
+        router.push('/login')
+        return Promise.reject(new Error('权限不足，请重新登录'))
       } else {
         ElMessage.error(data?.message || '请求失败')
       }

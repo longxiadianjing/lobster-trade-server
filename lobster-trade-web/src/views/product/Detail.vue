@@ -278,6 +278,30 @@
               </template>
             </el-dialog>
 
+            <!-- 评价发表对话框 -->
+            <el-dialog v-model="showReviewDialog" title="发表评价" width="500px" :close-on-click-modal="true">
+              <el-form label-width="70px">
+                <el-form-item label="商品评分">
+                  <el-rate v-model="reviewForm.rating" allow-half show-text>
+                    <template #text>
+                      <span style="color: var(--el-text-color-regular)">
+                        {{ ['', '极其不满', '不满意', '一般', '满意', '非常满意'][reviewForm.rating] || '' }}
+                      </span>
+                    </template>
+                  </el-rate>
+                </el-form-item>
+                <el-form-item label="评价内容">
+                  <el-input v-model="reviewForm.content" type="textarea" :rows="4"
+                    placeholder="请分享您的交易体验..."
+                    maxlength="500" show-word-limit />
+                </el-form-item>
+              </el-form>
+              <template #footer>
+                <el-button @click="showReviewDialog = false">取消</el-button>
+                <el-button type="primary" @click="submitReview">提交评价</el-button>
+              </template>
+            </el-dialog>
+
             <!-- 平台保障声明 -->
             <div class="platform-guarantee" id="platform-guarantee">
               <div class="guarantee-title">平台保障</div>
@@ -453,7 +477,24 @@
                 </div>
               </div>
               <div v-else-if="!reviewLoading" class="no-reviews">暂无评价，快来购买并发表评价吧～</div>
+              <div class="review-submit-area">
+                <el-button type="primary" plain @click="showReviewDialog = true" style="margin-top:12px">
+                  <el-icon><Star /></el-icon> 发表评价
+                </el-button>
+              </div>
             </div>
+          </template>
+
+          <template v-else-if="error">
+            <el-result
+              icon="error"
+              title="加载失败"
+              :sub-title="error"
+            >
+              <template #extra>
+                <el-button type="primary" @click="loadProduct">重新加载</el-button>
+              </template>
+            </el-result>
           </template>
 
           <template v-else-if="!loading">
@@ -473,7 +514,7 @@ import { Picture, Star, ChatDotRound, ArrowRight, ShoppingCart, Share, ZoomIn, T
 import { getProductDetail, getProductList } from '@/api/product'
 import { addFavorite, removeFavorite } from '@/api/favorite'
 import { getOrCreateSessionByProduct } from '@/api/im'
-import { getProductReviews, getSellerReviews } from '@/api/review'
+import { getProductReviews, getSellerReviews, createReview } from '@/api/review'
 import { getRecommendedSlots } from '@/api/recommend'
 import { createOrder } from '@/api/order'
 import { getUsableCouponsForOrder } from '@/api/coupon'
@@ -485,10 +526,13 @@ const route = useRoute()
 const activeMenu = ref('/product/list')
 const loading = ref(false)
 const product = ref(null)
+const error = ref(null)
 const currentImage = ref('')
 const reviewStats = ref({ totalReviews: 0, avgRating: 0, fiveStar: 0, fourStar: 0, threeStar: 0, twoStar: 0, oneStar: 0 })
 const isFavorited = ref(false)
 const reviews = ref([])
+const showReviewDialog = ref(false)
+const reviewForm = reactive({ rating: 5, content: '' })
 const reviewLoading = ref(false)
 const sideRecommendations = ref([])
 const showViewer = ref(false)
@@ -740,27 +784,14 @@ const formatReviewTime = (time) => {
 }
 
 const loadProduct = async () => {
+  error.value = null
+  product.value = mockProduct
   loading.value = true
   try {
     const id = route.params.id
     const res = await getProductDetail(id)
     if (res.data) {
       product.value = res.data
-      // images 是 JSON 字符串，需解析为数组
-      if (product.value.images) {
-        try { product.value.imagesArray = JSON.parse(product.value.images) } catch { product.value.imagesArray = [] }
-      } else { product.value.imagesArray = [] }
-      if (!product.value.imagesArray.length && product.value.coverImage) {
-        product.value.imagesArray = [product.value.coverImage]
-      }
-      currentImage.value = product.value.coverImage || (product.value.imagesArray[0]) || ''
-      // SEO：设置页面标题为商品名称
-      document.title = `${product.value.title} - 龙虾道具交易平台`
-      startCountdownIfNeeded()
-    loadReviewStats(product.value.sellerId)
-    } else {
-      product.value = mockProduct
-      currentImage.value = ''
       const userStore = useUserStore()
       if (userStore.isLoggedIn) {
         try {
@@ -771,11 +802,8 @@ const loadProduct = async () => {
         } catch {}
       }
     }
-  } catch (e) {
-    console.error('加载商品详情失败:', e)
-    product.value = mockProduct
-    currentImage.value = ''
-  } finally {
+    ElMessage.error('加载失败，请检查网络')
+    error.value = '加载失败，请检查网络'
     loading.value = false
   }
   loadReviews(route.params.id)
@@ -824,6 +852,35 @@ const loadSideRecommendations = async () => {
     }
   } catch (e) {
     console.error('加载推荐失败:', e)
+  }
+}
+
+const submitReview = async () => {
+  const userStore = useUserStore()
+  if (!userStore.isLoggedIn) {
+    ElMessage.warning('请先登录')
+    return
+  }
+  if (!product.value) return
+  try {
+    const oidRes = await fetch('/api/order/buyer/list?page=1&pageSize=50', {
+      headers: { Authorization: 'Bearer ' + (userStore.token || '') }
+    }).then(r => r.json())
+    const order = (oidRes.data?.records || []).find(
+      o => o.productId === product.value.id && ['completed', 'confirmed'].includes(o.status)
+    )
+    if (!order) {
+      ElMessage.info('可评分只在完成订单后提贡')
+      return
+    }
+    await createReview({ orderId: order.id, role: 1, rating: reviewForm.rating, content: reviewForm.content })
+    ElMessage.success('评价发表成功')
+    showReviewDialog.value = false
+    reviewForm.rating = 5
+    reviewForm.content = ''
+    loadReviews(product.value.id)
+  } catch (e) {
+    ElMessage.error(e?.message || '评价发表失败')
   }
 }
 

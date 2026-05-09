@@ -1,5 +1,7 @@
 package com.lobster.trade.controller.admin;
 
+import com.lobster.trade.annotation.RequirePermission;
+import com.lobster.trade.model.entity.AdminPermission;
 import com.lobster.trade.common.Result;
 import com.lobster.trade.model.entity.TradeOrder;
 import com.lobster.trade.model.entity.User;
@@ -23,6 +25,7 @@ public class ExportController {
     private final AdminService adminService;
 
     @GetMapping("/orders")
+    @RequirePermission(AdminPermission.EXPORT_DATA)
     public void exportOrders(HttpServletResponse response,
                               @RequestParam(required = false) String status,
                               @RequestParam(required = false) String tradeType,
@@ -59,6 +62,7 @@ public class ExportController {
     }
 
     @GetMapping("/users")
+    @RequirePermission(AdminPermission.EXPORT_DATA)
     public void exportUsers(HttpServletResponse response,
                              @RequestParam(required = false) String keyword,
                              @RequestParam(required = false) String status) throws IOException {

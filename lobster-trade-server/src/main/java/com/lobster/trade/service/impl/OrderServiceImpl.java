@@ -427,8 +427,17 @@ public class OrderServiceImpl implements OrderService {
         if (order == null || order.getIsDeleted() == 1) {
             throw new BusinessException(ErrorCode.PARAM_INVALID, "订单不存在");
         }
+        String oldStatus = order.getStatus();
         order.setStatus(status);
         tradeOrderMapper.updateById(order);
+        // 【资金处理】状态变更为已完成 → 释放托管资金给卖家
+        if (!oldStatus.equals(status) && "completed".equals(status)) {
+            escrowService.releaseEscrow(order);
+        }
+        // 【资金处理】状态变更为已取消 → 退款给买家
+        if (!oldStatus.equals(status) && "cancelled".equals(status)) {
+            escrowService.refundEscrow(order);
+        }
     }
 
     @Override

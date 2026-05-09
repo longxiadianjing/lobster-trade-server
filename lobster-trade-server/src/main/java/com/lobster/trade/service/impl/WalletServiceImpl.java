@@ -14,6 +14,7 @@ import com.lobster.trade.model.request.RechargeRequest;
 import com.lobster.trade.model.request.WithdrawRequest;
 import com.lobster.trade.service.WalletService;
 import com.lobster.trade.util.PasswordEncoder;
+import com.lobster.trade.util.RedisUtils;
 import com.lobster.trade.util.SnowflakeIdUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class WalletServiceImpl implements WalletService {
     private final WalletTransactionMapper walletTransactionMapper;
     private final TradeOrderMapper orderMapper;
     private final UserMapper userMapper;
+    private final RedisUtils redisUtils;
 
     @Override
     public Wallet getWalletInfo(Long userId) {
@@ -112,6 +114,19 @@ public class WalletServiceImpl implements WalletService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void withdraw(Long userId, WithdrawRequest request) {
+        String lockKey = "wallet:withdraw:" + userId;
+        String lockId = redisUtils.tryLock(lockKey, 3000, 5000);
+        if (lockId == null) {
+            throw new BusinessException("操作过于频繁，请稍后重试");
+        }
+        try {
+            doWithdraw(userId, request);
+        } finally {
+            redisUtils.unlock(lockKey, lockId);
+        }
+    }
+
+    private void doWithdraw(Long userId, WithdrawRequest request) {
         BigDecimal amount = request.getAmount();
         String channel = request.getChannel();
         String payPassword = request.getPayPassword();
@@ -250,7 +265,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void freezeEscrowForOrder(Long orderId) {
         com.lobster.trade.model.entity.TradeOrder order = orderMapper.selectById(orderId);
         if (order == null) {
