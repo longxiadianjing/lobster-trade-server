@@ -81,7 +81,7 @@ public class CertificationServiceImpl implements CertificationService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void reviewCertification(Long certId, Integer status, String rejectReason, Integer providerLevel) {
+    public void reviewCertification(Long certId, Integer status, String rejectReason, Integer providerLevel, String adminRemark) {
         ServiceProviderCertification cert = certMapper.selectById(certId);
         if (cert == null) throw new BusinessException("认证申请不存在");
         // 待审核才能操作通过/拒绝，已通过才能操作撤销
@@ -97,7 +97,8 @@ public class CertificationServiceImpl implements CertificationService {
             u.eq(ServiceProviderCertification::getId, certId)
              .set(ServiceProviderCertification::getStatus, 3)
              .set(ServiceProviderCertification::getReviewTime, LocalDateTime.now())
-             .set(ServiceProviderCertification::getRejectReason, "管理员撤销认证");
+             .set(ServiceProviderCertification::getRejectReason, "管理员撤销认证")
+             .set(ServiceProviderCertification::getAdminRemark, adminRemark);
             certMapper.update(null, u);
             // 清除用户的userLevel
             User user = userMapper.selectById(cert.getUserId());
@@ -115,7 +116,8 @@ public class CertificationServiceImpl implements CertificationService {
         u.eq(ServiceProviderCertification::getId, certId)
          .set(ServiceProviderCertification::getStatus, status)
          .set(ServiceProviderCertification::getReviewTime, LocalDateTime.now())
-         .set(ServiceProviderCertification::getRejectReason, rejectReason);
+         .set(ServiceProviderCertification::getRejectReason, rejectReason)
+         .set(ServiceProviderCertification::getAdminRemark, adminRemark);
 
         if (status == 1) {
             // 通过：设置1年有效期

@@ -2,6 +2,9 @@ package com.lobster.trade.controller;
 
 import com.lobster.trade.model.entity.ServiceProviderCertification;
 import com.lobster.trade.model.response.ApiResponse;
+import com.lobster.trade.common.Result;
+import com.lobster.trade.model.entity.AdminPermission;
+import com.lobster.trade.annotation.RequirePermission;
 import com.lobster.trade.service.CertificationService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +26,11 @@ public class CertificationController {
      * POST /api/certification/apply
      */
     @PostMapping("/apply")
-    public ApiResponse<Void> apply(HttpServletRequest request,
+    public Result<Void> apply(HttpServletRequest request,
                                     @RequestBody CertificationApplyRequest req) {
         Long userId = (Long) request.getAttribute("userId");
         if (userId == null) {
-            return ApiResponse.fail(401, "请先登录");
+            return Result.fail(401, "请先登录");
         }
         certificationService.applyCertification(
             userId,
@@ -39,7 +42,7 @@ public class CertificationController {
             req.getProviderLevel(),
             req.getCredentials()
         );
-        return ApiResponse.success("认证申请已提交，请等待审核");
+        return Result.success("认证申请已提交，请等待审核");
     }
 
     /**
@@ -47,9 +50,9 @@ public class CertificationController {
      * GET /api/certification/my
      */
     @GetMapping("/my")
-    public ApiResponse<ServiceProviderCertification> myCertification(HttpServletRequest request) {
+    public Result<ServiceProviderCertification> myCertification(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
-        return ApiResponse.success(certificationService.getUserCertification(userId));
+        return Result.success(certificationService.getUserCertification(userId));
     }
 
     /**
@@ -57,10 +60,10 @@ public class CertificationController {
      * GET /api/certification/list?certType=boost&gameId=1
      */
     @GetMapping("/list")
-    public ApiResponse<List<ServiceProviderCertification>> list(
+    public Result<List<ServiceProviderCertification>> list(
             @RequestParam(required = false) String certType,
             @RequestParam(required = false) Long gameId) {
-        return ApiResponse.success(
+        return Result.success(
             certificationService.getCertifiedProviders(certType, gameId)
         );
     }
@@ -70,8 +73,9 @@ public class CertificationController {
      * GET /api/certification/admin/pending
      */
     @GetMapping("/admin/pending")
-    public ApiResponse<List<ServiceProviderCertification>> pendingList() {
-        return ApiResponse.success(certificationService.getPendingCertifications());
+    @RequirePermission(AdminPermission.CERTIFICATION_VIEW)
+    public Result<List<ServiceProviderCertification>> pendingList() {
+        return Result.success(certificationService.getPendingCertifications());
     }
 
     /**
@@ -79,9 +83,10 @@ public class CertificationController {
      * POST /api/certification/admin/review
      */
     @PostMapping("/admin/review")
-    public ApiResponse<Void> review(@RequestBody CertificationReviewRequest req) {
-        certificationService.reviewCertification(req.getCertId(), req.getStatus(), req.getRejectReason(), req.getProviderLevel());
-        return ApiResponse.success("审核完成");
+    @RequirePermission(AdminPermission.CERTIFICATION_AUDIT)
+    public Result<Void> review(@RequestBody CertificationReviewRequest req) {
+        certificationService.reviewCertification(req.getCertId(), req.getStatus(), req.getRejectReason(), req.getProviderLevel(), req.getAdminRemark());
+        return Result.success("审核完成");
     }
 
     @Data
@@ -98,8 +103,9 @@ public class CertificationController {
     @Data
     public static class CertificationReviewRequest {
         private Long certId;
-        private Integer status;        // 1通过 2拒绝
+        private Integer status;        // 1通过 2拒绝 3冻结
         private String rejectReason;
         private Integer providerLevel; // 1普通 2铜牌 3银牌 4金牌
+        private String adminRemark;    // 管理员备注
     }
 }

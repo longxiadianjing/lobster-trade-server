@@ -1,0 +1,50 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< com.lobster.trade:lobster-trade-server >---------------
+[INFO] Building lobster-trade-server 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[WARNING] The artifact mysql:mysql-connector-java:jar:8.0.33 has been relocated to com.mysql:mysql-connector-j:jar:8.0.33: MySQL Connector/J artifacts moved to reverse-DNS compliant Maven 2+ coordinates.
+[INFO] 
+[INFO] --- resources:3.2.0:resources (default-resources) @ lobster-trade-server ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 2 resources
+[INFO] Copying 487 resources
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ lobster-trade-server ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 222 source files with javac [debug target 17] to target\classes
+[INFO] /C:/Users/Administrator/.openclaw/workspace/projects/龙虾道具交易平台/code/lobster-trade-server/src/main/java/com/lobster/trade/service/impl/RealNameVerifyServiceImpl.java: C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\impl\RealNameVerifyServiceImpl.java使用或覆盖了已过时的 API。
+[INFO] /C:/Users/Administrator/.openclaw/workspace/projects/龙虾道具交易平台/code/lobster-trade-server/src/main/java/com/lobster/trade/service/impl/RealNameVerifyServiceImpl.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+[INFO] /C:/Users/Administrator/.openclaw/workspace/projects/龙虾道具交易平台/code/lobster-trade-server/src/main/java/com/lobster/trade/model/entity/Product.java: 某些输入文件使用了未经检查或不安全的操作。
+[INFO] /C:/Users/Administrator/.openclaw/workspace/projects/龙虾道具交易平台/code/lobster-trade-server/src/main/java/com/lobster/trade/model/entity/Product.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+[INFO] 
+[INFO] --- resources:3.2.0:testResources (default-testResources) @ lobster-trade-server ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] skip non existing resourceDirectory C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ lobster-trade-server ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:2.22.2:test (default-test) @ lobster-trade-server ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.2.2:jar (default-jar) @ lobster-trade-server ---
+[INFO] Building jar: C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\target\lobster-trade-server-1.0.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:2.7.18:repackage (repackage) @ lobster-trade-server ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  14.154 s
+[INFO] Finished at: 2026-05-09T14:57:02+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:2.7.18:repackage (repackage) on project lobster-trade-server: Execution repackage of goal org.springframework.boot:spring-boot-maven-plugin:2.7.18:repackage failed: Unable to rename 'C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\target\lobster-trade-server-1.0.0-SNAPSHOT.jar' to 'C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\target\lobster-trade-server-1.0.0-SNAPSHOT.jar.original' -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/PluginExecutionException

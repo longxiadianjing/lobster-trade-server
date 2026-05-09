@@ -54,8 +54,9 @@
               <div class="form-tip">多个区服用逗号分隔</div>
             </el-form-item>
 
-            <el-form-item label="服务内容" prop="hourlyRate">
-              <el-input v-model="form.hourlyRate" placeholder="如：代练段位、代练要求、服务范围等" style="width: 400px;" />
+            <el-form-item label="参考时价" prop="hourlyRate">
+              <el-input v-model="form.hourlyRate" placeholder="如：100（表示100元/小时），或填"面议"" style="width: 400px;" />
+              <div class="form-tip">填数字表示参考时价，或填"面议"由买家咨询后确认</div>
             </el-form-item>
 
             <el-form-item label="服务商等级">
@@ -173,7 +174,8 @@ const certStatusType = computed(() => {
 
 const certTypeName = computed(() => {
     if (!currentCert.value) return ''
-    return currentCert.value.certificationType === 'boost' ? '代练服务商' : '陪玩服务商'
+    const map = { boost: '代练服务商', accompany: '陪玩服务商', studio: '工作室' }
+    return map[currentCert.value.certificationType] || currentCert.value.certificationType
 })
 
 const formatTime = (time) => {

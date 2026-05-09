@@ -135,10 +135,11 @@ export default {
         const res = await getMySessions()
         if (res.code === 200 && res.data) {
           sessions.value = res.data.map(s => {
-            const roleTag = s.buyerId === 4 ? 'buyer' : 'seller'
-            const counterpartId = s.buyerId === 4 ? s.sellerId : s.buyerId
-            const counterpartName = s.buyerId === 4 ? s.sellerNickname : s.buyerNickname
-            return { ...s, roleTag, counterpartId, counterpartName }
+            const uId = parseInt(localStorage.getItem('userId') || userStore?.userInfo?.id || 0)
+            const rTag = s.buyerId === uId ? 'buyer' : 'seller'
+            const cId = s.buyerId === uId ? s.sellerId : s.buyerId
+            const cName = s.buyerId === uId ? s.sellerNickname : s.buyerNickname
+            return { ...s, roleTag: rTag, counterpartId: cId, counterpartName: cName }
           })
         }
       } catch (e) {
@@ -221,9 +222,10 @@ export default {
         const res = await getSession(sessionId)
         if (res.code === 200 && res.data) {
           const s = res.data
-          const roleTag = s.buyerId === 4 ? 'buyer' : 'seller'
-          const counterpartName = s.buyerId === 4 ? s.sellerNickname : s.buyerNickname
-          currentSession.value = { ...s, roleTag, counterpartName }
+          const uId = parseInt(localStorage.getItem('userId') || userStore?.userInfo?.id || 0)
+          const rTag = s.buyerId === uId ? 'buyer' : 'seller'
+          const cName = s.buyerId === uId ? s.sellerNickname : s.buyerNickname
+          currentSession.value = { ...s, roleTag: rTag, counterpartName: cName }
           messagesLoading.value = true
           messages.value = []
           try {

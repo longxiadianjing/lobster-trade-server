@@ -26,10 +26,12 @@ public interface CertificationService {
     /**
      * 审核认证申请（管理员）
      * @param certId 认证记录ID
-     * @param status 1通过 2拒绝
+     * @param status 1通过 2拒绝 3冻结
      * @param rejectReason 拒绝原因（拒绝时必填）
+     * @param providerLevel 审核通过时设置的服务商等级
+     * @param adminRemark 管理员备注
      */
-    void reviewCertification(Long certId, Integer status, String rejectReason, Integer providerLevel);
+    void reviewCertification(Long certId, Integer status, String rejectReason, Integer providerLevel, String adminRemark);
 
     /**
      * 获取认证服务商列表（前端展示）
