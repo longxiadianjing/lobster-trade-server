@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <PageLayout>
     <template #sidebar>
       <div class="user-sidebar">
@@ -69,7 +69,7 @@
               <el-icon><Ticket /></el-icon>
               <span>我的优惠券</span>
             </el-menu-item>
-            <el-menu-item index="/cs/history">
+            <el-menu-item index="/cs">
               <el-icon><ChatDotRound /></el-icon>
               <span>客服记录</span>
             </el-menu-item>

@@ -792,6 +792,17 @@ const loadProduct = async () => {
     const res = await getProductDetail(id)
     if (res.data) {
       product.value = res.data
+      // 解析 images JSON 字符串为数组
+      if (product.value.images) {
+        try {
+          product.value.imagesArray = JSON.parse(product.value.images)
+        } catch {
+          product.value.imagesArray = []
+        }
+        if (product.value.imagesArray && product.value.imagesArray.length > 0 && !currentImage.value) {
+          currentImage.value = product.value.imagesArray[0]
+        }
+      }
       const userStore = useUserStore()
       if (userStore.isLoggedIn) {
         try {
@@ -801,12 +812,17 @@ const loadProduct = async () => {
           if (fres.code === 200 || fres.code === 0) isFavorited.value = fres.data === true
         } catch {}
       }
+      loadReviews(id)
+    } else {
+      ElMessage.error('加载失败，请检查网络')
+      error.value = '加载失败，请检查网络'
     }
+  } catch (e) {
     ElMessage.error('加载失败，请检查网络')
     error.value = '加载失败，请检查网络'
+  } finally {
     loading.value = false
   }
-  loadReviews(route.params.id)
 }
 
 const loadReviewStats = async (sellerId) => {
@@ -863,7 +879,7 @@ const submitReview = async () => {
   }
   if (!product.value) return
   try {
-    const oidRes = await fetch('/api/order/buyer/list?page=1&pageSize=50', {
+    const oidRes = await fetch('/api/order/buyer/list?page=1&size=50', {
       headers: { Authorization: 'Bearer ' + (userStore.token || '') }
     }).then(r => r.json())
     const order = (oidRes.data?.records || []).find(

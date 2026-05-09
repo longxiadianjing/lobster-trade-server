@@ -53,8 +53,13 @@ router.beforeEach((to, from, next) => {
   } else {
     const requiredPerms = to.meta.permissions
     if (requiredPerms && requiredPerms.length > 0) {
-      const hasPerm = requiredPerms.some(p => adminStore.permissions?.includes(p) || adminStore.permissions?.includes('*'))
-      if (!hasPerm) {
+      // 超级管理员 * 拥有所有权限
+      if (adminStore.permissions === '*') {
+        next()
+        return
+      }
+      // 普通管理员必须有所有必需权限
+      if (Array.isArray(adminStore.permissions) && !requiredPerms.every(p => adminStore.permissions.includes(p))) {
         ElMessage.warning('权限不足，无法访问该页面')
         return
       }

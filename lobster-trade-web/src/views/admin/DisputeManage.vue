@@ -47,8 +47,8 @@
       <el-form :model="resolveForm" label-width="90px">
         <el-form-item label="仲裁结果">
           <el-radio-group v-model="resolveForm.result">
-            <el-radio label="退款">退款给买家</el-radio>
-            <el-radio label="放款给卖家">放款给卖家</el-radio>
+            <el-radio value="退款">退款给买家</el-radio>
+            <el-radio value="放款给卖家">放款给卖家</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="处理备注">

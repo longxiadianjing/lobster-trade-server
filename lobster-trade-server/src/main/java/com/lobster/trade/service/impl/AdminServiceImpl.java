@@ -73,6 +73,7 @@ public class AdminServiceImpl implements AdminService {
         adminVO.setUsername(admin.getUsername());
         adminVO.setNickname(admin.getNickname());
         adminVO.setRole(admin.getRole());
+        adminVO.setPermissions(admin.getPermissions());
 
         Map<String, Object> result = new HashMap<>();
         result.put("token", token);

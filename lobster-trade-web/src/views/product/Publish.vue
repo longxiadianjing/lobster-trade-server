@@ -76,9 +76,9 @@
             <!-- 商品类型 -->
             <el-form-item label="商品类型" prop="productType">
               <el-radio-group v-model="form.productType">
-                <el-radio label="goods">游戏币/道具</el-radio>
-                <el-radio label="boost">代练服务</el-radio>
-                <el-radio label="accompany">陪玩陪练</el-radio>
+                <el-radio value="goods">游戏币/道具</el-radio>
+                <el-radio value="boost">代练服务</el-radio>
+                <el-radio value="accompany">陪玩陪练</el-radio>
               </el-radio-group>
             </el-form-item>
 
@@ -103,8 +103,8 @@
             <!-- 价格信息 -->
             <el-form-item label="价格类型" prop="priceType">
               <el-radio-group v-model="form.priceType">
-                <el-radio label="fixed">一口价</el-radio>
-                <el-radio label="negotiable">可议价</el-radio>
+                <el-radio value="fixed">一口价</el-radio>
+                <el-radio value="negotiable">可议价</el-radio>
               </el-radio-group>
             </el-form-item>
 

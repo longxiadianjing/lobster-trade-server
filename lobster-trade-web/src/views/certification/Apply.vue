@@ -36,9 +36,9 @@
           <el-form v-if="showForm" ref="formRef" :model="form" :rules="rules" label-width="120px" size="large">
             <el-form-item label="认证类型" prop="certType">
               <el-radio-group v-model="form.certType">
-                <el-radio label="boost">🎮 代练服务商</el-radio>
-                <el-radio label="accompany">🎯 陪玩服务商</el-radio>
-                <el-radio label="studio">🏢 工作室认证</el-radio>
+                <el-radio value="boost">🎮 代练服务商</el-radio>
+                <el-radio value="accompany">🎯 陪玩服务商</el-radio>
+                <el-radio value="studio">🏢 工作室认证</el-radio>
               </el-radio-group>
               <div class="form-tip">认证通过后将在对应服务类型下展示认证标识</div>
             </el-form-item>
@@ -60,10 +60,10 @@
 
             <el-form-item label="服务商等级">
               <el-radio-group v-model="form.providerLevel">
-                <el-radio :label="1">普通服务商</el-radio>
-                <el-radio :label="2">铜牌服务商</el-radio>
-                <el-radio :label="3">银牌服务商</el-radio>
-                <el-radio :label="4">金牌服务商</el-radio>
+                <el-radio :value="1">普通服务商</el-radio>
+                <el-radio :value="2">铜牌服务商</el-radio>
+                <el-radio :value="3">银牌服务商</el-radio>
+                <el-radio :value="4">金牌服务商</el-radio>
               </el-radio-group>
               <div class="form-tip">等级越高展示越靠前，审核通过后可升级</div>
             </el-form-item>
