@@ -147,7 +147,7 @@
 <script setup>
   document.title = '客服记录 - 龙虾道具交易平台';
 
-import { ref, reactive, onMounted, watch } from 'vue'
+import { ref, reactive, onMounted, watch, nextTick } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { getMyCsSessions, startCsSession, getCsSession, sendCsMessage, closeCsSession } from '@/api/cs'
 import { ElMessage } from 'element-plus'
@@ -171,6 +171,24 @@ const cdMessages = ref([])
 const cdInput = ref('')
 const cdSending = ref(false)
 const cdMessagesRef = ref(null)
+const cdDrawerVisible = ref(false)
+
+let cdPollTimer = null
+const startCdPolling = () => {
+  stopCdPolling()
+  cdPollTimer = setInterval(async () => {
+    if (cdDrawerVisible.value && chatSession.value && chatSession.value.status !== 2) {
+      try {
+        const res = await getCsSession(chatSession.value.id)
+        cdMessages.value = res.data?.messages || []
+        chatSession.value = res.data
+        await nextTick()
+        scrollCdBottom()
+      } catch (e) { /* silent */ }
+    }
+  }, 3000)
+}
+const stopCdPolling = () => { if (cdPollTimer) { clearInterval(cdPollTimer); cdPollTimer = null } }
 
 const statusText = (status) => ['等待中', '进行中', '已关闭'][status] || ''
 
@@ -219,8 +237,10 @@ const openSession = async (session) => {
     const res = await getCsSession(session.id)
     cdMessages.value = res.data?.messages || []
     chatDrawer.value = true
+    cdDrawerVisible.value = true
     await nextTick()
     scrollCdBottom()
+    startCdPolling()
   } catch (e) {
     ElMessage.error('加载会话失败')
   }
@@ -267,6 +287,12 @@ const startNewSession = async () => {
 }
 
 watch(filterStatus, () => loadSessions(1))
+watch(chatDrawer, (val) => {
+  if (!val) {
+    stopCdPolling()
+    cdDrawerVisible.value = false
+  }
+})
 
 onMounted(() => {
   loadSessions()
