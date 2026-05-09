@@ -25,6 +25,12 @@ public class AdminAuthFilter implements Filter {
                 return;
             }
 
+            // Allow ?token=xxx for SSE subscribe endpoints
+            if (path.contains("/subscribe") && req.getParameter("token") != null) {
+                chain.doFilter(request, response);
+                return;
+            }
+
             String auth = req.getHeader("Authorization");
             if (!StringUtils.hasText(auth) || !auth.startsWith("Bearer ")) {
                 HttpServletResponse resp = (HttpServletResponse) response;

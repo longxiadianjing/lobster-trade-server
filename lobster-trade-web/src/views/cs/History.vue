@@ -147,7 +147,7 @@
 <script setup>
   document.title = '客服记录 - 龙虾道具交易平台';
 
-import { ref, reactive, onMounted, watch, nextTick } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { getMyCsSessions, startCsSession, getCsSession, sendCsMessage, closeCsSession } from '@/api/cs'
 import { ElMessage } from 'element-plus'
@@ -174,6 +174,60 @@ const cdMessagesRef = ref(null)
 const cdDrawerVisible = ref(false)
 
 let cdPollTimer = null
+let sseSource = null
+let sseConnecting = ref(false)
+
+// Play notification beep using Web Audio API (no external file needed)
+const playBeep = () => {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.frequency.value = 880
+    osc.type = 'sine'
+    gain.gain.setValueAtTime(0.25, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35)
+    osc.start(ctx.currentTime)
+    osc.stop(ctx.currentTime + 0.35)
+    ctx.close()
+  } catch (e) { /* ignore */ }
+}
+
+const connectSSE = (token, sessionId) => {
+  if (sseSource) { sseSource.close(); sseSource = null }
+  const url = `/api/cs/subscribe/${sessionId}?token=${encodeURIComponent(token)}`
+  sseSource = new EventSource(url)
+  sseConnecting.value = true
+  sseSource.onopen = () => { sseConnecting.value = false }
+  sseSource.onerror = () => {
+    sseConnecting.value = false
+    sseSource.close(); sseSource = null
+  }
+  sseSource.addEventListener('new_message', (e) => {
+    const data = JSON.parse(e.data)
+    if (data.id === sessionId) {
+      cdMessages.value = data.messages || []
+      nextTick(scrollCdBottom)
+    }
+    playBeep()
+  })
+  sseSource.addEventListener('operator_assigned', (e) => {
+    playBeep()
+    if (data.sessionId === sessionId && chatSession.value) {
+      chatSession.value.handlerName = data.operatorName
+    }
+  })
+  sseSource.addEventListener('session_closed', (e) => {
+    if (chatSession.value) chatSession.value.status = 2
+  })
+}
+
+const disconnectSSE = () => {
+  if (sseSource) { sseSource.close(); sseSource = null }
+}
+
 const startCdPolling = () => {
   stopCdPolling()
   cdPollTimer = setInterval(async () => {
@@ -186,7 +240,7 @@ const startCdPolling = () => {
         scrollCdBottom()
       } catch (e) { /* silent */ }
     }
-  }, 3000)
+  }, 5000)
 }
 const stopCdPolling = () => { if (cdPollTimer) { clearInterval(cdPollTimer); cdPollTimer = null } }
 
@@ -238,6 +292,9 @@ const openSession = async (session) => {
     cdMessages.value = res.data?.messages || []
     chatDrawer.value = true
     cdDrawerVisible.value = true
+    // Connect SSE for real-time updates
+    const token = userStore.token || ''
+    connectSSE(token, session.id)
     await nextTick()
     scrollCdBottom()
     startCdPolling()
@@ -286,16 +343,21 @@ const startNewSession = async () => {
   }
 }
 
-watch(filterStatus, () => loadSessions(1))
 watch(chatDrawer, (val) => {
   if (!val) {
     stopCdPolling()
+    disconnectSSE()
     cdDrawerVisible.value = false
   }
 })
 
 onMounted(() => {
   loadSessions()
+})
+
+onUnmounted(() => {
+  stopCdPolling()
+  disconnectSSE()
 })
 </script>
 

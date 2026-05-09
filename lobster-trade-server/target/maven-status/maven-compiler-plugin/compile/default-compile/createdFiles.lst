@@ -87,6 +87,7 @@ com\lobster\trade\util\SnowflakeIdUtil.class
 com\lobster\trade\mapper\SmsCodeMapper.class
 com\lobster\trade\controller\TicketApiController.class
 com\lobster\trade\service\impl\PlatformAnnouncementServiceImpl.class
+com\lobster\trade\service\impl\CsPushServiceImpl$1.class
 com\lobster\trade\aspect\AuditLogAspect.class
 com\lobster\trade\model\response\CertificationVO.class
 com\lobster\trade\model\entity\WalletTransaction.class
@@ -111,6 +112,7 @@ com\lobster\trade\service\WeChatPayService.class
 com\lobster\trade\config\AdminContext.class
 com\lobster\trade\model\request\ResetPasswordRequest.class
 com\lobster\trade\model\entity\ServiceProviderCertification.class
+com\lobster\trade\service\impl\CsPushServiceImpl$EmitterEntry.class
 com\lobster\trade\mapper\ServiceTicketMapper.class
 com\lobster\trade\service\impl\TradeReviewServiceImpl.class
 com\lobster\trade\controller\WalletController.class
@@ -191,6 +193,7 @@ com\lobster\trade\model\entity\ImSession.class
 com\lobster\trade\model\request\WithdrawRequest.class
 com\lobster\trade\config\RedisConfig.class
 com\lobster\trade\model\request\ImSendMessageRequest.class
+com\lobster\trade\service\CsPushService.class
 com\lobster\trade\controller\admin\HotSearchWordController.class
 com\lobster\trade\service\impl\EscrowServiceImpl.class
 com\lobster\trade\controller\admin\ReviewController.class
@@ -220,6 +223,7 @@ com\lobster\trade\annotation\RequirePermission.class
 com\lobster\trade\model\response\AdminVO.class
 com\lobster\trade\model\request\AuditLogRequest.class
 com\lobster\trade\service\impl\WeChatPayServiceImpl.class
+com\lobster\trade\service\impl\CsPushServiceImpl.class
 com\lobster\trade\config\JwtAuthenticationFilter.class
 com\lobster\trade\schedule\OrderTimeoutTask.class
 com\lobster\trade\model\response\ImSessionVO$ImMessageVO.class

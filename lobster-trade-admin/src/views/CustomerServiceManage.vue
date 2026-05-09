@@ -130,7 +130,7 @@
 
 <script setup>
 document.title = '客服管理 - 龙虾道具交易平台'
-import { ref, reactive, nextTick, onMounted } from 'vue'
+import { ref, reactive, nextTick, onMounted, onUnmounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import request from '@/utils/request'
 
@@ -198,8 +198,17 @@ const openChat = async (row) => {
   messages.value = []
   chatVisible.value = true
   selectedOperatorId.value = row.operatorId
-  // poll messages every 3s
+  sseConnecting.value = true
+  // Get admin token for SSE auth
+  const token = localStorage.getItem('adminToken') || ''
+  connectSSE(token)
   await loadCsSession(row.id)
+}
+
+const closeChat = () => {
+  chatVisible.value = false
+  disconnectSSE()
+  stopPolling()
 }
 
 const loadCsSession = async (sessionId) => {
@@ -240,18 +249,90 @@ const scrollToBottom = () => {
 }
 
 let pollTimer = null
+let sseSource = null
+let sseConnecting = ref(false)
+let sseStatus = ref('')
+
+// Play a short notification beep using Web Audio API (no external file needed)
+const playBeep = () => {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.frequency.value = 880
+    osc.type = 'sine'
+    gain.gain.setValueAtTime(0.3, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3)
+    osc.start(ctx.currentTime)
+    osc.stop(ctx.currentTime + 0.3)
+    ctx.close()
+  } catch (e) { /* ignore audio errors */ }
+}
+
+const connectSSE = (token) => {
+  if (sseSource) { sseSource.close(); sseSource = null }
+  const url = `/api/admin/cs/subscribe?token=${encodeURIComponent(token)}`
+  sseSource = new EventSource(url)
+  sseStatus.value = 'connecting'
+  sseSource.onopen = () => { sseStatus.value = 'connected'; sseConnecting.value = false }
+  sseSource.onerror = () => {
+    sseStatus.value = 'error'
+    sseConnecting.value = false
+    sseSource.close(); sseSource = null
+  }
+  sseSource.addEventListener('new_message', (e) => {
+    const data = JSON.parse(e.data)
+    if (data.id === currentSession.value?.id || !currentSession.value) {
+      if (currentSession.value) {
+        messages.value = data.messages || []
+        nextTick(scrollToBottom)
+      }
+      playBeep()
+    }
+    // Refresh session list
+    loadSessions()
+  })
+  sseSource.addEventListener('operator_assigned', (e) => {
+    const data = JSON.parse(e.data)
+    if (currentSession.value && data.sessionId === currentSession.value.id) {
+      currentSession.value.operatorId = data.operatorId
+      currentSession.value.handlerName = data.operatorName
+      currentSession.value.operatorNickname = data.operatorName
+    }
+    loadSessions()
+  })
+  sseSource.addEventListener('session_closed', (e) => {
+    const data = JSON.parse(e.data)
+    if (currentSession.value && data.sessionId === currentSession.value.id) {
+      currentSession.value.status = 2
+    }
+    loadSessions()
+  })
+}
+
+const disconnectSSE = () => {
+  if (sseSource) { sseSource.close(); sseSource = null }
+  sseStatus.value = ''
+}
+
 const startPolling = () => {
   pollTimer = setInterval(async () => {
     if (chatVisible.value && currentSession.value && currentSession.value.status !== 2) {
       await loadCsSession(currentSession.value.id)
     }
-  }, 3000)
+  }, 5000)
 }
 const stopPolling = () => { if (pollTimer) clearInterval(pollTimer) }
 
 onMounted(() => {
   loadSessions()
   startPolling()
+})
+onUnmounted(() => {
+  stopPolling()
+  disconnectSSE()
 })
 </script>
 

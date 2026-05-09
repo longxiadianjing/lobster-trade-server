@@ -5,11 +5,15 @@ import com.lobster.trade.annotation.RequirePermission;
 import com.lobster.trade.common.Result;
 import com.lobster.trade.model.entity.AdminPermission;
 import com.lobster.trade.model.response.CsSessionVO;
+import com.lobster.trade.service.CsPushService;
 import com.lobster.trade.service.CsService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -21,6 +25,7 @@ import java.util.Map;
 public class CsAdminController {
 
     private final CsService csService;
+    private final CsPushService csPushService;
 
     /**
      * List all CS sessions (admin view, no user restriction)
@@ -50,8 +55,12 @@ public class CsAdminController {
     @PostMapping("/message")
     @RequirePermission(AdminPermission.CS_HANDLE)
     public Result<CsSessionVO> sendMessage(@RequestBody CsAdminMessageRequest req) {
-        return Result.success(csService.sendMessageAdmin(req.getSessionId(), req.getContent(),
+        Result<CsSessionVO> result = Result.success(csService.sendMessageAdmin(req.getSessionId(), req.getContent(),
             req.getMessageType(), req.getAttachmentUrl()));
+        // Push to user + broadcast to admin panels
+        csPushService.pushToSession(req.getSessionId(), "new_message", result.getData());
+        csPushService.broadcastToAdmin("new_message", result.getData());
+        return result;
     }
 
     @Data
@@ -69,6 +78,11 @@ public class CsAdminController {
     @RequirePermission(AdminPermission.CS_HANDLE)
     public Result<Void> assign(@RequestParam Long sessionId, @RequestParam Long operatorId, @RequestParam String operatorName) {
         csService.assignOperator(sessionId, operatorId, operatorName);
+        // Notify user that operator was assigned
+        csPushService.pushToSession(sessionId, "operator_assigned",
+            Map.of("operatorId", operatorId, "operatorName", operatorName, "sessionId", sessionId));
+        csPushService.broadcastToAdmin("operator_assigned",
+            Map.of("operatorId", operatorId, "operatorName", operatorName, "sessionId", sessionId));
         return Result.success(null);
     }
 
@@ -79,6 +93,8 @@ public class CsAdminController {
     @RequirePermission(AdminPermission.CS_HANDLE)
     public Result<Void> close(@PathVariable Long sessionId) {
         csService.closeSessionAdmin(sessionId);
+        csPushService.pushToSession(sessionId, "session_closed", Map.of("sessionId", sessionId));
+        csPushService.broadcastToAdmin("session_closed", Map.of("sessionId", sessionId));
         return Result.success(null);
     }
 
@@ -91,4 +107,16 @@ public class CsAdminController {
         return Result.success(csService.getCsStats());
     }
 
+    /**
+     * SSE subscribe to all CS sessions for admin (receives all events).
+     * GET /api/admin/cs/subscribe?token=xxx
+     * Produces text/event-stream for SSE client (EventSource).
+     */
+    @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE + ";charset=UTF-8")
+    @RequirePermission(AdminPermission.CS_VIEW)
+    public ResponseBodyEmitter subscribe(@RequestParam String token, HttpServletRequest request) {
+        // Register as admin subscriber (sessionId=null means broadcast all)
+        String emitterToken = csPushService.subscribe(null, true, token);
+        return csPushService.getEmitter(emitterToken);
+    }
 }
