@@ -107,6 +107,7 @@
 <script>
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 import { getMySessions, getSession, getOrCreateSessionByOrder, sendMessage, markRead, getOrCreateSessionByProduct } from '@/api/im'
 import { ElMessage } from 'element-plus'
 
@@ -114,7 +115,8 @@ export default {
   name: 'ImIndex',
   setup() {
     const router = useRouter()
-  const route = useRoute()
+    const route = useRoute()
+    const userStore = useUserStore()
     const sessions = ref([])
     const currentSession = ref(null)
     const messages = ref([])

@@ -55,7 +55,7 @@
             </el-form-item>
 
             <el-form-item label="参考时价" prop="hourlyRate">
-              <el-input v-model="form.hourlyRate" placeholder="如：100（表示100元/小时），或填"面议"" style="width: 400px;" />
+              <el-input v-model="form.hourlyRate" placeholder='如：100（表示100元/小时），或填面议' style="width: 400px;" />
               <div class="form-tip">填数字表示参考时价，或填"面议"由买家咨询后确认</div>
             </el-form-item>
 
