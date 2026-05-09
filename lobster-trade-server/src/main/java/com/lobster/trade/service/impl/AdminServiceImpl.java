@@ -55,7 +55,7 @@ public class AdminServiceImpl implements AdminService {
         if (admin == null) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED, "管理员账号不存在");
         }
-        if (!PasswordEncoder.matches(req.getPassword(), admin.getPassword())) {
+        if (!PasswordEncoder.matches(admin.getPassword(), req.getPassword())) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED, "密码错误");
         }
         if (admin.getStatus() != 1) {

@@ -28,6 +28,7 @@ com\lobster\trade\mapper\UserLoginDeviceMapper.class
 com\lobster\trade\mapper\CouponMapper.class
 com\lobster\trade\controller\admin\NotificationController.class
 com\lobster\trade\model\response\OrderRecognizeVO$RecognizedFields.class
+com\lobster\trade\controller\DebugController.class
 com\lobster\trade\util\PasswordEncoder.class
 com\lobster\trade\controller\StatsApiController.class
 com\lobster\trade\controller\RealNameApiController.class
