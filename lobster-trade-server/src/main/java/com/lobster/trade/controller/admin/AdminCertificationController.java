@@ -30,7 +30,7 @@ public class AdminCertificationController {
     @RequirePermission(AdminPermission.CERTIFICATION_AUDIT)
     @Audit(value = "审核服务商认证", targetType = "Certification")
     public Result<String> review(@RequestBody CertificationReviewRequest req) {
-        certificationService.reviewCertification(req.getCertId(), req.getStatus(), req.getRejectReason(), req.getProviderLevel());
+        certificationService.reviewCertification(req.getCertId(), req.getStatus(), req.getRejectReason(), req.getProviderLevel(), req.getAdminRemark());
         return Result.success("审核完成");
     }
 
@@ -40,5 +40,6 @@ public class AdminCertificationController {
         private Integer status;
         private String rejectReason;
         private Integer providerLevel;
+        private String adminRemark;
     }
 }

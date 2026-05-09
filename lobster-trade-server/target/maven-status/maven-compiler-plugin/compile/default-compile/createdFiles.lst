@@ -213,6 +213,7 @@ com\lobster\trade\service\impl\ProductCategoryServiceImpl.class
 com\lobster\trade\model\response\LoginResponse.class
 com\lobster\trade\controller\CertificationController$CertificationApplyRequest.class
 com\lobster\trade\model\request\AdminProductUpdateRequest.class
+com\lobster\trade\controller\admin\CsAdminController$CsAdminMessageRequest.class
 com\lobster\trade\mapper\UserFavoriteMapper.class
 com\lobster\trade\model\entity\GameCategory.class
 com\lobster\trade\annotation\RequirePermission.class

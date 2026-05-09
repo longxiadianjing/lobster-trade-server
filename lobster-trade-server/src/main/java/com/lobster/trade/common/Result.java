@@ -40,4 +40,12 @@ public class Result<T> implements Serializable {
     public static <T> Result<T> error(String message) {
         return error(90001, message);
     }
+
+    public static <T> Result<T> fail(int code, String message) {
+        Result<T> result = new Result<>();
+        result.setCode(code);
+        result.setMessage(message);
+        result.setData(null);
+        return result;
+    }
 }

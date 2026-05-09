@@ -6,10 +6,10 @@ import com.lobster.trade.common.Result;
 import com.lobster.trade.model.entity.AdminPermission;
 import com.lobster.trade.model.response.CsSessionVO;
 import com.lobster.trade.service.CsService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,16 +45,21 @@ public class CsAdminController {
     }
 
     /**
-     * Admin sends a message to a CS session
+     * Admin sends a message to a CS session — accepts JSON body
      */
     @PostMapping("/message")
     @RequirePermission(AdminPermission.CS_HANDLE)
-    public Result<CsSessionVO> sendMessage(
-            @RequestParam Long sessionId,
-            @RequestParam String content,
-            @RequestParam(required = false, defaultValue = "text") String messageType,
-            @RequestParam(required = false) String attachmentUrl) {
-        return Result.success(csService.sendMessageAdmin(sessionId, content, messageType, attachmentUrl));
+    public Result<CsSessionVO> sendMessage(@RequestBody CsAdminMessageRequest req) {
+        return Result.success(csService.sendMessageAdmin(req.getSessionId(), req.getContent(),
+            req.getMessageType(), req.getAttachmentUrl()));
+    }
+
+    @Data
+    public static class CsAdminMessageRequest {
+        private Long sessionId;
+        private String content;
+        private String messageType;
+        private String attachmentUrl;
     }
 
     /**
@@ -85,4 +90,5 @@ public class CsAdminController {
     public Result<Map<String, Object>> stats() {
         return Result.success(csService.getCsStats());
     }
+
 }

@@ -26,11 +26,11 @@ public class CertificationController {
      * POST /api/certification/apply
      */
     @PostMapping("/apply")
-    public Result<Void> apply(HttpServletRequest request,
+    public Result<String> apply(HttpServletRequest request,
                                     @RequestBody CertificationApplyRequest req) {
         Long userId = (Long) request.getAttribute("userId");
         if (userId == null) {
-            return Result.fail(401, "请先登录");
+            return Result.error(401, "请先登录");
         }
         certificationService.applyCertification(
             userId,
@@ -84,7 +84,7 @@ public class CertificationController {
      */
     @PostMapping("/admin/review")
     @RequirePermission(AdminPermission.CERTIFICATION_AUDIT)
-    public Result<Void> review(@RequestBody CertificationReviewRequest req) {
+    public Result<String> review(@RequestBody CertificationReviewRequest req) {
         certificationService.reviewCertification(req.getCertId(), req.getStatus(), req.getRejectReason(), req.getProviderLevel(), req.getAdminRemark());
         return Result.success("审核完成");
     }
