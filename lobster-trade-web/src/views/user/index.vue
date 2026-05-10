@@ -332,23 +332,29 @@
               <span class="unread-badge" v-if="unreadCount > 0">{{ unreadCount }} 条未读</span>
             </div>
           </template>
-          <div class="notification-list">
+          <div v-if="loadingNotifications" class="loading-wrap">
+            <el-icon class="is-loading"><Loading /></el-icon>
+            <span>加载中...</span>
+          </div>
+          <div v-else class="notification-list">
             <div
               class="notif-item"
               v-for="n in notifications"
               :key="n.id"
-              :class="{ unread: !n.read }"
+              :class="{ unread: n.status === 0 }"
+              @click="handleNotifClick(n)"
             >
-              <span class="notif-icon">{{ n.icon }}</span>
+              <span class="notif-icon">{{ getNotifIcon(n.type) }}</span>
               <div class="notif-body">
                 <div class="notif-title">{{ n.title }}</div>
-                <div class="notif-desc">{{ n.desc }}</div>
+                <div class="notif-desc">{{ n.content }}</div>
               </div>
               <div class="notif-right">
-                <div class="notif-time">{{ n.time }}</div>
-                <div v-if="!n.read" class="unread-dot"></div>
+                <div class="notif-time">{{ formatNotifTime(n.createTime) }}</div>
+                <div v-if="n.status === 0" class="unread-dot"></div>
               </div>
             </div>
+            <el-empty v-if="notifications.length === 0" description="暂无消息" :image-size="80" />
           </div>
         </el-card>
       </main>
@@ -357,15 +363,16 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, onMounted } from 'vue'
+import { ref, computed, reactive, onMounted, markRaw } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useUserStore } from '@/stores/user'
 import { updateUserInfo } from '@/api/user'
+import { getNotificationList, markNotificationRead } from '@/api/notification'
 import {
   User, Wallet, List, Goods, Sell, CircleCheck, CircleCheckFilled,
   Clock, Lock, Coin, Message, Warning, ChatDotRound, Ticket, Medal, DataAnalysis,
-  ChatLineSquare, Star
+  ChatLineSquare, Star, Loading, Bell, ShoppingCart, Headset
 } from '@element-plus/icons-vue'
 
 const router = useRouter()
@@ -374,17 +381,69 @@ const userStore = useUserStore()
 const activeMenu = ref('/user')
 const editing = ref(false)
 const saveLoading = ref(false)
+const loadingNotifications = ref(false)
 
 const form = reactive({ nickname: '', email: '' })
 const userInfo = computed(() => userStore.userInfo)
+const unreadCount = computed(() => userStore.unreadNotificationCount || 0)
 
-const notifications = ref([
-  { id: 1, type: 'order', icon: '📦', title: '订单已完成', desc: '您的订单 #1234 已确认收货，交易成功', time: '2小时前', read: false },
-  { id: 2, type: 'system', icon: '🔔', title: '系统通知', desc: '您的商品"三角洲行动-哈夫币"已被收藏', time: '5小时前', read: false },
-  { id: 3, type: 'review', icon: '⭐', title: '评价提醒', desc: '买家对订单 #1233 进行了评价，请及时回复', time: '昨天', read: true },
-  { id: 4, type: 'fund', icon: '💰', title: '资金到账', desc: '订单 #1232 收入 ¥80.00 已到账', time: '昨天', read: true },
-])
-const unreadCount = computed(() => notifications.value.filter(n => !n.read).length)
+const notifications = ref([])
+const unreadCount = computed(() => userStore.unreadNotificationCount)
+
+const typeToIcon = (type) => {
+  if (type === 1) return '🔔'
+  if (type === 2) return '📦'
+  if (type === 3) return '💬'
+  if (type === 4) return '🎁'
+  return '🔔'
+}
+
+const getNotifIcon = (type) => typeToIcon(type)
+
+const formatNotifTime = (time) => {
+  if (!time) return ''
+  let d
+  if (typeof time === 'string') {
+    d = new Date(time.replace('T', ' ').substring(0, 19))
+  } else {
+    d = new Date(time)
+  }
+  const now = new Date()
+  const diff = now - d
+  if (diff < 60 * 1000) return '刚刚'
+  if (diff < 60 * 60 * 1000) return `${Math.floor(diff / 60000)}分钟前`
+  if (diff < 24 * 60 * 60 * 1000) return `${Math.floor(diff / 3600000)}小时前`
+  if (diff < 2 * 24 * 60 * 60 * 1000) return '昨天'
+  if (diff < 7 * 24 * 60 * 60 * 1000) return `${Math.floor(diff / 86400000)}天前`
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+const fetchNotifications = async () => {
+  loadingNotifications.value = true
+  try {
+    const res = await getNotificationList({ page: 1, size: 20 })
+    notifications.value = res.data?.records || []
+  } catch (e) {
+    console.error('fetchNotifications error', e)
+  } finally {
+    loadingNotifications.value = false
+  }
+}
+
+const handleNotifClick = async (n) => {
+  if (n.status === 0) {
+    try {
+      await markNotificationRead(n.id)
+      n.status = 1
+      userStore.setUnreadCount(Math.max(0, userStore.unreadNotificationCount - 1))
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  if (n.linkUrl) {
+    router.push(n.linkUrl)
+  }
+}
 
 const maskedRealName = computed(() => {
   const name = userInfo.value?.real_name
@@ -421,6 +480,8 @@ onMounted(async () => {
   } catch (e) {
     console.error('Failed to fetch user info:', e)
   }
+  userStore.fetchUnreadCount()
+  fetchNotifications()
 })
 
 const startEdit = () => {
@@ -680,6 +741,16 @@ const handleLogout = async () => {
   padding: 2px 8px;
   border-radius: 10px;
   font-weight: 700;
+}
+
+.loading-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 40px;
+  color: #999;
+  font-size: 14px;
 }
 
 .notification-list { display: flex; flex-direction: column; }

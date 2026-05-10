@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lobster.trade.exception.BusinessException;
 import com.lobster.trade.exception.ErrorCode;
+import com.lobster.trade.mapper.AdminMapper;
 import com.lobster.trade.mapper.GameCategoryMapper;
 import com.lobster.trade.mapper.ProductMapper;
 import com.lobster.trade.mapper.UserMapper;
+import com.lobster.trade.model.entity.Admin;
 import com.lobster.trade.model.entity.GameCategory;
 import com.lobster.trade.model.entity.Product;
 import com.lobster.trade.model.entity.User;
@@ -28,6 +30,14 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
     private final GameCategoryMapper gameCategoryMapper;
     private final UserMapper userMapper;
+    private final AdminMapper adminMapper;
+
+    private boolean isAdminSeller(Long sellerId) {
+        if (sellerId == null) return false;
+        return adminMapper.selectCount(new LambdaQueryWrapper<Admin>()
+                .eq(Admin::getId, sellerId)
+                .eq(Admin::getIsDeleted, 0)) > 0;
+    }
 
     @Override
     public Long publish(ProductPublishRequest req, Long sellerId) {
@@ -67,17 +77,14 @@ public class ProductServiceImpl implements ProductService {
         if (sellerId != null) wrapper.eq(Product::getSellerId, sellerId);
         wrapper.orderByDesc(Product::getCreateTime);
 
-        // Count total first
         long total = productMapper.selectCount(wrapper);
-
-        // Manual pagination via offset/size using selectList
         long offset = (long) (page - 1) * size;
         wrapper.last("LIMIT " + size + " OFFSET " + offset);
-        java.util.List<Product> productList = productMapper.selectList(wrapper);
+        List<Product> productList = productMapper.selectList(wrapper);
 
-        java.util.List<ProductDetailVO> records = new java.util.ArrayList<>();
+        List<ProductDetailVO> records = new java.util.ArrayList<>();
         for (Product p : productList) {
-            ProductDetailVO vo = toVO(p);
+            ProductDetailVO vo = toVO(p, isAdminSeller(p.getSellerId()));
             GameCategory g = gameCategoryMapper.selectById(p.getGameId());
             if (g != null) vo.setGameName(g.getGameName());
             User u = userMapper.selectById(p.getSellerId());
@@ -96,7 +103,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductDetailVO> list(String keyword, Long gameId, String productType, int page, int size) {
-        // Use apply() with flat OR structure - same logic as search()
         LambdaQueryWrapper<Product> wrapper = new LambdaQueryWrapper<Product>()
             .eq(Product::getStatus, 1)
             .eq(Product::getIsDeleted, 0);
@@ -108,18 +114,16 @@ public class ProductServiceImpl implements ProductService {
         if (productType != null && !productType.isEmpty()) wrapper.eq(Product::getProductType, productType);
         wrapper.orderByDesc(Product::getCreateTime);
 
-        // Count: fetch all matching products
-        java.util.List<Product> allProducts = productMapper.selectList(wrapper);
+        List<Product> allProducts = productMapper.selectList(wrapper);
         long total = allProducts.size();
 
-        // Apply pagination in Java
         long offset = (long) (page - 1) * size;
-        java.util.List<Product> pageProducts = allProducts.stream()
+        List<Product> pageProducts = allProducts.stream()
             .skip(offset).limit(size).collect(java.util.stream.Collectors.toList());
 
-        java.util.List<ProductDetailVO> records = new java.util.ArrayList<>();
+        List<ProductDetailVO> records = new java.util.ArrayList<>();
         for (Product p : pageProducts) {
-            ProductDetailVO vo = toVO(p);
+            ProductDetailVO vo = toVO(p, isAdminSeller(p.getSellerId()));
             GameCategory g = gameCategoryMapper.selectById(p.getGameId());
             if (g != null) vo.setGameName(g.getGameName());
             User u = userMapper.selectById(p.getSellerId());
@@ -140,7 +144,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDetailVO getDetail(Long productId) {
         Product p = productMapper.selectById(productId);
         if (p == null || p.getIsDeleted() == 1) throw new BusinessException(ErrorCode.PARAM_INVALID, "商品不存在");
-        ProductDetailVO vo = toVO(p);
+        ProductDetailVO vo = toVO(p, isAdminSeller(p.getSellerId()));
         GameCategory g = gameCategoryMapper.selectById(p.getGameId());
         if (g != null) vo.setGameName(g.getGameName());
         User u = userMapper.selectById(p.getSellerId());
@@ -148,7 +152,7 @@ public class ProductServiceImpl implements ProductService {
             vo.setSellerNickname(u.getNickname());
             vo.setSellerReputationScore(u.getReputationScore());
             vo.setSellerIsVerified(u.getIsVerified());
-                vo.setSellerRealNameVerified(u.getRealNameStatus() != null && u.getRealNameStatus() == 1 ? 1 : 0);
+            vo.setSellerRealNameVerified(u.getRealNameStatus() != null && u.getRealNameStatus() == 1 ? 1 : 0);
         }
         return vo;
     }
@@ -184,16 +188,16 @@ public class ProductServiceImpl implements ProductService {
         if (sellerId != null) wrapper.eq(Product::getSellerId, sellerId);
         wrapper.orderByDesc(Product::getViewCount);
 
-        java.util.List<Product> allProducts = productMapper.selectList(wrapper);
+        List<Product> allProducts = productMapper.selectList(wrapper);
         long total = allProducts.size();
 
         long offset = (long) (page - 1) * size;
-        java.util.List<Product> pageProducts = allProducts.stream()
+        List<Product> pageProducts = allProducts.stream()
             .skip(offset).limit(size).collect(java.util.stream.Collectors.toList());
 
-        java.util.List<ProductDetailVO> records = new java.util.ArrayList<>();
+        List<ProductDetailVO> records = new java.util.ArrayList<>();
         for (Product p : pageProducts) {
-            ProductDetailVO vo = toVO(p);
+            ProductDetailVO vo = toVO(p, isAdminSeller(p.getSellerId()));
             GameCategory g = gameCategoryMapper.selectById(p.getGameId());
             if (g != null) vo.setGameName(g.getGameName());
             User u = userMapper.selectById(p.getSellerId());
@@ -230,10 +234,11 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    ProductDetailVO toVO(Product p) {
+    private ProductDetailVO toVO(Product p, boolean isOfficial) {
         ProductDetailVO vo = new ProductDetailVO();
         vo.setId(p.getId());
         vo.setSellerId(p.getSellerId());
+        vo.setIsOfficial(isOfficial);
         vo.setGameId(p.getGameId());
         vo.setProductType(p.getProductType());
         vo.setTitle(p.getTitle());

@@ -47,6 +47,7 @@ com\lobster\trade\model\entity\CsMessage.class
 com\lobster\trade\mapper\ImMessageMapper.class
 com\lobster\trade\controller\OrderController.class
 com\lobster\trade\controller\SecurityCenterController.class
+com\lobster\trade\config\RequestLogFilter.class
 com\lobster\trade\controller\admin\CsAdminController.class
 com\lobster\trade\controller\OrderRecognitionController.class
 com\lobster\trade\service\GameService.class

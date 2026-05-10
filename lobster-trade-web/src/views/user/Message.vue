@@ -257,9 +257,11 @@ import { ElMessage } from 'element-plus'
 import PageLayout from '@/components/PageLayout.vue'
 import { User, Wallet, List, Star, ChatDotRound, Bell, ShoppingCart, Headset, Loading } from '@element-plus/icons-vue'
 import { getNotificationList, markNotificationRead, markAllNotificationsRead, getUnreadCount } from '@/api/notification'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
 const route = useRoute()
+const userStore = useUserStore()
 const activeTab = ref('all')
 const loading = ref(false)
 const messageList = ref([])
@@ -377,7 +379,9 @@ const handleMarkRead = async (msg) => {
   try {
     await markNotificationRead(msg.id)
     msg.status = 1
-    totalUnread.value = Math.max(0, totalUnread.value - 1)
+    const newCount = Math.max(0, totalUnread.value - 1)
+    totalUnread.value = newCount
+    userStore.setUnreadCount(newCount)
   } catch (e) {
     console.error(e)
   }
@@ -387,6 +391,7 @@ const handleMarkAllRead = async () => {
   try {
     await markAllNotificationsRead()
     totalUnread.value = 0
+    userStore.setUnreadCount(0)
     messageList.value.forEach(m => { m.status = 1 })
     allMessagesMap.value = {}
     ElMessage.success('全部消息已标记为已读')

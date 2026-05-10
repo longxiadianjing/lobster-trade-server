@@ -51,6 +51,9 @@ public class Product {
     @TableField(exist = false)
     private String coverImage;
 
+    @TableField(exist = false)
+    private Boolean isOfficial;
+
     /** 从 images JSON 数组中解析出封面图URL */
     public void computeCoverImage() {
         if (this.images == null || this.images.isEmpty()) {

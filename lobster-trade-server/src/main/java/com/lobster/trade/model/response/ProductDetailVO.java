@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class ProductDetailVO {
     private Long id;
     private Long sellerId;
+    private Boolean isOfficial; // true if seller is admin (官方自营)
     private String sellerNickname;
     private BigDecimal sellerReputationScore;
     private Integer sellerIsVerified;

@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia'
 import { getUserInfo } from '@/api/user'
+import { getUnreadCount } from '@/api/notification'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     token: localStorage.getItem('token') || '',
-    userInfo: null
+    userInfo: null,
+    unreadNotificationCount: 0
   }),
 
   getters: {
@@ -32,9 +34,24 @@ export const useUserStore = defineStore('user', {
       }
     },
 
+    async fetchUnreadCount() {
+      try {
+        const res = await getUnreadCount()
+        this.unreadNotificationCount = res?.data ?? res ?? 0
+      } catch (error) {
+        console.error('Failed to fetch unread count:', error)
+        this.unreadNotificationCount = 0
+      }
+    },
+
+    setUnreadCount(count) {
+      this.unreadNotificationCount = count
+    },
+
     logout() {
       this.token = ''
       this.userInfo = null
+      this.unreadNotificationCount = 0
       localStorage.removeItem('token')
     }
   }

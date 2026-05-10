@@ -197,6 +197,7 @@
             <div v-if="p.completedOrders > 0" class="hot-badge">
               🔥 售{{ p.completedOrders }}
             </div>
+            <div v-if="p.isOfficial" class="official-badge">官开自营</div>
             <div class="product-price-tag">¥{{ p.price }}</div>
           </div>
           <div class="product-info">
@@ -906,6 +907,14 @@ const resetFilters = () => {
   color: #fff; padding: 4px 12px; border-radius: 14px;
   font-size: 13px; font-weight: 800;
   box-shadow: 0 2px 8px rgba(102,126,234,0.4);
+}
+.official-badge {
+  position: absolute; top: 8px; right: 8px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff; padding: 3px 10px; border-radius: 12px;
+  font-size: 11px; font-weight: 800;
+  box-shadow: 0 2px 8px rgba(102,126,234,0.4);
+  z-index: 2;
 }
 .hot-badge {
   position: absolute; top: 8px; left: 8px;

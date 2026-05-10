@@ -102,6 +102,7 @@
                     {{ typeMap[product.productType] || product.productType }}
                   </el-tag>
                   <h1 class="product-title">{{ product.title }}</h1>
+                  <el-tag v-if="product.isOfficial" type="warning" size="small" effect="dark" style="margin-left:8px;background:linear-gradient(135deg,#667eea,#764ba2);border:none;">官方自营</el-tag>
                 </div>
 
                 <div class="price-section">
