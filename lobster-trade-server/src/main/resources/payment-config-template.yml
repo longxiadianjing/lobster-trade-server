@@ -1,0 +1,54 @@
+# ================================================
+# 支付渠道统一配置
+# 所有敏感信息通过环境变量注入，禁止硬编码
+# ================================================
+
+payment:
+  # 统一支付密钥（用于内部签名防伪）
+  # 生产环境务必通过环境变量注入，禁止硬编码
+  secret: ${PAYMENT_SECRET}
+
+  # 支付宝配置
+  alipay:
+    enabled: ${ALIPAY_ENABLED:false}
+    # 应用ID
+    appId: ${ALIPAY_APP_ID}
+    # 应用私钥（PKCS8格式，RSA2）
+    privateKey: ${ALIPAY_PRIVATE_KEY}
+    # 支付宝公钥
+    alipayPublicKey: ${ALIPAY_PUBLIC_KEY}
+    # 异步回调地址（公网可访问）
+    notifyUrl: ${ALIPAY_NOTIFY_URL}
+    # 前端回跳地址
+    returnUrl: ${ALIPAY_RETURN_URL:http://localhost:5174/payment/result}
+    # 是否沙箱环境（开发测试用）
+    sandbox: ${ALIPAY_SANDBOX:false}
+
+  # 微信支付配置（APIv3 RSA）
+  wechat:
+    enabled: ${WECHAT_ENABLED:false}
+    appId: ${WECHAT_APP_ID}
+    mchId: ${WECHAT_MCH_ID}
+    # APIv3私钥（直接配置或通过 privateKeyPath 引用文件）
+    privateKey: ${WECHAT_PRIVATE_KEY:}
+    # 私钥文件路径（优先级低于 privateKey）
+    privateKeyPath: ${WECHAT_PRIVATE_KEY_PATH:classpath:wechat_private_key.pem}
+    # APIv3密钥（用于回调验签，不是签名密钥）
+    apiKey: ${WECHAT_API_KEY:}
+    # 平台证书序列号
+    certSerialNo: ${WECHAT_CERT_SERIAL_NO}
+    # 异步回调地址（公网可访问）
+    notifyUrl: ${WECHAT_NOTIFY_URL}
+    # 平台证书内容（PEM格式，用于回调验签）
+    certContent: ${WECHAT_CERT_CONTENT:}
+
+  # 银行卡/聚合支付配置（预留）
+  bankcard:
+    enabled: ${BANKCARD_ENABLED:false}
+    # 支付平台：laKaLa / EasyPay / unionPay
+    platform: ${BANKCARD_PLATFORM:}
+    mchId: ${BANKCARD_MCH_ID:}
+    appId: ${BANKCARD_APP_ID:}
+    privateKey: ${BANKCARD_PRIVATE_KEY:}
+    publicKey: ${BANKCARD_PUBLIC_KEY:}
+    notifyUrl: ${BANKCARD_NOTIFY_URL:}

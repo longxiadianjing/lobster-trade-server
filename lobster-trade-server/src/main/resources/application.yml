@@ -1,3 +1,9 @@
+# ================================================
+# 龙虾道具交易平台 - application.yml
+# 【生产环境】所有敏感字段必须通过环境变量注入
+# 禁止在生产环境使用硬编码默认值
+# ================================================
+
 spring:
   application:
     name: lobster-trade-server
@@ -7,14 +13,15 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/lobster_trade?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
-    username: root
-    password: root
+    # 【安全】数据库密码通过环境变量注入，禁止硬编码
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:lobster_trade}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=${DB_SSL:false}&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
 
   redis:
-    host: localhost
-    port: 6379
-    password:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
     lettuce:
       pool:
         max-active: 8
@@ -38,38 +45,81 @@ spring:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: ${MYBATIS_LOG_IMPL:org.apache.ibatis.logging.stdout.StdOutImpl}
   mapper-locations: classpath*:/mapper/**/*.xml
   type-aliases-package: com.lobster.trade.model.entity
 
+# 【安全】JWT密钥必须通过环境变量注入，禁止硬编码
 jwt:
-  secret: ${JWT_SECRET}
+  secret: ${JWT_SECRET:}
   expire: ${JWT_EXPIRE:86400000}
 
+# ================================================
+# 支付渠道统一配置
+# 所有敏感信息通过环境变量注入，禁止硬编码
+# ================================================
 payment:
-  secret: ${PAYMENT_SECRET:mock-payment-secret-key-2026}
+  # 【安全】支付商户密钥（所有支付通用）
+  secret: ${PAYMENT_SECRET:}
+
+  # ---------- 支付宝配置 ----------
   alipay:
-    appId: ${ALIPAY_APP_ID:2021006151687443}
-    privateKey: ${ALIPAY_PRIVATE_KEY:MIIEuwIBADANBgkqhkiG9w0BAQEFAASCBKUwggShAgEAAoIBAQCRszh6sFrKGoscw3T1nw1Y1pKDXYtTkKsZGTdrTya5aXmIIUg6Em1CIO/ySe+ENCuYa9o2gdLH3J0OajF75cnCz1+T9Iun7oM1rc7aRBO+5HcZ6TvBT1863oqmLkGAbr7aFniTCGgLCfueGuz8ke4Rm3aCRCVgn9CTOboesf6AKkItoG+r8N3dLTlGvJ/XlNbUAwsafoVurJV4cPA8jmTAszDoBaXhc0QpsKu2UwlWCF8jm7Y8Kq4Juf4N/aEROeXLg9V1Hwm+ljDKs0DWKCdS1z+dVb2U2kgb9mIa+IWWrAsljG27odf/QjHRUb3BWAqAPrEK0DdbDTw+JlxgRP8hAgMBAAECgf9lTjf3FqgJ3mrblQu9vNmK66bzsBcwA2b0DJR8CIzkXnIiNQIDXsyZLk2oKcBgK+YkFNmlDJ+CV+LcIvpFK4Ed8xKBzYdNPIn+yNsK6ErScAhf+8uQnZ+ZTyMYaREiO953xSgRE8dD5a0OQaqF8vGVTIMaEEfs5zIfLAQ9U4Whlqv2LSE6Q1d7amy+p2XrZl9XirXikuIkZrSMHc9cDIoVIuW5W4QABruWSQp92fRqqoUW+BkdgPtNdWRfWwWGp1g31e2bVPUsd6pbsHlu9Wqrgy5sdFe7251KsvmHQ0DlaERf0a35JIIYlp8RnWsNuuDAGGOR72Z1AgJ9O4GnRWECgYEA9fiJuLyp6xiJOKSNW7DgDnkWKd0Z3q0QjGMzmrWYZr5poa21b5Mn4hvb/m4XvZPQP7nngcGfhW/khlncEdrEfXjir2g1twEm9qMI5jqGDIb6wQpasoeFa4FN8rUbbwKOiY32V09v8mwQKrY8HTgYfaMjZy9ur7CZBQesFAnEQbUCgYEAl6QMhARJAYRFNw3vx6QeyiomVR7IOGxYqMwlzxb74+6ecTnyYmA2MbYTDfZorSvA19qeXKCCY9h7TMzxiDEsPsyeD9dS8DcR+a/IzAyg4c1mxpOBIcrivi/HsTpgRz+/ydD9j4fGxweNCnmqf+8lwtMT5aoEFuwGPbBgZrROWz0CgYAs/i2TEU+zpWVUayVAZHZXr2aSedNFnDqus2a5IgaipKoF3RSXOD/PaHExdUn6b5NkVMk4PwbDDdirirxqt63Bld9BXrqUoy1RaDk0g/gJSpeLwC0fAxMwuxJbFy3RfJI+Ly2kgu9jVMkQRw1v+tbgBHtxYIfKs28KMIEVmUPBEQKBgBBrOs+whxca80OaxrOfGZZaKfxdcOBrGs5sDEv3+R4c4BryY0QzlqqbRETmwT6+1gqJKUxuNLAK6I7QQfa1HE1Qamzcq6ZG0DNwzRUK6QCJ9O7bWcgG57YgBkcyQup0BJgdgNbhpKw4LRVNRyDDDBukLytW1UqGE8bqKgX0z+chAoGBALqFXL2lNQeathe3tGbhrPy+TReiHIxH51gIlb/YT7kz4d/Y27pNXLbt0/zUOV+06f6c9RF4twZSu1T/d9LfJw9nz/KNw+v7Ck5qnUVAX53LEeX73Y5CzlB5L1Ark3SnmRJGZ8NgcEUm9br6ukRlC9WlODrmr9/83AtQmj6b2clN}
-    alipayPublicKey: ${ALIPAY_PUBLIC_KEY:MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo/I4PFPUT07O7PEMId0fT/5DvQmtKtrxyPTeHO4Lcw8mJqed3RlQSJltu3kAnZq4G3rD307SvzdBYJqWsbGvbD6JQlLxsi6iFoF7FmqCICtwyqIyDG7OWolBDbzKgN69yXzCiBNy5tAIhxj9HhnL9iAFdYGZVLVVitfbkvm/yE1RMpIQVnSMxUW1crne3G2cftRkAvVt1V8zfYoyD+VAQfffuU+0FLqNftpi32/GHFLQkgZ0OZUy7KIXJgvtYE4LmvGwDZDOLGscQkHc+cs2l6JwzDR2XRIkcSg7pvqZ0vsQs2ZvtbLzyyUysq3e3FWQKLmw9DUghRoFdSRyPkpAKQIDAQAB}
+    # 【安全】enabled 必须通过环境变量注入（生产：ALIPAY_ENABLED=true）
+    enabled: ${ALIPAY_ENABLED:false}
+    # 【安全】AppID 必须通过环境变量注入
+    appId: ${ALIPAY_APP_ID:}
+    # 【安全】应用私钥（RSA2 PKCS8）必须通过环境变量注入
+    privateKey: ${ALIPAY_PRIVATE_KEY:}
+    # 【安全】支付宝公钥必须通过环境变量注入
+    alipayPublicKey: ${ALIPAY_PUBLIC_KEY:}
+    # 异步回调地址
     notifyUrl: ${ALIPAY_NOTIFY_URL:http://localhost:8080/api/payment/alipay/notify}
+    # 前端回跳地址
+    returnUrl: ${ALIPAY_RETURN_URL:http://localhost:5174/payment/result}
+    # 是否沙箱（测试环境）
     sandbox: ${ALIPAY_SANDBOX:false}
+
+  # ---------- 微信支付配置 ----------
   wechat:
-    appId: wx305b929f776078d8
-    mchId: "1715080856"
-    # 私钥从 classpath:wechat_private_key.pem 自动加载
-    privateKeyPath: classpath:wechat_private_key.pem
-    certSerialNo: 5E7EAD6F807398EE2B39958E5E1B3CDDE63AB803
-    notifyUrl: http://localhost:8080/api/payment/wechat/notify
-    enabled: true
+    # 【安全】enabled 必须通过环境变量注入
+    enabled: ${WECHAT_ENABLED:false}
+    # 【安全】AppID 必须通过环境变量注入
+    appId: ${WECHAT_APP_ID:}
+    # 【安全】商户号必须通过环境变量注入
+    mchId: ${WECHAT_MCH_ID:}
+    # 【安全】APIv3 私钥内容（直填内容，不依赖文件）
+    privateKey: ${WECHAT_PRIVATE_KEY:}
+    # 私钥文件路径（可选，优先用 privateKey 环境变量）
+    privateKeyPath: ${WECHAT_PRIVATE_KEY_PATH:}
+    # APIv2 密钥（HMAC-SHA256，可选）
+    apiKey: ${WECHAT_API_KEY:}
+    # 【安全】平台证书序列号必须通过环境变量注入
+    certSerialNo: ${WECHAT_CERT_SERIAL_NO:}
+    # 平台证书内容（APIv3 回调验签用）
+    certContent: ${WECHAT_CERT_CONTENT:}
+    # 异步回调地址
+    notifyUrl: ${WECHAT_NOTIFY_URL:http://localhost:8080/api/payment/wechat/notify}
+
+  # ---------- 银行卡/聚合支付配置 ----------
+  bankcard:
+    # 【安全】银行卡支付未启用，预留
+    enabled: ${BANKCARD_ENABLED:false}
+    # 支付平台名称（laKaLa/EasyPay/unionPay）
+    platform: ${BANKCARD_PLATFORM:}
+    mchId: ${BANKCARD_MCH_ID:}
+    appId: ${BANKCARD_APP_ID:}
+    # 【安全】私钥/公钥通过环境变量注入
+    privateKey: ${BANKCARD_PRIVATE_KEY:}
+    publicKey: ${BANKCARD_PUBLIC_KEY:}
+    notifyUrl: ${BANKCARD_NOTIFY_URL:}
 
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
 
 upload:
-  path: D:/uploads/lobster
-  base-url: http://localhost:8080/uploads
+  path: ${UPLOAD_PATH:D:/uploads/lobster}
+  base-url: ${UPLOAD_BASE_URL:http://localhost:8080/uploads}
 
 logging:
   level:
-    com.lobster.trade: debug
+    com.lobster.trade: ${LOG_LEVEL:debug}

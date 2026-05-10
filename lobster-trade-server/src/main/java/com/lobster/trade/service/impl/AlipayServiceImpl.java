@@ -9,6 +9,7 @@ import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.lobster.trade.mapper.PaymentTransactionMapper;
 import com.lobster.trade.model.entity.PaymentTransaction;
+import com.lobster.trade.payment.config.AlipayProperties;
 import com.lobster.trade.service.AlipayService;
 import com.lobster.trade.service.WalletService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class AlipayServiceImpl implements AlipayService {
 
     private final AlipayClient alipayClient;
+    private final AlipayProperties alipayProperties;
     private final PaymentTransactionMapper paymentMapper;
     private final WalletService walletService;
 
@@ -71,6 +73,30 @@ public class AlipayServiceImpl implements AlipayService {
         log.info("[ALIPAY_NOTIFY] 回调通知: outTradeNo={}, tradeStatus={}, tradeNo={}, amount={}",
             outTradeNo, tradeStatus, tradeNo, totalAmount);
 
+        // 【安全修复1】必须先验证签名，防止伪造回调
+        if (alipayProperties.getAlipayPublicKey() != null
+                && !alipayProperties.getAlipayPublicKey().isEmpty()) {
+            try {
+                boolean signValid = AlipaySignature.rsaCheckV2(
+                    params,
+                    alipayProperties.getAlipayPublicKey(),
+                    "UTF-8",
+                    "RSA2"
+                );
+                if (!signValid) {
+                    log.error("[ALIPAY_NOTIFY] 签名验证失败，拒绝处理: outTradeNo={}", outTradeNo);
+                    return "fail";
+                }
+                log.info("[ALIPAY_NOTIFY] 签名验证通过: outTradeNo={}", outTradeNo);
+            } catch (Exception e) {
+                log.error("[ALIPAY_NOTIFY] 签名验证异常: outTradeNo={}, error={}", outTradeNo, e.getMessage());
+                return "fail";
+            }
+        } else {
+            log.warn("[ALIPAY_NOTIFY] 未配置支付宝公钥，跳过验签（测试模式）: outTradeNo={}", outTradeNo);
+        }
+
+        // 查询支付单
         LambdaQueryWrapper<PaymentTransaction> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(PaymentTransaction::getPaymentNo, outTradeNo);
         PaymentTransaction payment = paymentMapper.selectOne(wrapper);
@@ -80,8 +106,18 @@ public class AlipayServiceImpl implements AlipayService {
             return "fail";
         }
 
+        // 【安全修复2】金额校验，防止篡改
+        if (totalAmount != null && !totalAmount.isEmpty()) {
+            BigDecimal paidAmount = new BigDecimal(totalAmount);
+            if (paidAmount.compareTo(payment.getAmount()) != 0) {
+                log.error("[ALIPAY_NOTIFY] 金额篡改攻击！支付单={}, 系统金额={}, 回调金额={}",
+                    outTradeNo, payment.getAmount(), paidAmount);
+                return "fail";
+            }
+        }
+
         if (payment.getStatus() == PaymentTransaction.STATUS_SUCCESS) {
-            return "success"; // 已处理，跳过
+            return "success"; // 已处理，跳过（幂等性）
         }
 
         if ("TRADE_SUCCESS".equals(tradeStatus) || "TRADE_FINISHED".equals(tradeStatus)) {

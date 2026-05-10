@@ -14,6 +14,7 @@ import com.lobster.trade.service.OrderService;
 import com.lobster.trade.service.SysNotificationService;
 import com.lobster.trade.util.SnowflakeIdUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -427,16 +429,48 @@ public class OrderServiceImpl implements OrderService {
         if (order == null || order.getIsDeleted() == 1) {
             throw new BusinessException(ErrorCode.PARAM_INVALID, "订单不存在");
         }
+        if (reason == null || reason.trim().isEmpty()) {
+            throw new BusinessException(ErrorCode.PARAM_INVALID, "操作原因不能为空");
+        }
         String oldStatus = order.getStatus();
+
+
+        // 【安全修复】管理员操作必须遵循状态机合法性校验
+        // 允许的管理员可跳转状态（防恶意强制转账）
+        Map<String, List<String>> adminAllowedTransitions = new java.util.HashMap<>();
+        adminAllowedTransitions.put("pending_pay", java.util.Arrays.asList("cancelled"));
+        adminAllowedTransitions.put("paid", java.util.Arrays.asList("cancelled", "in_progress"));
+        adminAllowedTransitions.put("in_progress", java.util.Arrays.asList("submit_delivery", "disputed"));
+        adminAllowedTransitions.put("submit_delivery", java.util.Arrays.asList("confirmed", "disputed"));
+        // 纠纷状态只有管理员介入后才能解除
+        adminAllowedTransitions.put("disputed", java.util.Arrays.asList("completed", "cancelled"));
+
+        List<String> allowedTargets = adminAllowedTransitions.get(oldStatus);
+        boolean isAllowed = allowedTargets != null && allowedTargets.contains(status);
+        boolean isNoChange = oldStatus.equals(status);
+
+        if (!isNoChange && !isAllowed) {
+            throw new BusinessException(ErrorCode.PARAM_INVALID,
+                "非法状态跳转：" + oldStatus + " → " + status + "，管理员无权强制执行此操作");
+        }
+
+        log.info("[ADMIN_ORDER] 管理员强制修改订单状态: orderId={}, {} → {}, reason={}",
+            orderId, oldStatus, status, reason);
+
         order.setStatus(status);
+        order.setUpdateTime(LocalDateTime.now());
         tradeOrderMapper.updateById(order);
+
+
         // 【资金处理】状态变更为已完成 → 释放托管资金给卖家
         if (!oldStatus.equals(status) && "completed".equals(status)) {
             escrowService.releaseEscrow(order);
+            log.info("[ADMIN_ORDER] 订单{}资金释放给卖家: orderId={}", order.getOrderNo(), orderId);
         }
         // 【资金处理】状态变更为已取消 → 退款给买家
         if (!oldStatus.equals(status) && "cancelled".equals(status)) {
             escrowService.refundEscrow(order);
+            log.info("[ADMIN_ORDER] 订单{}退款给买家: orderId={}", order.getOrderNo(), orderId);
         }
     }
 
