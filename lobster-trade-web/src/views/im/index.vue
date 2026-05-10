@@ -126,6 +126,8 @@ export default {
     const msgListRef = ref(null)
     const originalTitle = document.title
     const isTitleFlashing = ref(false)
+    let imSource = null
+    let sseToken = null
 
     const totalUnread = computed(() =>
       sessions.value.reduce((sum, s) => sum + (s.myUnread || 0), 0)
@@ -153,6 +155,7 @@ export default {
 
     const selectSession = async (s) => {
       currentSession.value = s
+      connectSSE(s.id)
       messagesLoading.value = true
       messages.value = []
       try {
@@ -262,6 +265,37 @@ export default {
       }
     }
 
+    // SSE实时推送
+    const connectSSE = (sessionId) => {
+      disconnectSSE()
+      const token = localStorage.getItem('token') || ''
+      const url = `/api/im/subscribe/${sessionId}?token=${encodeURIComponent(token)}`
+      imSource = new EventSource(url)
+      imSource.addEventListener('new_message', (e) => {
+        try {
+          const data = JSON.parse(e.data)
+          const uId = parseInt(localStorage.getItem('userId') || userStore?.userInfo?.id || 0)
+          if (data.senderId !== uId) {
+            messages.value.push(data)
+            nextTick(() => scrollToBottom())
+          }
+        } catch (ex) {
+          console.error('SSE parse error', ex)
+        }
+      })
+      imSource.onerror = () => {
+        console.warn('SSE error, reconnecting...')
+        setTimeout(() => connectSSE(sessionId), 3000)
+      }
+    }
+
+    const disconnectSSE = () => {
+      if (imSource) {
+        imSource.close()
+        imSource = null
+      }
+    }
+
     // 轮询新消息
     let pollTimer = null
     let oldMessagesLength = 0
@@ -328,6 +362,7 @@ export default {
 
     onUnmounted(() => {
       stopPolling()
+      disconnectSSE()
       document.title = originalTitle
     })
 

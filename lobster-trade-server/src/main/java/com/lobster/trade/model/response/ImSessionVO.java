@@ -34,6 +34,7 @@ public class ImSessionVO {
     @Data
     public static class ImMessageVO {
         private Long id;
+        private Long sessionId;
         private Long senderId;
         private String senderRole;
         private String senderNickname;

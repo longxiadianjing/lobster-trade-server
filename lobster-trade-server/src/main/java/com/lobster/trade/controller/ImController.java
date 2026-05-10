@@ -3,9 +3,12 @@ package com.lobster.trade.controller;
 import com.lobster.trade.model.request.ImSendMessageRequest;
 import com.lobster.trade.model.response.ApiResponse;
 import com.lobster.trade.model.response.ImSessionVO;
+import com.lobster.trade.service.ImPushService;
 import com.lobster.trade.service.ImService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -16,6 +19,19 @@ import java.util.List;
 public class ImController {
 
     private final ImService imService;
+    private final ImPushService imPushService;
+
+    /**
+     * SSE订阅IM会话实时消息
+     * GET /api/im/subscribe/{sessionId}?token=xxx
+     */
+    @GetMapping(value = "/subscribe/{sessionId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE + ";charset=UTF-8")
+    public ResponseBodyEmitter subscribe(@PathVariable Long sessionId,
+                                          @RequestParam String token,
+                                          HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        return imPushService.subscribe(sessionId, userId, token);
+    }
 
     /**
      * 获取我的所有IM会话列表

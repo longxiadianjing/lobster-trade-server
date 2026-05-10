@@ -65,6 +65,7 @@ com\lobster\trade\service\FavoriteService.class
 com\lobster\trade\common\BaseContext.class
 com\lobster\trade\controller\ProductCategoryController.class
 com\lobster\trade\mapper\GameCategoryMapper.class
+com\lobster\trade\service\impl\ImPushServiceImpl.class
 com\lobster\trade\model\response\OrderRecognizeVO.class
 com\lobster\trade\controller\admin\AdminCertificationController$CertificationReviewRequest.class
 com\lobster\trade\mapper\UserCouponMapper.class
@@ -112,6 +113,7 @@ com\lobster\trade\model\response\SellerStatsResponse.class
 com\lobster\trade\service\WeChatPayService.class
 com\lobster\trade\config\AdminContext.class
 com\lobster\trade\model\request\ResetPasswordRequest.class
+com\lobster\trade\service\ImPushService.class
 com\lobster\trade\model\entity\ServiceProviderCertification.class
 com\lobster\trade\service\impl\CsPushServiceImpl$EmitterEntry.class
 com\lobster\trade\mapper\ServiceTicketMapper.class
@@ -174,6 +176,7 @@ com\lobster\trade\util\RateLimitUtil.class
 com\lobster\trade\service\PlatformAnnouncementService.class
 com\lobster\trade\model\response\AdminProductVO.class
 com\lobster\trade\service\CsService.class
+com\lobster\trade\service\impl\ImPushServiceImpl$EmitterEntry.class
 com\lobster\trade\controller\FileUploadController.class
 com\lobster\trade\controller\NotificationApiController.class
 com\lobster\trade\model\entity\User.class

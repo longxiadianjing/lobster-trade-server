@@ -29,6 +29,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // SSE subscribe endpoints use token=queryParam instead of Authorization header
         if (path.contains("/subscribe") && request.getParameter("token") != null) {
+            String token = request.getParameter("token");
+            try {
+                Long userId = jwtAuthService.getUserIdFromToken(token);
+                if (userId != null) {
+                    request.setAttribute("userId", userId);
+                }
+            } catch (Exception e) {
+                // Token invalid - let endpoint handle auth error
+            }
             filterChain.doFilter(request, response);
             return;
         }

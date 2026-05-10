@@ -388,7 +388,6 @@ const userInfo = computed(() => userStore.userInfo)
 const unreadCount = computed(() => userStore.unreadNotificationCount || 0)
 
 const notifications = ref([])
-const unreadCount = computed(() => userStore.unreadNotificationCount)
 
 const typeToIcon = (type) => {
   if (type === 1) return '🔔'

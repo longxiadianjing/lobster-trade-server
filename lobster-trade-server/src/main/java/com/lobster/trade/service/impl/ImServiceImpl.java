@@ -7,6 +7,7 @@ import com.lobster.trade.mapper.*;
 import com.lobster.trade.model.entity.*;
 import com.lobster.trade.model.request.ImSendMessageRequest;
 import com.lobster.trade.model.response.ImSessionVO;
+import com.lobster.trade.service.ImPushService;
 import com.lobster.trade.service.ImService;
 import com.lobster.trade.util.SnowflakeIdUtil;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class ImServiceImpl implements ImService {
     private final UserMapper userMapper;
     private final TradeOrderMapper orderMapper;
     private final ProductMapper productMapper;
+    private final ImPushService imPushService;
 
     @Override
     public List<ImSessionVO> getMySessions(Long userId) {
@@ -169,6 +171,9 @@ public class ImServiceImpl implements ImService {
         }
         imSessionMapper.updateById(session);
 
+        // 推送新消息给订阅方
+        imPushService.pushToSession(session.getId(), "new_message", buildSingleMessageVO(message));
+
         return buildSessionVO(session, userId);
     }
 
@@ -262,6 +267,26 @@ public class ImServiceImpl implements ImService {
         imMessageMapper.insert(msg);
     }
 
+    private ImSessionVO.ImMessageVO buildSingleMessageVO(ImMessage msg) {
+        ImSessionVO.ImMessageVO mv = new ImSessionVO.ImMessageVO();
+        mv.setId(msg.getId());
+        mv.setSessionId(msg.getSessionId());
+        mv.setSenderId(msg.getSenderId());
+        mv.setSenderRole(msg.getSenderRole());
+        mv.setMessageType(msg.getMessageType());
+        mv.setContent(msg.getContent());
+        mv.setAttachmentUrl(msg.getAttachmentUrl());
+        mv.setIsRead(msg.getIsRead());
+        mv.setCreateTime(msg.getCreateTime());
+        if (!"system".equals(msg.getSenderRole())) {
+            User sender = userMapper.selectById(msg.getSenderId());
+            if (sender != null) mv.setSenderNickname(sender.getNickname());
+        } else {
+            mv.setSenderNickname("系统");
+        }
+        return mv;
+    }
+
     private ImSessionVO buildSessionVO(ImSession session, Long currentUserId) {
         ImSessionVO vo = new ImSessionVO();
         vo.setId(session.getId());
@@ -307,24 +332,7 @@ public class ImServiceImpl implements ImService {
             // 倒序转正序
             List<ImSessionVO.ImMessageVO> msgVOList = new ArrayList<>();
             for (int i = messages.size() - 1; i >= 0; i--) {
-                ImMessage msg = messages.get(i);
-                ImSessionVO.ImMessageVO mv = new ImSessionVO.ImMessageVO();
-                mv.setId(msg.getId());
-                mv.setSenderId(msg.getSenderId());
-                mv.setSenderRole(msg.getSenderRole());
-                mv.setMessageType(msg.getMessageType());
-                mv.setContent(msg.getContent());
-                mv.setAttachmentUrl(msg.getAttachmentUrl());
-                mv.setIsRead(msg.getIsRead());
-                mv.setCreateTime(msg.getCreateTime());
-                // 填充发送者昵称
-                if (!"system".equals(msg.getSenderRole())) {
-                    User sender = userMapper.selectById(msg.getSenderId());
-                    if (sender != null) mv.setSenderNickname(sender.getNickname());
-                } else {
-                    mv.setSenderNickname("系统");
-                }
-                msgVOList.add(mv);
+                msgVOList.add(buildSingleMessageVO(messages.get(i)));
             }
             vo.setRecentMessages(msgVOList);
         } else {
