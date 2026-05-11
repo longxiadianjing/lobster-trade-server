@@ -86,6 +86,10 @@
           <el-icon><Document /></el-icon>
           <span>审计日志</span>
         </el-menu-item>
+        <el-menu-item index="/payment-config">
+          <el-icon><Wallet /></el-icon>
+          <span>支付设置</span>
+        </el-menu-item>
         <el-menu-item index="/coupon">
           <el-icon><Ticket /></el-icon>
           <span>优惠券管理</span>
@@ -134,7 +138,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAdminStore } from '@/stores/admin'
-import { DataLine, User, List, Goods, Warning, Monitor, SwitchButton, TrendCharts, Bell, MessageBox, Ticket, Star, Download, Postcard, Document, Key } from '@element-plus/icons-vue'
+import { DataLine, User, List, Goods, Warning, Monitor, SwitchButton, TrendCharts, Bell, MessageBox, Ticket, Star, Download, Postcard, Document, Key, Wallet } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -151,7 +155,8 @@ const pageTitle = computed(() => {
     '/orders': '订单管理',
     '/products': '商品管理',
     '/disputes': '仲裁管理',
-    '/games': '游戏管理'
+    '/games': '游戏管理',
+    '/payment-config': '支付设置'
   }
   return map[route.path] || ''
 })

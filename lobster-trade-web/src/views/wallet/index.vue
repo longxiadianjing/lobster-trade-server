@@ -307,33 +307,33 @@ onMounted(() => {
 }
 
 .recharge {
-  background: rgba(255,255,255,0.2) !important;
-  border: 1px solid rgba(255,255,255,0.3) !important;
+  background: linear-gradient(135deg, #667eea, #764ba2) !important;
+  border: none !important;
   color: #fff !important;
 }
 
 .recharge:hover {
-  background: rgba(255,255,255,0.3) !important;
+  background: linear-gradient(135deg, #7b8ff0, #8a62c7) !important;
 }
 
 .withdraw {
-  background: #fff !important;
-  color: #67c23a !important;
+  background: #67c23a !important;
+  color: #fff !important;
   border: none !important;
 }
 
 .withdraw:hover {
-  background: #f0f7eb !important;
+  background: #5a9e31 !important;
 }
 
 .trans {
-  background: rgba(255,255,255,0.2) !important;
-  border: 1px solid rgba(255,255,255,0.3) !important;
-  color: #fff !important;
+  background: rgba(102,126,234,0.15) !important;
+  border: 1.5px solid rgba(102,126,234,0.3) !important;
+  color: #667eea !important;
 }
 
 .trans:hover {
-  background: rgba(255,255,255,0.3) !important;
+  background: rgba(102,126,234,0.25) !important;
 }
 
 /* 图表卡片 */

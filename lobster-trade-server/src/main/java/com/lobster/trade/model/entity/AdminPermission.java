@@ -85,5 +85,9 @@ public final class AdminPermission {
     public static final String CERTIFICATION_VIEW = "CERTIFICATION_VIEW";   // 查看认证申请
     public static final String CERTIFICATION_AUDIT = "CERTIFICATION_AUDIT"; // 审核认证
 
+    // 支付配置
+    public static final String CONFIG_VIEW = "CONFIG_VIEW";            // 查看配置
+    public static final String CONFIG_EDIT = "CONFIG_EDIT";              // 编辑配置
+
     private AdminPermission() {}
 }

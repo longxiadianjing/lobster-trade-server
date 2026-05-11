@@ -34,6 +34,7 @@ const routes = [
       { path: 'real-name', name: 'RealName', component: () => import('@/views/RealNameManage.vue'), meta: { permissions: ['USER_VIEW'] } },
       { path: 'audit-log', name: 'AuditLog', component: () => import('@/views/AuditLogManage.vue'), meta: { permissions: ['AUDIT_LOG'] } },
       { path: 'coupon', name: 'Coupon', component: () => import('@/views/CouponManage.vue'), meta: { permissions: ['COUPON_MANAGE'] } },
+      { path: 'payment-config', name: 'PaymentConfig', component: () => import('@/views/PaymentConfig.vue'), meta: { permissions: ['CONFIG_VIEW'] } },
       { path: 'admin-manage', name: 'AdminManage', component: () => import('@/views/AdminManage.vue'), meta: { permissions: ['ADMIN_MANAGE'] } },
     ]
   }
