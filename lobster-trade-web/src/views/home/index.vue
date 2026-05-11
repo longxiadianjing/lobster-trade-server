@@ -657,8 +657,8 @@ onMounted(() => {
 .rating-stars { color: var(--gold-color); font-size: 12px; }
 .seller-game-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; justify-content: center; }
 .seller-game-tags span { font-size: 11px; padding: 2px 8px; background: rgba(233,69,96,0.08); color: var(--accent-color); border-radius: 10px; border: 1px solid rgba(233,69,96,0.2); }
-.seller-btn { width: 100%; background: var(--accent-color); border: none; color: #fff; font-weight: 700; }
-.seller-btn:hover { background: var(--accent-hover); box-shadow: var(--shadow-glow); }
+.seller-btn { width: 100%; background: rgba(102,126,234,0.1); border: 1px solid #667eea; color: #667eea; font-weight: 700; }
+.seller-btn:hover { background: #667eea; color: #fff; box-shadow: 0 4px 12px rgba(102,126,234,0.3); }
 
 /* 页脚 */
 .home-footer { background: #0f0f1a; color: #fff; padding: 0; border-top: 1px solid var(--border-color); }
