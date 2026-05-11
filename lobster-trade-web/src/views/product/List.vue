@@ -614,17 +614,17 @@ const resetFilters = () => {
 :deep(.game-tag.el-tag--info) {
   background: rgba(233,69,96,0.08) !important;
   border-color: rgba(233,69,96,0.2) !important;
-  color: var(--text-secondary) !important;
+  color: #1a1a1a !important;
 }
 :deep(.game-tag.el-tag--info:hover) {
   background: rgba(233,69,96,0.15) !important;
-  border-color: var(--accent-color) !important;
-  color: var(--accent-color) !important;
+  border-color: #667eea !important;
+  color: #667eea !important;
 }
 :deep(.game-tag.el-tag--primary) {
   background: linear-gradient(135deg, var(--accent-color), #c73e54) !important;
   border-color: transparent !important;
-  color: #fff !important;
+  color: #667eea !important;
   font-weight: 700 !important;
   box-shadow: 0 3px 10px rgba(233,69,96,0.35) !important;
 }
@@ -638,7 +638,7 @@ const resetFilters = () => {
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 12px;
-  color: var(--text-secondary);
+  color: #666;
   background: rgba(233,69,96,0.05);
   border: 1.5px solid rgba(233,69,96,0.15);
   cursor: pointer;
@@ -649,8 +649,8 @@ const resetFilters = () => {
   user-select: none;
 }
 .type-btn:hover {
-  border-color: var(--accent-color);
-  color: var(--accent-color);
+  border-color: #667eea;
+  color: #667eea;
   background: rgba(233,69,96,0.1);
 }
 .type-btn.active {
@@ -671,7 +671,7 @@ const resetFilters = () => {
   padding: 8px 6px;
   border-radius: 10px;
   font-size: 12px;
-  color: var(--text-secondary);
+  color: #666;
   background: rgba(240,165,0,0.05);
   border: 1.5px solid rgba(240,165,0,0.15);
   text-align: center;
@@ -680,12 +680,12 @@ const resetFilters = () => {
   user-select: none;
 }
 .price-btn:hover {
-  border-color: var(--gold-color);
-  color: var(--gold-color);
+  border-color: #e94560;
+  color: #e94560;
   background: rgba(240,165,0,0.1);
 }
 .price-btn.active {
-  background: linear-gradient(135deg, var(--gold-color), var(--gold-hover));
+  background: linear-gradient(135deg, #667eea, #764ba2);
   border-color: transparent;
   color: #1a1a2e;
   font-weight: 700;
@@ -716,7 +716,7 @@ const resetFilters = () => {
   padding: 8px 12px;
   border-radius: 10px;
   font-size: 13px;
-  color: var(--text-secondary);
+  color: #666;
   background: rgba(233,69,96,0.05);
   border: 1.5px solid rgba(233,69,96,0.15);
   cursor: pointer;
@@ -724,8 +724,8 @@ const resetFilters = () => {
   user-select: none;
 }
 .ptype-btn:hover {
-  border-color: var(--accent-color);
-  color: var(--accent-color);
+  border-color: #667eea;
+  color: #667eea;
   background: rgba(233,69,96,0.1);
 }
 .ptype-btn.active {
@@ -758,8 +758,8 @@ const resetFilters = () => {
   transition: all 0.2s !important;
 }
 .reset-btn:hover {
-  border-color: var(--accent-color) !important;
-  color: var(--accent-color) !important;
+  border-color: #667eea !important;
+  color: #667eea !important;
   background: rgba(233,69,96,0.05) !important;
 }
 
@@ -776,13 +776,13 @@ const resetFilters = () => {
   box-shadow: none !important;
 }
 :deep(.search-input .el-input__wrapper:focus-within) {
-  border-color: var(--accent-color);
+  border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(233,69,96,0.12) !important;
 }
 .publish-btn {
   background: linear-gradient(135deg, #e94560, #c73e54) !important;
   border: none !important; border-radius: 10px !important;
-  color: #fff !important; font-weight: 700 !important;
+  color: #667eea !important; font-weight: 700 !important;
   box-shadow: 0 4px 14px rgba(233,69,96,0.38) !important;
 }
 .publish-btn:hover { opacity: 0.92; transform: translateY(-1px); }
@@ -839,12 +839,12 @@ const resetFilters = () => {
 .rank-num {
   font-size: 13px;
   font-weight: 900;
-  color: var(--accent-color);
+  color: #667eea;
   flex-shrink: 0;
   min-width: 18px;
 }
 .rank-num.top3 {
-  color: var(--gold-color);
+  color: #e94560;
   font-size: 15px;
 }
 .rank-info {
@@ -854,7 +854,7 @@ const resetFilters = () => {
 }
 .rank-title {
   font-size: 11px;
-  color: var(--text-primary);
+  color: #1a1a1a;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -863,7 +863,7 @@ const resetFilters = () => {
 }
 .rank-sales {
   font-size: 10px;
-  color: var(--gold-color);
+  color: #e94560;
   font-weight: 600;
 }
 @media (max-width: 900px) {
@@ -893,7 +893,7 @@ const resetFilters = () => {
   cursor: pointer; transition: all 0.25s; border: 1px solid var(--border-color);
 }
 .product-card:hover {
-  border-color: var(--accent-color); transform: translateY(-4px);
+  border-color: #667eea; transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(233,69,96,0.2);
 }
 .product-image { position: relative; height: 160px; background: #f5f5f5; }
@@ -904,7 +904,7 @@ const resetFilters = () => {
 }
 .product-price-tag {
   position: absolute; bottom: 8px; right: 8px;
-  background: linear-gradient(135deg, var(--gold-color), var(--gold-hover));
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: #1a1a2e; padding: 4px 12px; border-radius: 14px;
   font-size: 13px; font-weight: 800;
   box-shadow: 0 2px 8px rgba(240,165,0,0.4);
@@ -927,22 +927,22 @@ const resetFilters = () => {
 }
 .product-info { padding: 14px; }
 .product-title {
-  font-size: 14px; font-weight: 600; color: var(--text-primary);
+  font-size: 14px; font-weight: 600; color: #1a1a1a;
   margin-bottom: 8px; overflow: hidden;
   text-overflow: ellipsis; white-space: nowrap;
 }
 .product-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
 .meta-game {
-  font-size: 11px; color: var(--accent-color); background: rgba(233,69,96,0.1);
+  font-size: 11px; color: #667eea; background: rgba(233,69,96,0.1);
   padding: 2px 8px; border-radius: 6px; font-weight: 600;
   border: 1px solid rgba(233,69,96,0.2);
 }
-.meta-unit { font-size: 11px; color: var(--text-muted); }
+.meta-unit { font-size: 11px; color: #999; }
 .product-bottom { display: flex; align-items: center; justify-content: space-between; }
 .product-seller { display: flex; align-items: center; gap: 5px; }
 .seller-avatar { font-size: 16px; }
 .product-stats { display: flex; gap: 8px; }
-.stat { font-size: 11px; color: var(--text-muted); }
+.stat { font-size: 11px; color: #999; }
 
 .empty-state {
   display: flex; flex-direction: column; align-items: center;
@@ -951,7 +951,7 @@ const resetFilters = () => {
   border: 1px solid var(--border-color);
 }
 .empty-icon { font-size: 48px; }
-.empty-text { font-size: 15px; color: var(--text-secondary); }
+.empty-text { font-size: 15px; color: #666; }
 
 .sort-dropdown { margin-left: 2px; }
 .sort-btn {
@@ -961,24 +961,24 @@ const resetFilters = () => {
   border-radius: 10px !important;
   border: 1.5px solid #667eea !important;
   background: #ffffff !important;
-  color: var(--text-primary) !important;
+  color: #1a1a1a !important;
   font-size: 13px !important;
   font-weight: 600 !important;
   transition: all 0.2s !important;
 }
 .sort-btn:hover {
-  border-color: var(--accent-color) !important;
-  color: var(--accent-color) !important;
+  border-color: #667eea !important;
+  color: #667eea !important;
   background: rgba(233,69,96,0.05) !important;
 }
 .pagination-info {
   font-size: 13px;
-  color: var(--text-secondary);
+  color: #666;
   margin-right: 16px;
   white-space: nowrap;
 }
 .pagination-info strong {
-  color: var(--accent-color);
+  color: #667eea;
 }
 .pagination-wrap {
   display: flex;
@@ -1054,12 +1054,12 @@ const resetFilters = () => {
 }
 .flyer-item:last-child { margin-bottom: 0; }
 .flyer-nick {
-  color: var(--accent-color);
+  color: #667eea;
   font-weight: 700;
 }
-.flyer-text { color: var(--text-secondary); }
+.flyer-text { color: #666; }
 .flyer-title {
-  color: var(--text-primary);
+  color: #1a1a1a;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
