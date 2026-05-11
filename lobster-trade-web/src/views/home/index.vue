@@ -588,8 +588,8 @@ onMounted(() => {
 /* 区块通用 */
 .section { margin-bottom: 32px; }
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-.see-more-btn { color: #667eea !important; font-size: 13px; }
-.see-more-btn:hover { color: #5a70d4 !important; }
+.see-more-btn { color: #e94560 !important; font-size: 13px; }
+.see-more-btn:hover { color: #d63050 !important; }
 
 /* 商品网格 */
 .product-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
