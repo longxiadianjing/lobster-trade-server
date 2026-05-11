@@ -195,7 +195,7 @@
             <el-icon><Goods /></el-icon>
             热门商品
           </h3>
-          <el-button text type="primary" @click="router.push({ path: '/product/list' })">
+          <el-button text class="see-more-btn" @click="router.push({ path: '/product/list' })">
             查看更多
             <el-icon><ArrowRight /></el-icon>
           </el-button>
@@ -588,7 +588,8 @@ onMounted(() => {
 /* 区块通用 */
 .section { margin-bottom: 32px; }
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-.section-title { margin: 0; font-size: 17px; font-weight: 700; color: #1a1a1a; display: flex; align-items: center; gap: 8px; }
+.see-more-btn { color: #667eea !important; font-size: 13px; }
+.see-more-btn:hover { color: #5a70d4 !important; }
 
 /* 商品网格 */
 .product-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
