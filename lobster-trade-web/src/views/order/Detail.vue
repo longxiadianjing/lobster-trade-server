@@ -468,8 +468,8 @@ const handleConfirm = async () => {
 const contactCounterpart = async () => {
   try {
     const res = await getOrCreateSessionByOrder(order.value.id)
-    if (res.code === 200 && res.data) {
-      router.push({ path: '/im' })
+    if (res.code === 200 && res.data?.id) {
+      router.push({ path: '/im', query: { sessionId: res.data.id } })
     } else {
       ElMessage.error('无法创建会话')
     }

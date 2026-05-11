@@ -1,39 +1,23 @@
 package com.lobster.trade.config;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
+/**
+ * 后端 API 服务专用，不再充当 SPA 宿主。
+ * 用户前端（lobster-trade-web）由 Vite 开发服务器（localhost:5174）托管。
+ */
 @RestController
+@Configuration
 public class SpaFallbackController {
 
-    /** 单段路径的 SPA 路由，如 /home, /login 等（排除 assets） */
-    @GetMapping(value = "/{pathSegment}", produces = MediaType.TEXT_HTML_VALUE)
-    public ResponseEntity<String> fallback(@PathVariable String pathSegment) {
-        if ("assets".equals(pathSegment) || "favicon.svg".equals(pathSegment)) {
-            return ResponseEntity.notFound().build();
-        }
-        // 排除 /admin 下的所有路径（由 WebMvcConfig 处理）
-        if ("admin".equals(pathSegment)) {
-            return ResponseEntity.notFound().build();
-        }
-        return serveIndex();
-    }
-
-    private ResponseEntity<String> serveIndex() {
-        try {
-            ClassPathResource resource = new ClassPathResource("static/index.html");
-            String content = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-            return ResponseEntity.ok(content);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found");
-        }
+    /**
+     * 当浏览器直接访问后端根路径时，返回简单的 API 信息页。
+     * 不再尝试返回任何 HTML，避免与前端路由冲突。
+     */
+    @GetMapping("/")
+    public String root() {
+        return "龙虾道具交易平台 - API 服务 (端口 8080)\n前端请访问: http://localhost:5174";
     }
 }

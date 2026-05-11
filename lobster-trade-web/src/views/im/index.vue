@@ -233,15 +233,9 @@ export default {
           currentSession.value = { ...s, roleTag: rTag, counterpartName: cName }
           messagesLoading.value = true
           messages.value = []
-          try {
-            const msgRes = await getSession(sessionId)
-            if (msgRes.code === 200 && msgRes.data) {
-              messages.value = msgRes.data.recentMessages || []
-              await markRead(sessionId)
-            }
-          } finally {
-            messagesLoading.value = false
-          }
+          messages.value = s.recentMessages || []
+          messagesLoading.value = false
+          await markRead(sessionId)
           await nextTick()
           scrollToBottom()
         }
