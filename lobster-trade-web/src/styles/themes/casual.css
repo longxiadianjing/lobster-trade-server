@@ -1,0 +1,109 @@
+/* ============================================================
+   龙虾道具交易平台 - 休闲清新主题
+   色彩体系：薄荷绿 + 暖橙 + 柔白
+   ============================================================ */
+
+[data-theme="casual"] {
+  /* 主色调 */
+  --theme-primary: #2d6a4f;
+  --theme-secondary: #40916c;
+  --theme-accent: #e76f51;
+  --theme-accent-hover: #f49578;
+  --theme-gold: #e9c46a;
+  --theme-gold-hover: #f0d080;
+
+  /* 文字色 */
+  --theme-text-primary: #2b2b2b;
+  --theme-text-secondary: #6b6b6b;
+  --theme-text-muted: #aaaaaa;
+
+  /* 背景色 */
+  --theme-bg-dark: #f5f3ef;
+  --theme-bg-card: #ffffff;
+  --theme-bg-card-hover: #faf9f7;
+  --theme-bg-input: #f0eeeb;
+  --theme-bg-sidebar: #2d6a4f;
+
+  /* 边框色 */
+  --theme-border-color: #e5e0d8;
+  --theme-border-glow: rgba(231, 111, 81, 0.2);
+
+  /* 功能色 */
+  --theme-success: #52b788;
+  --theme-warning: #f4a261;
+  --theme-danger: #e63946;
+  --theme-info: #457b9d;
+
+  /* 阴影 */
+  --theme-shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --theme-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --theme-shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.1);
+  --theme-shadow-glow: 0 0 16px rgba(231, 111, 81, 0.15);
+
+  /* 渐变 */
+  --theme-gradient-accent: linear-gradient(135deg, #e76f51, #f49578);
+  --theme-gradient-hero: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+  --theme-gradient-gold: linear-gradient(135deg, #e9c46a, #f0d080);
+  --theme-gradient-sidebar: linear-gradient(180deg, #2d6a4f 0%, #1e5238 100%);
+
+  /* 圆角 */
+  --theme-radius-sm: 10px;
+  --theme-radius-md: 14px;
+  --theme-radius-lg: 20px;
+
+  /* 头像卡片渐变 */
+  --theme-profile-bg: linear-gradient(135deg, #2d6a4f, #40916c);
+  --theme-profile-shadow: 0 4px 16px rgba(45, 106, 79, 0.3);
+}
+
+/* 休闲主题全局背景 */
+[data-theme="casual"] body,
+[data-theme="casual"] #app {
+  background-color: var(--theme-bg-dark);
+  color: var(--theme-text-primary);
+}
+
+/* 休闲主题卡片 */
+[data-theme="casual"] .theme-card {
+  background: var(--theme-bg-card);
+  border: 1px solid var(--theme-border-color);
+  border-radius: var(--theme-radius-md);
+  transition: all 0.3s ease;
+  box-shadow: var(--theme-shadow-sm);
+}
+
+[data-theme="casual"] .theme-card:hover {
+  border-color: var(--theme-accent);
+  box-shadow: var(--theme-shadow-md);
+  transform: translateY(-2px);
+}
+
+/* 休闲主题按钮 */
+[data-theme="casual"] .theme-btn-primary {
+  background: var(--theme-gradient-accent);
+  color: white;
+  border: none;
+  border-radius: var(--theme-radius-sm);
+  padding: 10px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(231, 111, 81, 0.25);
+}
+
+[data-theme="casual"] .theme-btn-primary:hover {
+  box-shadow: var(--theme-shadow-glow);
+  transform: translateY(-1px);
+}
+
+/* 休闲主题价格 */
+[data-theme="casual"] .theme-price {
+  color: var(--theme-accent);
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+/* 休闲主题侧边栏 */
+[data-theme="casual"] .theme-sidebar {
+  background: var(--theme-gradient-sidebar);
+}

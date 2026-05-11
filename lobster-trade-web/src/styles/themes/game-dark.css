@@ -1,0 +1,111 @@
+/* ============================================================
+   龙虾道具交易平台 - 游戏风格深色主题
+   色彩体系：深海蓝黑 + 珊瑚红 + 琥珀金
+   ============================================================ */
+
+[data-theme="game"] {
+  /* 主色调 */
+  --theme-primary: #1a1a2e;
+  --theme-secondary: #16213e;
+  --theme-accent: #e94560;
+  --theme-accent-hover: #ff6b6b;
+  --theme-gold: #f0a500;
+  --theme-gold-hover: #ffc933;
+
+  /* 文字色 */
+  --theme-text-primary: #e8e8e8;
+  --theme-text-secondary: #a0a0a0;
+  --theme-text-muted: #666666;
+
+  /* 背景色 */
+  --theme-bg-dark: #0f0f1a;
+  --theme-bg-card: #1a1a2e;
+  --theme-bg-card-hover: #22223a;
+  --theme-bg-input: #252542;
+  --theme-bg-sidebar: #0f0f1a;
+
+  /* 边框色 */
+  --theme-border-color: #2d2d4a;
+  --theme-border-glow: rgba(233, 69, 96, 0.3);
+
+  /* 功能色 */
+  --theme-success: #10b981;
+  --theme-warning: #f59e0b;
+  --theme-danger: #ef4444;
+  --theme-info: #3b82f6;
+
+  /* 阴影 */
+  --theme-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --theme-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --theme-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --theme-shadow-glow: 0 0 20px rgba(233, 69, 96, 0.25);
+
+  /* 渐变 */
+  --theme-gradient-accent: linear-gradient(135deg, #e94560, #c73e54);
+  --theme-gradient-hero: linear-gradient(135deg, #0d0d2b 0%, #1a1a4e 40%, #23236b 70%, #764ba2 100%);
+  --theme-gradient-gold: linear-gradient(135deg, #f0a500, #ffc933);
+  --theme-gradient-sidebar: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+
+  /* 圆角 */
+  --theme-radius-sm: 8px;
+  --theme-radius-md: 12px;
+  --theme-radius-lg: 16px;
+
+  /* 头像卡片渐变 */
+  --theme-profile-bg: linear-gradient(135deg, #e94560, #c73e54);
+  --theme-profile-shadow: 0 4px 16px rgba(233, 69, 96, 0.35);
+
+  /* 高亮强调 */
+  --theme-highlight-bg: rgba(233, 69, 96, 0.08);
+}
+
+/* 游戏主题全局背景 */
+[data-theme="game"] body,
+[data-theme="game"] #app {
+  background-color: var(--theme-bg-dark);
+  color: var(--theme-text-primary);
+}
+
+/* 游戏主题卡片 */
+[data-theme="game"] .theme-card {
+  background: var(--theme-bg-card);
+  border: 1px solid var(--theme-border-color);
+  border-radius: var(--theme-radius-md);
+  transition: all 0.3s ease;
+}
+
+[data-theme="game"] .theme-card:hover {
+  border-color: var(--theme-accent);
+  box-shadow: var(--theme-shadow-glow);
+  transform: translateY(-2px);
+}
+
+/* 游戏主题按钮 */
+[data-theme="game"] .theme-btn-primary {
+  background: var(--theme-gradient-accent);
+  color: white;
+  border: none;
+  border-radius: var(--theme-radius-sm);
+  padding: 10px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(233, 69, 96, 0.3);
+}
+
+[data-theme="game"] .theme-btn-primary:hover {
+  box-shadow: var(--theme-shadow-glow);
+  transform: translateY(-1px);
+}
+
+/* 游戏主题价格 */
+[data-theme="game"] .theme-price {
+  color: var(--theme-gold);
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+/* 游戏主题侧边栏 */
+[data-theme="game"] .theme-sidebar {
+  background: var(--theme-gradient-sidebar);
+}

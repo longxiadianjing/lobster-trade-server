@@ -18,6 +18,6 @@ public interface ProductService {
     List<Product> getMyProducts(Long sellerId);
 
     // Admin
-    void updateStatus(Long productId, Integer status, String reason);
-    void batchUpdateStatus(List<Long> productIds, Integer status, String reason);
+    void updateStatus(Long productId, Integer status, String reason, Long userId);
+    void batchUpdateStatus(List<Long> productIds, Integer status, String reason, Long userId);
 }

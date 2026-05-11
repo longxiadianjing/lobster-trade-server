@@ -1,0 +1,308 @@
+/* ============================================================
+   龙虾道具交易平台 - 全局主题变量
+   所有主题共享的 CSS 变量定义
+   ============================================================ */
+
+/* 默认游戏主题变量（可被 theme CSS 覆盖） */
+:root {
+  /* 主色调 */
+  --theme-primary: #1a1a2e;
+  --theme-secondary: #16213e;
+  --theme-accent: #e94560;
+  --theme-accent-hover: #ff6b6b;
+  --theme-gold: #f0a500;
+  --theme-gold-hover: #ffc933;
+
+  /* 文字色 */
+  --theme-text-primary: #e8e8e8;
+  --theme-text-secondary: #a0a0a0;
+  --theme-text-muted: #666666;
+
+  /* 背景色 */
+  --theme-bg-dark: #0f0f1a;
+  --theme-bg-card: #1a1a2e;
+  --theme-bg-card-hover: #22223a;
+  --theme-bg-input: #252542;
+  --theme-bg-sidebar: #0f0f1a;
+
+  /* 边框色 */
+  --theme-border-color: #2d2d4a;
+  --theme-border-glow: rgba(233, 69, 96, 0.3);
+
+  /* 功能色 */
+  --theme-success: #10b981;
+  --theme-warning: #f59e0b;
+  --theme-danger: #ef4444;
+  --theme-info: #3b82f6;
+
+  /* 阴影 */
+  --theme-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --theme-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --theme-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --theme-shadow-glow: 0 0 20px rgba(233, 69, 96, 0.25);
+
+  /* 渐变 */
+  --theme-gradient-accent: linear-gradient(135deg, #e94560, #c73e54);
+  --theme-gradient-hero: linear-gradient(135deg, #0d0d2b 0%, #1a1a4e 40%, #23236b 70%, #764ba2 100%);
+  --theme-gradient-gold: linear-gradient(135deg, #f0a500, #ffc933);
+  --theme-gradient-sidebar: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+
+  /* 圆角 */
+  --theme-radius-sm: 8px;
+  --theme-radius-md: 12px;
+  --theme-radius-lg: 16px;
+
+  /* 头像卡片 */
+  --theme-profile-bg: linear-gradient(135deg, #667eea, #764ba2);
+  --theme-profile-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+
+  /* 高亮背景 */
+  --theme-highlight-bg: rgba(233, 69, 96, 0.08);
+}
+
+/* ==================== 通用样式 ==================== */
+
+body {
+  background-color: var(--theme-bg-dark);
+  color: var(--theme-text-primary);
+  font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+html {
+  background-color: var(--theme-bg-dark);
+}
+
+#app {
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 通用卡片 */
+.theme-card {
+  background: var(--theme-bg-card);
+  border: 1px solid var(--theme-border-color);
+  border-radius: var(--theme-radius-md);
+  transition: all 0.3s ease;
+  box-shadow: var(--theme-shadow-sm);
+}
+
+.theme-card:hover {
+  border-color: var(--theme-accent);
+  box-shadow: var(--theme-shadow-glow);
+  transform: translateY(-2px);
+}
+
+/* 通用按钮 */
+.theme-btn-primary {
+  background: var(--theme-gradient-accent);
+  color: white;
+  border: none;
+  border-radius: var(--theme-radius-sm);
+  padding: 10px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-btn-primary:hover {
+  box-shadow: var(--theme-shadow-glow);
+  transform: translateY(-1px);
+}
+
+/* 价格标签 */
+.theme-price {
+  color: var(--theme-gold);
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+/* 侧边栏 */
+.theme-sidebar {
+  background: var(--theme-gradient-sidebar);
+}
+
+/* ==================== Element Plus 深色适配 ==================== */
+
+/* Input */
+.el-input__wrapper {
+  background-color: var(--theme-bg-input) !important;
+  border: 1px solid var(--theme-border-color) !important;
+  box-shadow: none !important;
+  border-radius: var(--theme-radius-sm) !important;
+}
+.el-input__wrapper:hover { border-color: var(--theme-accent) !important; }
+.el-input__wrapper.is-focus {
+  border-color: var(--theme-accent) !important;
+  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15) !important;
+}
+.el-input__inner {
+  color: var(--theme-text-primary) !important;
+}
+.el-input__inner::placeholder { color: var(--theme-text-muted) !important; }
+
+/* Select */
+.el-select__wrapper {
+  background-color: var(--theme-bg-input) !important;
+  border: 1px solid var(--theme-border-color) !important;
+  box-shadow: none !important;
+  border-radius: var(--theme-radius-sm) !important;
+}
+.el-select__wrapper:hover { border-color: var(--theme-accent) !important; }
+.el-select-dropdown {
+  background-color: var(--theme-bg-card) !important;
+  border: 1px solid var(--theme-border-color) !important;
+}
+.el-select-dropdown__item {
+  color: var(--theme-text-primary) !important;
+}
+.el-select-dropdown__item:hover { background-color: var(--theme-bg-card-hover) !important; }
+.el-select-dropdown__item.is-selected {
+  color: var(--theme-accent) !important;
+  background-color: rgba(233, 69, 96, 0.1) !important;
+}
+
+/* Button */
+:deep(.el-button--primary) {
+  background: var(--theme-gradient-accent) !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(233, 69, 96, 0.3) !important;
+}
+:deep(.el-button--primary:hover) {
+  box-shadow: var(--theme-shadow-glow) !important;
+  transform: translateY(-1px);
+}
+:deep(.el-button--default) {
+  background-color: var(--theme-bg-card) !important;
+  border: 1px solid var(--theme-border-color) !important;
+  color: var(--theme-text-primary) !important;
+}
+:deep(.el-button--default:hover) {
+  border-color: var(--theme-accent) !important;
+  color: var(--theme-accent) !important;
+}
+
+/* Card */
+:deep(.el-card) {
+  background-color: var(--theme-bg-card) !important;
+  border: 1px solid var(--theme-border-color) !important;
+  border-radius: var(--theme-radius-md) !important;
+  box-shadow: var(--theme-shadow-sm) !important;
+  color: var(--theme-text-primary) !important;
+}
+:deep(.el-card__header) {
+  border-bottom: 1px solid var(--theme-border-color) !important;
+  color: var(--theme-text-primary) !important;
+}
+:deep(.el-card__body) { color: var(--theme-text-primary) !important; }
+
+/* Tag */
+:deep(.el-tag) {
+  border-radius: 6px !important;
+  border: 1px solid var(--theme-border-color) !important;
+  background-color: var(--theme-bg-card-hover) !important;
+  color: var(--theme-text-primary) !important;
+}
+:deep(.el-tag--success) {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+  color: var(--theme-success) !important;
+}
+:deep(.el-tag--warning) {
+  background-color: rgba(245, 158, 11, 0.1) !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+  color: var(--theme-warning) !important;
+}
+:deep(.el-tag--danger) {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  color: var(--theme-danger) !important;
+}
+
+/* Menu */
+:deep(.el-menu) {
+  background-color: transparent !important;
+  border: none !important;
+}
+:deep(.el-menu-item) {
+  color: var(--theme-text-primary) !important;
+}
+:deep(.el-menu-item:hover) {
+  background-color: var(--theme-bg-card-hover) !important;
+  color: var(--theme-accent) !important;
+}
+:deep(.el-menu-item.is-active) {
+  color: var(--theme-accent) !important;
+  background-color: var(--theme-highlight-bg) !important;
+}
+
+/* Divider */
+:deep(.el-divider) {
+  border-color: var(--theme-border-color) !important;
+}
+:deep(.el-divider--horizontal) { border-top-color: var(--theme-border-color) !important; }
+
+/* Pagination */
+:deep(.el-pagination) {
+  background-color: transparent !important;
+  color: var(--theme-text-primary) !important;
+}
+:deep(.el-pagination button) {
+  background-color: var(--theme-bg-card) !important;
+  color: var(--theme-text-primary) !important;
+  border: 1px solid var(--theme-border-color) !important;
+}
+:deep(.el-pagination .el-pager li) {
+  background-color: var(--theme-bg-card) !important;
+  color: var(--theme-text-primary) !important;
+  border: 1px solid var(--theme-border-color) !important;
+}
+:deep(.el-pagination .el-pager li.is-active) {
+  background: var(--theme-gradient-accent) !important;
+  border-color: transparent !important;
+  color: white !important;
+}
+
+/* Dialog */
+:deep(.el-dialog) {
+  background-color: var(--theme-bg-card) !important;
+  border: 1px solid var(--theme-border-color) !important;
+  border-radius: var(--theme-radius-lg) !important;
+  color: var(--theme-text-primary) !important;
+}
+:deep(.el-dialog__title) { color: var(--theme-text-primary) !important; }
+:deep(.el-drawer) {
+  background-color: var(--theme-bg-card) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+/* Rate */
+:deep(.el-rate__icon) {
+  color: var(--theme-border-color) !important;
+}
+
+/* Form */
+:deep(.el-form-item__label) {
+  color: var(--theme-text-primary) !important;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--theme-bg-dark); }
+::-webkit-scrollbar-thumb {
+  background: var(--theme-border-color);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--theme-accent); }
+
+/* 响应式 */
+@media (max-width: 768px) {
+  :root { --font-size-base: 14px; }
+  .theme-card:hover { transform: none; }
+  .theme-btn-primary:hover { transform: none; }
+}

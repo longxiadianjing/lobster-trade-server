@@ -1,0 +1,478 @@
+/* ============================================================
+   龙虾道具交易平台 - 游戏风格深色主题
+   色彩体系：深海蓝黑 + 琥珀金 + 游戏感强调色
+   ============================================================ */
+
+/* ===== 全局 CSS 变量 ===== */
+:root {
+  /* 主色调 */
+  --primary-color: #1a1a2e;
+  --secondary-color: #16213e;
+  --accent-color: #e94560;
+  --accent-hover: #ff6b6b;
+  --gold-color: #f0a500;
+  --gold-hover: #ffc933;
+
+  /* 文字色 */
+  --text-primary: #e8e8e8;
+  --text-secondary: #a0a0a0;
+  --text-muted: #666666;
+
+  /* 背景色 */
+  --bg-dark: #0f0f1a;
+  --bg-card: #1a1a2e;
+  --bg-card-hover: #22223a;
+  --bg-input: #252542;
+  --bg-sidebar: #0f0f1a;
+
+  /* 边框色 */
+  --border-color: #2d2d4a;
+  --border-glow: rgba(233, 69, 96, 0.3);
+
+  /* 功能色 */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
+
+  /* 阴影 */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(233, 69, 96, 0.25);
+
+  /* 渐变 */
+  --gradient-accent: linear-gradient(135deg, #e94560, #c73e54);
+  --gradient-hero: linear-gradient(135deg, #0d0d2b 0%, #1a1a4e 40%, #23236b 70%, #764ba2 100%);
+  --gradient-gold: linear-gradient(135deg, #f0a500, #ffc933);
+
+  /* 圆角 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}
+
+/* ===== 全局重置 ===== */
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+html {
+  background-color: var(--bg-dark);
+  scroll-behavior: smooth;
+}
+
+#app {
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ===== 卡片样式 ===== */
+.game-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+}
+
+.game-card:hover {
+  border-color: var(--accent-color);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+/* ===== 按钮样式 ===== */
+.game-btn-primary {
+  background: var(--gradient-accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(233, 69, 96, 0.3);
+}
+
+.game-btn-primary:hover {
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent-color));
+}
+
+/* ===== 价格显示 ===== */
+.price-tag {
+  color: var(--gold-color);
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+.price-tag-large {
+  color: var(--gold-color);
+  font-weight: 800;
+  font-size: 1.3em;
+}
+
+/* ===== 页面容器 ===== */
+.page-container {
+  min-height: 100vh;
+  background: var(--bg-dark);
+}
+
+/* ===== Section 区块 ===== */
+.section {
+  margin-bottom: 32px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ===== 标签样式 ===== */
+.game-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--accent-color);
+  background: rgba(233, 69, 96, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(233, 69, 96, 0.2);
+}
+
+/* ===== 输入框深色适配 ===== */
+.el-input__wrapper {
+  background-color: var(--bg-input) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: none !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.el-input__wrapper:hover {
+  border-color: var(--accent-color) !important;
+}
+
+.el-input__wrapper.is-focus {
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15) !important;
+}
+
+.el-input__inner {
+  color: var(--text-primary) !important;
+}
+
+.el-input__inner::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* ===== Select 深色适配 ===== */
+.el-select__wrapper {
+  background-color: var(--bg-input) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: none !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.el-select__wrapper:hover {
+  border-color: var(--accent-color) !important;
+}
+
+.el-select__wrapper.is-focused {
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15) !important;
+}
+
+.el-select-dropdown {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.el-select-dropdown__item {
+  color: var(--text-primary) !important;
+}
+
+.el-select-dropdown__item:hover {
+  background-color: var(--bg-card-hover) !important;
+}
+
+.el-select-dropdown__item.is-selected {
+  color: var(--accent-color) !important;
+  background-color: rgba(233, 69, 96, 0.1) !important;
+}
+
+/* ===== Button 深色适配 ===== */
+:deep(.el-button) {
+  border-radius: var(--radius-sm) !important;
+}
+
+:deep(.el-button--primary) {
+  background: var(--gradient-accent) !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(233, 69, 96, 0.3) !important;
+}
+
+:deep(.el-button--primary:hover) {
+  box-shadow: var(--shadow-glow) !important;
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent-color)) !important;
+}
+
+:deep(.el-button--default) {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+:deep(.el-button--default:hover) {
+  border-color: var(--accent-color) !important;
+  color: var(--accent-color) !important;
+}
+
+/* ===== Card 深色适配 ===== */
+:deep(.el-card) {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-sm) !important;
+  color: var(--text-primary) !important;
+}
+
+:deep(.el-card:hover) {
+  border-color: var(--accent-color) !important;
+  box-shadow: var(--shadow-glow) !important;
+}
+
+/* ===== Tag 深色适配 ===== */
+:deep(.el-tag) {
+  border-radius: 6px !important;
+  border: 1px solid var(--border-color) !important;
+  background-color: var(--bg-card-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+:deep(.el-tag--success) {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+  color: var(--success) !important;
+}
+
+:deep(.el-tag--warning) {
+  background-color: rgba(245, 158, 11, 0.1) !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+  color: var(--warning) !important;
+}
+
+:deep(.el-tag--danger) {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  color: var(--danger) !important;
+}
+
+:deep(.el-tag--info) {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+  color: var(--info) !important;
+}
+
+/* ===== Dropdown 深色适配 ===== */
+:deep(.el-dropdown-menu) {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+:deep(.el-dropdown-menu__item) {
+  color: var(--text-primary) !important;
+}
+
+:deep(.el-dropdown-menu__item:hover) {
+  background-color: var(--bg-card-hover) !important;
+  color: var(--accent-color) !important;
+}
+
+/* ===== Pagination 深色适配 ===== */
+:deep(.el-pagination) {
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+:deep(.el-pagination button) {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+:deep(.el-pagination .el-pager li) {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+:deep(.el-pagination .el-pager li:hover) {
+  color: var(--accent-color) !important;
+  border-color: var(--accent-color) !important;
+}
+
+:deep(.el-pagination .el-pager li.is-active) {
+  background: var(--gradient-accent) !important;
+  border-color: transparent !important;
+  color: white !important;
+}
+
+:deep(.el-pagination .el-pager li.is-disabled) {
+  opacity: 0.4 !important;
+}
+
+/* ===== Switch 深色适配 ===== */
+.el-switch {
+  --el-switch-off-color: var(--border-color) !important;
+  --el-switch-on-color: var(--accent-color) !important;
+}
+
+.el-switch__core {
+  background-color: var(--bg-input) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* ===== Dialog / Drawer 深色适配 ===== */
+.el-dialog {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg) !important;
+  color: var(--text-primary) !important;
+}
+
+.el-dialog__title {
+  color: var(--text-primary) !important;
+}
+
+.el-drawer {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ===== Message / Notification 深色适配 ===== */
+.el-message {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.el-notification {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ===== Tabs 深色适配 ===== */
+.el-tabs__nav-wrap {
+  background-color: var(--bg-card) !important;
+}
+
+.el-tabs__item {
+  color: var(--text-secondary) !important;
+}
+
+.el-tabs__item:hover {
+  color: var(--text-primary) !important;
+}
+
+.el-tabs__item.is-active {
+  color: var(--accent-color) !important;
+}
+
+.el-tabs__active-bar {
+  background-color: var(--accent-color) !important;
+}
+
+/* ===== Tooltip 深色适配 ===== */
+.el-tooltip__popper {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ===== Popover 深色适配 ===== */
+.el-popover {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ===== Form 深色适配 ===== */
+.el-form-item__label {
+  color: var(--text-primary) !important;
+}
+
+.el-form-item__error {
+  color: var(--danger) !important;
+}
+
+/* ===== Badge 深色适配 ===== */
+.el-badge__content {
+  background: var(--accent-color) !important;
+}
+
+/* ===== Progress 深色适配 ===== */
+.el-progress-bar__outer {
+  background-color: var(--bg-input) !important;
+}
+
+/* ===== 滚动条深色适配 ===== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
+}
+
+/* ===== 响应式断点 ===== */
+@media (max-width: 768px) {
+  :root {
+    --font-size-base: 14px;
+  }
+
+  .game-card:hover {
+    transform: none;
+  }
+
+  .game-btn-primary:hover {
+    transform: none;
+  }
+}

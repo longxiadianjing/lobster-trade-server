@@ -117,8 +117,11 @@ onMounted(async () => {
 .providers-main { max-width: 1200px; margin: 0 auto; padding: 20px; }
 .filter-bar { background: #fff; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; gap: 16px; align-items: center; }
 .provider-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
-.provider-card { border-radius: 12px; cursor: pointer; transition: transform 0.2s; }
-.provider-card:hover { transform: translateY(-2px); }
+.provider-card { background: #1e1a2e !important; border: 1px solid #2d2854 !important; border-radius: 12px; cursor: pointer; transition: all 0.2s; color: #f1f5f9 !important; }
+.provider-card :deep(.el-card__body) { background: transparent !important; color: #f1f5f9 !important; }
+.provider-card :deep(.el-card) { background: #1e1a2e !important; border: 1px solid #2d2854 !important; }
+.provider-card:hover { background: #252240 !important; border-color: #667eea !important; }
+.provider-card:hover { background: #252240; border-color: #667eea; transform: translateY(-2px); }
 .provider-header { display: flex; gap: 12px; margin-bottom: 12px; }
 .provider-avatar { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
 .provider-avatar img { width: 100%; height: 100%; object-fit: cover; }
@@ -129,4 +132,20 @@ onMounted(async () => {
 .provider-desc { font-size: 13px; color: #666; line-height: 1.5; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .provider-footer { display: flex; justify-content: space-between; font-size: 12px; color: #999; }
 .regions { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
+
+.provider-name { color: #f1f5f9; font-size: 15px; font-weight: 600; }
+.provider-meta { color: #94a3b8; font-size: 12px; margin-top: 4px; }
+.provider-desc { color: #cbd5e1; font-size: 13px; line-height: 1.6; margin-top: 8px; border-top: 1px solid #2d2854; padding-top: 10px; }
+.provider-avatar .avatar-placeholder { background: #667eea; color: #fff; }
+.provider-avatar img { border: 2px solid #667eea; }
+.provider-stats { color: #94a3b8; }
+.provider-stat-value { color: #f1f5f9; font-weight: 600; }
+.provider-stat-label { color: #64748b; font-size: 11px; }
+.filter-bar { background: #1e1a2e; border-radius: 12px; padding: 16px; margin-bottom: 20px; border: 1px solid #2d2854; }
+.filter-bar :deep(.el-tabs__item) { color: #94a3b8; }
+.filter-bar :deep(.el-tabs__item.is-active) { color: #667eea; }
+.filter-bar :deep(.el-tabs__active-bar) { background-color: #667eea; }
+.filter-bar :deep(.el-select .el-input__wrapper) { background: #252240 !important; }
+.provider-grid { background: transparent; }
+
 </style>

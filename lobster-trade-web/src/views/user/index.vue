@@ -1,5 +1,5 @@
 <template>
-  <div class="user-container">
+  <div class="user-container" data-theme="business">
     <!-- 顶部导航 -->
     <div class="top-header">
       <div class="header-inner">
@@ -18,10 +18,13 @@
     <div class="user-main">
       <!-- 左侧边栏 -->
       <aside class="sidebar">
-        <!-- 头像卡片 -->
-        <div class="profile-card">
+        <div class="profile-card" @click="showAvatarPicker = true">
           <div class="avatar-wrap">
-            <el-avatar :size="72" class="avatar">{{ userInfo?.nickname?.charAt(0) || 'U' }}</el-avatar>
+            <el-avatar :size="72" class="avatar" :src="userInfo?.avatar || undefined">
+              <img v-if="userInfo?.avatar" :src="userInfo.avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" />
+              <span v-else>{{ userInfo?.nickname?.charAt(0) || 'U' }}</span>
+            </el-avatar>
+            <div class="avatar-edit-icon">✏️</div>
             <div class="level-badge">V{{ userInfo?.user_level || 1 }}</div>
           </div>
           <h3 class="nickname">{{ userInfo?.nickname || '用户' }}</h3>
@@ -76,7 +79,6 @@
           </div>
         </div>
 
-        <!-- 快捷菜单 -->
         <el-card class="menu-card" shadow="never">
           <template #header>
             <span class="menu-title">快捷服务</span>
@@ -98,6 +100,16 @@
               <el-icon><Lock /></el-icon>
               <span>安全中心</span>
             </el-menu-item>
+            <el-sub-menu index="theme-switch">
+              <template #title>
+                <span>&#127912; 切换主题</span>
+              </template>
+              <el-menu-item v-for="t in themes" :key="t.id" :index="t.id" @click="switchTheme(t.id)">
+                <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--primary);margin-right:8px;"></span>
+                <span style="font-size:13px;">{{ t.name }}</span>
+                <span v-if="currentTheme === t.id" style="margin-left:auto;color:var(--primary);font-size:11px;">&#10003;</span>
+              </el-menu-item>
+            </el-sub-menu>
             <el-menu-item index="/user/coupon-center">
               <el-icon><Ticket /></el-icon>
               <span>优惠券</span>
@@ -359,6 +371,36 @@
         </el-card>
       </main>
     </div>
+
+    <!-- 头像选择弹窗 -->
+    <el-dialog v-model="showAvatarPicker" title="选择头像" width="480px" :close-on-click-modal="true">
+      <div class="avatar-picker-grid">
+        <div
+          v-for="av in presetAvatars"
+          :key="av"
+          class="avatar-option"
+          :class="{ selected: selectedAvatar === av }"
+          @click="selectedAvatar = av"
+        >
+          <img :src="av" />
+        </div>
+      </div>
+      <div class="avatar-upload-row">
+        <el-upload
+          class="avatar-uploader"
+          :show-file-list="false"
+          :before-upload="beforeAvatarUpload"
+          :http-request="uploadAvatar"
+          accept="image/*"
+        >
+          <el-button size="small" type="primary">上传自定义头像</el-button>
+        </el-upload>
+      </div>
+      <template #footer>
+        <el-button @click="showAvatarPicker = false">取消</el-button>
+        <el-button type="primary" :loading="avatarSaving" @click="saveAvatar">确定</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -374,9 +416,12 @@ import {
   Clock, Lock, Coin, Message, Warning, ChatDotRound, Ticket, Medal, DataAnalysis,
   ChatLineSquare, Star, Loading, Bell, ShoppingCart, Headset
 } from '@element-plus/icons-vue'
+import { useTheme } from '@/composables/useTheme'
+import ThemeSwitcher from '@/components/ThemeSwitcher/index.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
+const { themes, switchTheme, currentTheme } = useTheme()
 
 const activeMenu = ref('/user')
 const editing = ref(false)
@@ -388,6 +433,60 @@ const userInfo = computed(() => userStore.userInfo)
 const unreadCount = computed(() => userStore.unreadNotificationCount || 0)
 
 const notifications = ref([])
+
+// 头像选择相关
+const showAvatarPicker = ref(false)
+const selectedAvatar = ref('')
+const avatarSaving = ref(false)
+const presetAvatars = [
+  '/avatars/lobster.png',
+  '/avatars/fox.png',
+  '/avatars/cat.png',
+  '/avatars/bear.png',
+  '/avatars/panda.png',
+  '/avatars/owl.png',
+  '/avatars/rabbit.png'
+]
+
+const beforeAvatarUpload = (file) => {
+  const isImage = file.type.startsWith('image/')
+  const isLt2M = file.size / 1024 / 1024 < 2
+  if (!isImage) { ElMessage.error('只能上传图片文件'); return false }
+  if (!isLt2M) { ElMessage.error('图片大小不能超过 2MB'); return false }
+  return true
+}
+
+const uploadAvatar = async ({ file }) => {
+  const formData = new FormData()
+  formData.append('avatar', file)
+  try {
+    const res = await fetch('/api/user/avatar', { method: 'POST', body: formData, headers: { 'Authorization': 'Bearer ' + userStore.token } })
+    const data = await res.json()
+    if (data.code === 0 || data.code === 200) {
+      selectedAvatar.value = data.data
+      ElMessage.success('头像上传成功')
+    } else {
+      ElMessage.error(data.message || '上传失败')
+    }
+  } catch (e) {
+    ElMessage.error('上传失败')
+  }
+}
+
+const saveAvatar = async () => {
+  if (!selectedAvatar.value) { ElMessage.warning('请选择头像'); return }
+  avatarSaving.value = true
+  try {
+    await updateUserInfo({ avatar: selectedAvatar.value })
+    await userStore.fetchUserInfo()
+    showAvatarPicker.value = false
+    ElMessage.success('头像更新成功')
+  } catch (e) {
+    ElMessage.error('更新失败')
+  } finally {
+    avatarSaving.value = false
+  }
+}
 
 const typeToIcon = (type) => {
   if (type === 1) return '🔔'
@@ -523,7 +622,7 @@ const handleLogout = async () => {
 /* ========== 整体容器 ========== */
 .user-container {
   min-height: 100vh;
-  background: #f0f2f5;
+  background: #ffffff;
 }
 
 /* ========== 顶部导航 ========== */
@@ -590,13 +689,22 @@ const handleLogout = async () => {
 
 /* 头像卡片 */
 .profile-card {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: #ffffff;
+  border: 1px solid #e2e6ed;
   border-radius: 14px;
   padding: 28px 20px 20px;
   text-align: center;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
-  color: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  color: #1a1a1a;
 }
+
+.profile-card .nickname,
+.profile-card .user-id,
+.profile-card .auth-status .el-tag {
+  color: #1a1a1a;
+}
+.profile-card .user-id { color: #555; }
+.profile-card .auth-status .el-tag { background: rgba(91,71,194,0.1); border-color: rgba(91,71,194,0.2); color: #667eea; }
 
 .avatar-wrap {
   position: relative;
@@ -651,10 +759,11 @@ const handleLogout = async () => {
 
 /* 统计卡片 */
 .stats-card {
-  background: #fff;
+  background: #ffffff;
+  border: 1px solid #e2e6ed;
   border-radius: 14px;
   padding: 16px 12px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 .stats-grid {
@@ -672,50 +781,84 @@ const handleLogout = async () => {
 }
 
 .stat-item:hover {
-  background: #f5f7fa;
+  background: rgba(91,71,194,0.06);
 }
 
 .stat-value {
   display: block;
   font-size: 18px;
   font-weight: 700;
-  color: #333;
+  color: var(--theme-text-primary);
   margin-bottom: 4px;
 }
 
 .stat-label {
   display: block;
   font-size: 11px;
-  color: #999;
+  color: var(--theme-text-muted);
 }
 
 .stats-title-row {
   padding: 0 0 8px 0;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--theme-border-color);
   margin-bottom: 4px;
 }
-.stats-title { font-size: 12px; font-weight: 700; color: #888; }
+.stats-title { font-size: 12px; font-weight: 700; color: var(--theme-text-secondary); }
 
-.stats-grid .stat-item:nth-child(2) .stat-value {
-  color: #667eea;
+.stats-grid .stat-item:nth-child(2) .stat-value { color: #667eea; }
+.stats-grid .stat-value.green { color: #27ae60 !important; }
+.stats-grid .stat-value.orange { color: #e67e22 !important; }
+.stats-grid .stat-value.purple { color: #667eea !important; }
+.stats-grid .stat-value.red { color: #c0392b !important; }
+.stat-item.highlight { background: rgba(91,71,194,0.06); border-radius: 8px; padding: 4px; }
+
+.stat-value {
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 4px;
 }
-.stats-grid .stat-value.green { color: #67c23a !important; }
-.stats-grid .stat-value.orange { color: #e6a23c !important; }
-.stats-grid .stat-value.purple { color: #764ba2 !important; }
-.stats-grid .stat-value.red { color: #f56c6c !important; }
-.stat-item.highlight { background: #f9f8ff; border-radius: 8px; padding: 4px; }
+
+.stat-label {
+  display: block;
+  font-size: 11px;
+  color: #999999;
+}
+
+.stats-title-row {
+  padding: 0 0 8px 0;
+  border-bottom: 1px solid #e2e6ed;
+  margin-bottom: 4px;
+}
+.stats-title { font-size: 12px; font-weight: 700; color: #555555; }
 
 /* 菜单卡片 */
 .menu-card {
-  background: #fff;
+  background: #ffffff;
+  border: 1px solid #e2e6ed;
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.menu-card :deep(.el-menu-item) {
+  color: #1a1a1a !important;
+}
+
+.menu-card :deep(.el-menu-item.is-active) {
+  background: linear-gradient(135deg, #667eea, #7B5FD4) !important;
+  color: #fff !important;
+}
+
+.menu-card :deep(.el-menu-item:hover) {
+  background: rgba(91,71,194,0.08) !important;
+  color: #667eea !important;
 }
 
 .menu-card :deep(.el-card__header) {
   padding: 12px 16px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--theme-border-color);
 }
 
 .menu-card :deep(.el-card__body) {
@@ -725,7 +868,7 @@ const handleLogout = async () => {
 .menu-title {
   font-size: 13px;
   font-weight: 600;
-  color: #333;
+  color: var(--theme-text-primary);
 }
 
 .menu-card :deep(.el-menu) {
@@ -734,7 +877,7 @@ const handleLogout = async () => {
 
 /* ========== 消息通知 ========== */
 .unread-badge {
-  background: #f56c6c;
+  background: var(--theme-danger);
   color: #fff;
   font-size: 11px;
   padding: 2px 8px;
@@ -759,11 +902,11 @@ const handleLogout = async () => {
   transition: background 0.2s; cursor: pointer;
 }
 .notif-item:last-child { border-bottom: none; }
-.notif-item:hover { background: #f9f8ff; border-radius: 8px; }
-.notif-item.unread { background: #fff5f5; }
+.notif-item:hover { background: var(--theme-bg-card-hover); border-radius: 8px; }
+.notif-item.unread { background: rgba(239,68,68,0.06); }
 .notif-icon { font-size: 22px; flex-shrink: 0; width: 32px; text-align: center; }
 .notif-body { flex: 1; min-width: 0; }
-.notif-title { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 3px; }
+.notif-title { font-size: 13px; font-weight: 700; color: var(--theme-text-primary); margin-bottom: 3px; }
 .notif-desc { font-size: 12px; color: #888; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .notif-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
 .notif-time { font-size: 11px; color: #bbb; }
@@ -972,4 +1115,149 @@ const handleLogout = async () => {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ========== Theme Switcher ========== */
+.theme-switcher-wrap {
+  background: var(--theme-bg-card);
+  border: 1px solid var(--theme-border-color);
+  border-radius: var(--theme-radius-md);
+  padding: 14px;
+}
+
+.theme-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--theme-text-secondary);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.theme-label-icon { font-size: 14px; }
+
+.theme-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.theme-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  border-radius: var(--theme-radius-sm);
+  background: var(--theme-bg-input);
+  border: 1px solid var(--theme-border-color);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.theme-btn:hover {
+  border-color: var(--theme-accent);
+}
+
+.theme-btn.active {
+  border-color: var(--theme-accent);
+  background: var(--theme-highlight-bg);
+}
+
+.theme-btn-preview {
+  width: 32px;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.theme-btn-name {
+  font-size: 10px;
+  color: var(--theme-text-secondary);
+}
+
+.theme-btn.active .theme-btn-name {
+  color: var(--theme-accent);
+  font-weight: 600;
+}
+
+
+
+/* ========== 头像选择器 ========== */
+.avatar-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 8px 0 16px;
+}
+
+.avatar-option {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-option img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatar-option:hover {
+  border-color: #667eea;
+  transform: scale(1.05);
+}
+
+.avatar-option.selected {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+.avatar-upload-row {
+  padding-top: 12px;
+  border-top: 1px solid #e2e6ed;
+  display: flex;
+  justify-content: center;
+}
+
+/* ========== 头像卡片 ========== */
+.avatar-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar-edit-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 22px;
+  height: 22px;
+  background: #667eea;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  border: 2px solid #fff;
+}
+
 </style>

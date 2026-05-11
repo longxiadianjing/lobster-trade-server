@@ -216,10 +216,16 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateStatus(Long productId, Integer status, String reason) {
+    public void updateStatus(Long productId, Integer status, String reason, Long userId) {
         Product p = productMapper.selectById(productId);
         if (p == null || p.getIsDeleted() == 1) {
             throw new BusinessException(ErrorCode.PARAM_INVALID, "商品不存在");
+        }
+        // 权限校验：商品所有者本人 或 管理员 才能操作
+        boolean isOwner = userId != null && userId.equals(p.getSellerId());
+        boolean isAdmin = isAdminSeller(userId);
+        if (!isOwner && !isAdmin) {
+            throw new BusinessException(ErrorCode.FORBIDDEN, "无权操作此商品");
         }
         p.setStatus(status);
         p.setUpdateTime(LocalDateTime.now());
@@ -228,9 +234,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void batchUpdateStatus(List<Long> productIds, Integer status, String reason) {
+    public void batchUpdateStatus(List<Long> productIds, Integer status, String reason, Long userId) {
         for (Long id : productIds) {
-            updateStatus(id, status, reason);
+            updateStatus(id, status, reason, userId);
         }
     }
 

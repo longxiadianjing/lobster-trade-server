@@ -738,7 +738,7 @@ public class AdminServiceImpl implements AdminService {
             throw new BusinessException(ErrorCode.FORBIDDEN, "不能修改超级管理员信息");
         }
         if (admin.getPassword() != null && !admin.getPassword().isEmpty()) {
-            exist.setPassword(admin.getPassword());
+            exist.setPassword(PasswordEncoder.encode(admin.getPassword()));
         }
         if (admin.getNickname() != null) exist.setNickname(admin.getNickname());
         if (admin.getRole() != null) exist.setRole(admin.getRole());

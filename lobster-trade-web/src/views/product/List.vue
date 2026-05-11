@@ -494,10 +494,10 @@ const resetFilters = () => {
 <style scoped>
 /* ====== 侧边栏 ====== */
 .sidebar-wrapper {
-  background: #fff;
-  border-radius: 16px;
-  border: 1px solid #f0eeff;
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.08);
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   overflow: hidden;
   position: sticky;
   top: 24px;
@@ -557,10 +557,11 @@ const resetFilters = () => {
   align-items: center;
   gap: 8px;
   padding: 16px 18px 14px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--accent-color), #c73e54);
   color: #fff;
+  border-bottom: 1px solid rgba(233,69,96,0.3);
 }
-.sidebar-icon { font-size: 16px; }
+.sidebar-head .sidebar-icon { font-size: 16px; }
 .sidebar-title {
   font-size: 15px;
   font-weight: 800;
@@ -584,10 +585,10 @@ const resetFilters = () => {
   width: 8px; height: 8px; border-radius: 50%;
   flex-shrink: 0;
 }
-.dot-game { background: #667eea; box-shadow: 0 0 6px rgba(102,126,234,0.5); }
-.dot-type { background: #f56c6c; box-shadow: 0 0 6px rgba(245,108,108,0.5); }
-.dot-price { background: #e6a23c; box-shadow: 0 0 6px rgba(230,162,60,0.5); }
-.dot-stock { background: #67c23a; box-shadow: 0 0 6px rgba(103,194,58,0.5); }
+.dot-game { background: var(--accent-color); box-shadow: 0 0 6px rgba(233,69,96,0.5); }
+.dot-type { background: var(--danger); box-shadow: 0 0 6px rgba(239,68,68,0.5); }
+.dot-price { background: var(--gold-color); box-shadow: 0 0 6px rgba(240,165,0,0.5); }
+.dot-stock { background: var(--success); box-shadow: 0 0 6px rgba(16,185,129,0.5); }
 .dot-ptype { background: #909399; box-shadow: 0 0 6px rgba(144,147,153,0.5); }
 .block-name {
   font-size: 12px;
@@ -611,21 +612,21 @@ const resetFilters = () => {
   border: 1.5px solid !important;
 }
 :deep(.game-tag.el-tag--info) {
-  background: #f9f8ff !important;
-  border-color: #e0deff !important;
-  color: #555 !important;
+  background: rgba(233,69,96,0.08) !important;
+  border-color: rgba(233,69,96,0.2) !important;
+  color: var(--text-secondary) !important;
 }
 :deep(.game-tag.el-tag--info:hover) {
-  background: #f0eeff !important;
-  border-color: #667eea !important;
-  color: #667eea !important;
+  background: rgba(233,69,96,0.15) !important;
+  border-color: var(--accent-color) !important;
+  color: var(--accent-color) !important;
 }
 :deep(.game-tag.el-tag--primary) {
-  background: linear-gradient(135deg, #667eea, #764ba2) !important;
+  background: linear-gradient(135deg, var(--accent-color), #c73e54) !important;
   border-color: transparent !important;
   color: #fff !important;
   font-weight: 700 !important;
-  box-shadow: 0 3px 10px rgba(102,126,234,0.35) !important;
+  box-shadow: 0 3px 10px rgba(233,69,96,0.35) !important;
 }
 
 .type-wrap {
@@ -637,9 +638,9 @@ const resetFilters = () => {
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 12px;
-  color: #555;
-  background: #f9f8ff;
-  border: 1.5px solid #e0deff;
+  color: var(--text-secondary);
+  background: rgba(233,69,96,0.05);
+  border: 1.5px solid rgba(233,69,96,0.15);
   cursor: pointer;
   transition: all 0.2s;
   display: flex;
@@ -648,16 +649,16 @@ const resetFilters = () => {
   user-select: none;
 }
 .type-btn:hover {
-  border-color: #667eea;
-  color: #667eea;
-  background: #f0eeff;
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  background: rgba(233,69,96,0.1);
 }
 .type-btn.active {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--accent-color), #c73e54);
   border-color: transparent;
   color: #fff;
   font-weight: 700;
-  box-shadow: 0 3px 10px rgba(102,126,234,0.3);
+  box-shadow: 0 3px 10px rgba(233,69,96,0.3);
 }
 .type-btn .chk { font-size: 11px; }
 
@@ -670,25 +671,25 @@ const resetFilters = () => {
   padding: 8px 6px;
   border-radius: 10px;
   font-size: 12px;
-  color: #555;
-  background: #f9f8ff;
-  border: 1.5px solid #e0deff;
+  color: var(--text-secondary);
+  background: rgba(240,165,0,0.05);
+  border: 1.5px solid rgba(240,165,0,0.15);
   text-align: center;
   cursor: pointer;
   transition: all 0.2s;
   user-select: none;
 }
 .price-btn:hover {
-  border-color: #e6a23c;
-  color: #e6a23c;
-  background: #fffbf0;
+  border-color: var(--gold-color);
+  color: var(--gold-color);
+  background: rgba(240,165,0,0.1);
 }
 .price-btn.active {
-  background: linear-gradient(135deg, #f6a02d, #e6a23c);
+  background: linear-gradient(135deg, var(--gold-color), var(--gold-hover));
   border-color: transparent;
-  color: #fff;
+  color: #1a1a2e;
   font-weight: 700;
-  box-shadow: 0 3px 10px rgba(230,162,60,0.3);
+  box-shadow: 0 3px 10px rgba(240,165,0,0.3);
 }
 
 .stock-row {
@@ -715,31 +716,31 @@ const resetFilters = () => {
   padding: 8px 12px;
   border-radius: 10px;
   font-size: 13px;
-  color: #555;
-  background: #f9f8ff;
-  border: 1.5px solid #e0deff;
+  color: var(--text-secondary);
+  background: rgba(233,69,96,0.05);
+  border: 1.5px solid rgba(233,69,96,0.15);
   cursor: pointer;
   transition: all 0.2s;
   user-select: none;
 }
 .ptype-btn:hover {
-  border-color: #667eea;
-  color: #667eea;
-  background: #f0eeff;
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  background: rgba(233,69,96,0.1);
 }
 .ptype-btn.active {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--accent-color), #c73e54);
   border-color: transparent;
   color: #fff;
   font-weight: 700;
-  box-shadow: 0 3px 10px rgba(102,126,234,0.3);
+  box-shadow: 0 3px 10px rgba(233,69,96,0.3);
 }
 .ptype-dot {
   width: 8px; height: 8px; border-radius: 50%;
-  background: #ccc; flex-shrink: 0;
+  background: var(--border-color); flex-shrink: 0;
   transition: background 0.2s;
 }
-.ptype-btn:hover .ptype-dot { background: #667eea; }
+.ptype-btn:hover .ptype-dot { background: var(--accent-color); }
 .ptype-btn.active .ptype-dot { background: rgba(255,255,255,0.7); }
 
 .reset-row {
@@ -750,16 +751,16 @@ const resetFilters = () => {
 .reset-btn {
   width: 100%;
   border-radius: 10px !important;
-  border: 1.5px dashed #e0deff !important;
-  color: #888 !important;
+  border: 1.5px dashed var(--border-color) !important;
+  color: #667eea !important;
   font-size: 13px !important;
-  background: transparent !important;
+  background: #f0f2ff !important;
   transition: all 0.2s !important;
 }
 .reset-btn:hover {
-  border-color: #667eea !important;
-  color: #667eea !important;
-  background: #f5f0ff !important;
+  border-color: var(--accent-color) !important;
+  color: var(--accent-color) !important;
+  background: rgba(233,69,96,0.05) !important;
 }
 
 /* ====== 主内容区 ====== */
@@ -767,38 +768,38 @@ const resetFilters = () => {
 
 .search-bar {
   display: flex; gap: 10px; align-items: center;
-  background: #fff; padding: 14px 16px; border-radius: 14px;
-  box-shadow: 0 2px 12px rgba(102, 126, 234, 0.08);
+  background: var(--bg-card); padding: 14px 16px; border-radius: 14px;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
 }
 :deep(.search-input .el-input__wrapper) {
-  border-radius: 10px; border: 1.5px solid #e8e0ff;
+  border-radius: 10px; border: 1.5px solid var(--border-color);
   box-shadow: none !important;
 }
 :deep(.search-input .el-input__wrapper:focus-within) {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102,126,234,0.12) !important;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(233,69,96,0.12) !important;
 }
 .publish-btn {
-  background: linear-gradient(135deg, #667eea, #764ba2) !important;
+  background: linear-gradient(135deg, #e94560, #c73e54) !important;
   border: none !important; border-radius: 10px !important;
   color: #fff !important; font-weight: 700 !important;
-  box-shadow: 0 4px 14px rgba(102,126,234,0.38) !important;
+  box-shadow: 0 4px 14px rgba(233,69,96,0.38) !important;
 }
 .publish-btn:hover { opacity: 0.92; transform: translateY(-1px); }
 
 /* ====== 热销榜 ====== */
 .hot-rank-section {
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(102, 126, 234, 0.08);
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
 }
 .section-head {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--accent-color), #c73e54);
   color: #fff;
 }
 .section-icon { font-size: 16px; }
@@ -838,12 +839,12 @@ const resetFilters = () => {
 .rank-num {
   font-size: 13px;
   font-weight: 900;
-  color: #667eea;
+  color: var(--accent-color);
   flex-shrink: 0;
   min-width: 18px;
 }
 .rank-num.top3 {
-  color: #ff6b6b;
+  color: var(--gold-color);
   font-size: 15px;
 }
 .rank-info {
@@ -853,7 +854,7 @@ const resetFilters = () => {
 }
 .rank-title {
   font-size: 11px;
-  color: #333;
+  color: var(--text-primary);
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -862,7 +863,7 @@ const resetFilters = () => {
 }
 .rank-sales {
   font-size: 10px;
-  color: #ff6b6b;
+  color: var(--gold-color);
   font-weight: 600;
 }
 @media (max-width: 900px) {
@@ -888,103 +889,96 @@ const resetFilters = () => {
 }
 
 .product-card {
-  background: #fff; border-radius: 14px; overflow: hidden;
-  cursor: pointer; transition: all 0.25s; border: 1px solid #f0f0f0;
+  background: var(--bg-card); border-radius: 14px; overflow: hidden;
+  cursor: pointer; transition: all 0.25s; border: 1px solid var(--border-color);
 }
 .product-card:hover {
-  border-color: #b8a5f5; transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(91,71,194,0.14);
+  border-color: var(--accent-color); transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(233,69,96,0.2);
 }
-.product-image { position: relative; height: 160px; background: #f8f8f8; }
+.product-image { position: relative; height: 160px; background: #12122a; }
 .product-img { width: 100%; height: 100%; }
 .img-placeholder {
   width: 100%; height: 100%; display: flex; align-items: center;
-  justify-content: center; font-size: 40px; background: #f5f0ff;
+  justify-content: center; font-size: 40px; background: rgba(233,69,96,0.05);
 }
 .product-price-tag {
   position: absolute; bottom: 8px; right: 8px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff; padding: 4px 12px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--gold-color), var(--gold-hover));
+  color: #1a1a2e; padding: 4px 12px; border-radius: 14px;
   font-size: 13px; font-weight: 800;
-  box-shadow: 0 2px 8px rgba(102,126,234,0.4);
+  box-shadow: 0 2px 8px rgba(240,165,0,0.4);
 }
 .official-badge {
   position: absolute; top: 8px; right: 8px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--accent-color), #c73e54);
   color: #fff; padding: 3px 10px; border-radius: 12px;
   font-size: 11px; font-weight: 800;
-  box-shadow: 0 2px 8px rgba(102,126,234,0.4);
+  box-shadow: 0 2px 8px rgba(233,69,96,0.4);
   z-index: 2;
 }
 .hot-badge {
   position: absolute; top: 8px; left: 8px;
-  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
   color: #fff; padding: 3px 10px; border-radius: 12px;
   font-size: 11px; font-weight: 800;
-  box-shadow: 0 2px 8px rgba(255,107,107,0.4);
+  box-shadow: 0 2px 8px rgba(233,69,96,0.4);
   z-index: 1;
 }
 .product-info { padding: 14px; }
 .product-title {
-  font-size: 14px; font-weight: 600; color: #333;
+  font-size: 14px; font-weight: 600; color: var(--text-primary);
   margin-bottom: 8px; overflow: hidden;
   text-overflow: ellipsis; white-space: nowrap;
 }
 .product-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
 .meta-game {
-  font-size: 11px; color: #667eea; background: #f0eeff;
+  font-size: 11px; color: var(--accent-color); background: rgba(233,69,96,0.1);
   padding: 2px 8px; border-radius: 6px; font-weight: 600;
+  border: 1px solid rgba(233,69,96,0.2);
 }
-.meta-unit { font-size: 11px; color: #999; }
+.meta-unit { font-size: 11px; color: var(--text-muted); }
 .product-bottom { display: flex; align-items: center; justify-content: space-between; }
 .product-seller { display: flex; align-items: center; gap: 5px; }
 .seller-avatar { font-size: 16px; }
 .product-stats { display: flex; gap: 8px; }
-.stat { font-size: 11px; color: #999; }
+.stat { font-size: 11px; color: var(--text-muted); }
 
 .empty-state {
   display: flex; flex-direction: column; align-items: center;
   justify-content: center; padding: 60px 0; gap: 16px;
-  background: #fff; border-radius: 14px;
+  background: var(--bg-card); border-radius: 14px;
+  border: 1px solid var(--border-color);
 }
 .empty-icon { font-size: 48px; }
-.empty-text { font-size: 15px; color: #999; }
+.empty-text { font-size: 15px; color: var(--text-secondary); }
 
-:deep(.search-input .el-input__wrapper:focus-within) {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102,126,234,0.12) !important;
-}
 .sort-dropdown { margin-left: 2px; }
 .sort-btn {
   display: flex !important;
   align-items: center !important;
   gap: 4px !important;
   border-radius: 10px !important;
-  border: 1.5px solid #e8e0ff !important;
-  background: #fff !important;
-  color: #555 !important;
+  border: 1.5px solid #667eea !important;
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
   font-size: 13px !important;
   font-weight: 600 !important;
   transition: all 0.2s !important;
 }
 .sort-btn:hover {
-  border-color: #667eea !important;
-  color: #667eea !important;
-  background: #f5f0ff !important;
-}
-:deep(.sort-dropdown .el-dropdown-menu__item.sort-active) {
-  color: #667eea !important;
-  font-weight: 700 !important;
-  background: #f0eeff !important;
+  border-color: var(--accent-color) !important;
+  color: var(--accent-color) !important;
+  background: rgba(233,69,96,0.05) !important;
 }
 .pagination-info {
   font-size: 13px;
-  color: #888;
+  color: var(--text-secondary);
   margin-right: 16px;
   white-space: nowrap;
 }
 .pagination-info strong {
-  color: #667eea;
+  color: var(--accent-color);
 }
 .pagination-wrap {
   display: flex;
@@ -993,10 +987,10 @@ const resetFilters = () => {
   padding: 20px 0;
 }
 :deep(.pagination-wrap .el-pagination) {
-  background: #fff;
+  background: var(--bg-card);
   padding: 10px 16px;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(102,126,234,0.08);
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
 }
 
 /* ====== 最近成交动态（右侧悬浮） ====== */
@@ -1006,10 +1000,10 @@ const resetFilters = () => {
   top: 50%;
   transform: translateY(-50%);
   width: 220px;
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 14px;
-  box-shadow: 0 6px 28px rgba(102, 126, 234, 0.18);
-  border: 1px solid #e0deff;
+  box-shadow: 0 6px 28px rgba(0,0,0,0.5);
+  border: 1px solid var(--border-color);
   z-index: 100;
   overflow: hidden;
 }
@@ -1018,7 +1012,7 @@ const resetFilters = () => {
   align-items: center;
   gap: 6px;
   padding: 10px 12px 8px;
-  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
   color: #fff;
   font-size: 12px;
   font-weight: 700;
@@ -1052,20 +1046,20 @@ const resetFilters = () => {
   gap: 2px;
   padding: 6px 8px;
   border-radius: 8px;
-  background: #fff5f5;
-  border: 1px solid #ffe0e0;
+  background: rgba(233,69,96,0.08);
+  border: 1px solid rgba(233,69,96,0.15);
   margin-bottom: 6px;
   font-size: 11px;
   line-height: 1.4;
 }
 .flyer-item:last-child { margin-bottom: 0; }
 .flyer-nick {
-  color: #ff6b6b;
+  color: var(--accent-color);
   font-weight: 700;
 }
-.flyer-text { color: #999; }
+.flyer-text { color: var(--text-secondary); }
 .flyer-title {
-  color: #333;
+  color: var(--text-primary);
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
