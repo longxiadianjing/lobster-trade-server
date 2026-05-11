@@ -2,6 +2,30 @@
   <PageLayout>
     <template #sidebar>
       <el-card class="menu-card" shadow="never" :body-style="{ padding: '0' }">
+        <template #header>
+          <span class="menu-title">🔐 安全中心</span>
+        </template>
+        <el-menu :default-active="route.path" router @select="() => {}">
+          <el-menu-item index="/user">
+            <el-icon><User /></el-icon>
+            <span>个人信息</span>
+          </el-menu-item>
+          <el-menu-item index="/user/message">
+            <el-icon><ChatDotRound /></el-icon>
+            <span>消息中心</span>
+          </el-menu-item>
+          <el-menu-item index="/user/security-center">
+            <el-icon><Lock /></el-icon>
+            <span>安全中心</span>
+          </el-menu-item>
+          <el-menu-item index="/wallet">
+            <el-icon><Wallet /></el-icon>
+            <span>我的钱包</span>
+          </el-menu-item>
+        </el-menu>
+      </el-card>
+    </template>
+
     <div class="page-header">
       <h2>安全中心</h2>
     </div>
@@ -91,12 +115,14 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/utils/request'
 import PageLayout from '@/components/PageLayout.vue'
+import { User, Lock, ChatDotRound, Wallet } from '@element-plus/icons-vue'
 
 const router = useRouter()
+const route = useRoute()
 
 const securityData = ref({ score: 0, level: '', events: [] })
 const devices = ref([])
@@ -200,6 +226,9 @@ onMounted(() => {
 
 <style scoped>
 .security-center { padding: 0; max-width: 100%; }
+
+.menu-card { border-radius: 12px; border: none; }
+.menu-title { font-weight: 600; font-size: 14px; }
 
 .page-header { margin-bottom: 20px; }
 .page-header h2 { margin: 0; font-size: 18px; font-weight: 600; }
