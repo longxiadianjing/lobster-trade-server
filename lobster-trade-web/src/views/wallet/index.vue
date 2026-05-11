@@ -219,7 +219,7 @@ onMounted(() => {
 .balance-card {
   border-radius: 12px;
   border: none;
-  background: linear-gradient(135deg, #667eea, #7B5FD4);
+  background: #f0f0ff;
   color: #1a1a1a;
 }
 
@@ -267,7 +267,7 @@ onMounted(() => {
   gap: 24px;
   margin-bottom: 24px;
   padding: 16px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(102,126,234,0.1);
   border-radius: 10px;
 }
 
