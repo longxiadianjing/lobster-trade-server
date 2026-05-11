@@ -228,6 +228,10 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.12);
 }
 
 .balance-title {
@@ -239,6 +243,7 @@ onMounted(() => {
 .balance-sub {
   font-size: 12px;
   color: #e94560;
+  font-weight: 500;
 }
 
 .balance-amount {
