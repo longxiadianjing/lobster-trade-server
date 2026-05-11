@@ -220,7 +220,7 @@ onMounted(() => {
   border-radius: 12px;
   border: none;
   background: linear-gradient(135deg, #667eea, #7B5FD4);
-  color: #fff;
+  color: #1a1a1a;
 }
 
 .balance-header {
@@ -233,12 +233,12 @@ onMounted(() => {
 .balance-title {
   font-size: 15px;
   font-weight: 600;
-  opacity: 0.9;
+  color: #1a1a1a;
 }
 
 .balance-sub {
   font-size: 12px;
-  opacity: 0.6;
+  color: #666;
 }
 
 .balance-amount {
@@ -251,13 +251,14 @@ onMounted(() => {
 .currency {
   font-size: 20px;
   font-weight: 600;
-  opacity: 0.8;
+  color: #e94560;
 }
 
 .amount {
   font-size: 42px;
   font-weight: 700;
   letter-spacing: -1px;
+  color: #e94560;
 }
 
 .balance-detail {
@@ -278,12 +279,14 @@ onMounted(() => {
 
 .detail-label {
   font-size: 12px;
+  color: #1a1a1a;
   opacity: 0.7;
 }
 
 .detail-value {
   font-size: 16px;
   font-weight: 600;
+  color: #1a1a1a;
 }
 
 .detail-split {
