@@ -49,7 +49,7 @@
               <span class="stat-label">交易订单</span>
             </div>
             <div class="stat-item highlight" @click="router.push({ path: '/wallet' })">
-              <span class="stat-value green">¥{{ (userInfo?.balance || 0).toFixed(2) }}</span>
+              <span class="stat-value green">¥{{ (walletStore.balance || '0.00') }}</span>
               <span class="stat-label">账户余额</span>
             </div>
             <div class="stat-item">
@@ -409,6 +409,7 @@ import { ref, computed, reactive, onMounted, markRaw } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useUserStore } from '@/stores/user'
+import { useWalletStore } from '@/stores/wallet'
 import { updateUserInfo } from '@/api/user'
 import { getNotificationList, markNotificationRead } from '@/api/notification'
 import {
@@ -421,6 +422,7 @@ import ThemeSwitcher from '@/components/ThemeSwitcher/index.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
+const walletStore = useWalletStore()
 const { themes, switchTheme, currentTheme } = useTheme()
 
 const activeMenu = ref('/user')
@@ -573,6 +575,7 @@ onMounted(async () => {
   document.title = '个人中心 - 龙虾道具交易平台'
   try {
     await userStore.fetchUserInfo()
+    await walletStore.fetchWalletInfo()
     form.nickname = userInfo.value?.nickname || ''
     form.email = userInfo.value?.email || ''
   } catch (e) {
