@@ -643,9 +643,9 @@ onMounted(() => {
 /* 商家网格 */
 .seller-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
 .seller-card {
-  background: #fff; border-radius: 12px; padding: 18px 14px;
-  border: 1px solid #e8e8e8; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  transition: all 0.3s; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center;
+  background: #f5f5f5; border-radius: 12px; padding: 18px 14px;
+  border: 1px solid #e0e0e0; box-shadow: none;
+  transition: all 0.25s; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center;
 }
 .seller-card:hover { box-shadow: 0 4px 20px rgba(102,126,234,0.15); border-color: #667eea; transform: translateY(-2px); }
 .seller-avatar-wrap { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #fff; box-shadow: 0 4px 14px rgba(102,126,234,0.3); }
