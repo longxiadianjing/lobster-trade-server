@@ -507,7 +507,7 @@ onMounted(() => {
 .home-container { min-height: 100vh; background: #ffffff; }
 
 /* 公告栏 */
-.announcement-bar { background: var(--accent-color); color: #fff; font-size: 12px; padding: 5px 0; }
+.announcement-bar { background: #e94560; color: #fff; font-size: 12px; padding: 5px 0; }
 .announcement-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
 /* 顶部导航（深色） */
