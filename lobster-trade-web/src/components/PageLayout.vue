@@ -24,7 +24,7 @@ import SiteHeader from './SiteHeader.vue'
 <style scoped>
 .page-layout {
   min-height: 100vh;
-  background: var(--bg-dark);
+  background: #ffffff;
 }
 
 .page-body {

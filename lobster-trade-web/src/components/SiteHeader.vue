@@ -75,9 +75,10 @@ onUnmounted(() => {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: #1e3a5f;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   min-height: 60px;
+  border-bottom: 1px solid #eee;
 }
 .header-inner {
   max-width: 1280px;
@@ -99,7 +100,7 @@ onUnmounted(() => {
   text-decoration: none;
 }
 .logo .logo-icon { font-size: 22px; }
-.logo-text { color: #ffffff; letter-spacing: 1px; }
+.logo-text { color: #1a1a2e; letter-spacing: 1px; }
 .header-center { flex: 1; max-width: 520px; }
 .header-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
 .sell-btn {
@@ -113,14 +114,14 @@ onUnmounted(() => {
 }
 .sell-btn:hover { background: #ff6b6b !important; }
 .action-text-btn {
-  color: rgba(255,255,255,0.85) !important;
+  color: #666 !important;
   font-size: 14px;
   padding: 4px 8px;
   border: none;
   background: transparent;
   cursor: pointer;
 }
-.action-text-btn:hover { color: #ffffff !important; background: rgba(255,255,255,0.1); border-radius: 6px; }
+.action-text-btn:hover { color: #667eea !important; background: rgba(102,126,234,0.06); border-radius: 6px; }
 .user-avatar-link { display: flex; align-items: center; text-decoration: none; }
 .user-avatar-link :deep(.el-avatar) {
   background: #e94560;
@@ -135,7 +136,7 @@ onUnmounted(() => {
 .header-divider {
   width: 1px;
   height: 24px;
-  background: rgba(255,255,255,0.2);
+  background: #e0e0e0;
   margin: 0 4px;
 }
 .notif-badge :deep(.el-badge__content) { background: #e94560; }

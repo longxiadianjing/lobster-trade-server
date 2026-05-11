@@ -557,9 +557,9 @@ const resetFilters = () => {
   align-items: center;
   gap: 8px;
   padding: 16px 18px 14px;
-  background: linear-gradient(135deg, var(--accent-color), #c73e54);
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: #fff;
-  border-bottom: 1px solid rgba(233,69,96,0.3);
+  border-bottom: none;
 }
 .sidebar-head .sidebar-icon { font-size: 16px; }
 .sidebar-title {
@@ -570,7 +570,7 @@ const resetFilters = () => {
 
 .filter-block {
   padding: 14px 16px;
-  border-bottom: 1px solid #f5f0ff;
+  border-bottom: 1px solid #eeeeee;
   transition: background 0.2s;
 }
 .filter-block:last-of-type { border-bottom: none; }
@@ -768,7 +768,7 @@ const resetFilters = () => {
 
 .search-bar {
   display: flex; gap: 10px; align-items: center;
-  background: var(--bg-card); padding: 14px 16px; border-radius: 14px;
+  background: #ffffff; padding: 14px 16px; border-radius: 14px;
   box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
 }
 :deep(.search-input .el-input__wrapper) {
@@ -789,7 +789,7 @@ const resetFilters = () => {
 
 /* ====== 热销榜 ====== */
 .hot-rank-section {
-  background: var(--bg-card);
+  background: #ffffff;
   border-radius: 14px;
   overflow: hidden;
   box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
@@ -889,14 +889,14 @@ const resetFilters = () => {
 }
 
 .product-card {
-  background: var(--bg-card); border-radius: 14px; overflow: hidden;
+  background: #ffffff; border-radius: 14px; overflow: hidden;
   cursor: pointer; transition: all 0.25s; border: 1px solid var(--border-color);
 }
 .product-card:hover {
   border-color: var(--accent-color); transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(233,69,96,0.2);
 }
-.product-image { position: relative; height: 160px; background: #12122a; }
+.product-image { position: relative; height: 160px; background: #f5f5f5; }
 .product-img { width: 100%; height: 100%; }
 .img-placeholder {
   width: 100%; height: 100%; display: flex; align-items: center;
@@ -947,7 +947,7 @@ const resetFilters = () => {
 .empty-state {
   display: flex; flex-direction: column; align-items: center;
   justify-content: center; padding: 60px 0; gap: 16px;
-  background: var(--bg-card); border-radius: 14px;
+  background: #ffffff; border-radius: 14px;
   border: 1px solid var(--border-color);
 }
 .empty-icon { font-size: 48px; }
@@ -960,7 +960,7 @@ const resetFilters = () => {
   gap: 4px !important;
   border-radius: 10px !important;
   border: 1.5px solid #667eea !important;
-  background: var(--bg-card) !important;
+  background: #ffffff !important;
   color: var(--text-primary) !important;
   font-size: 13px !important;
   font-weight: 600 !important;
@@ -987,7 +987,7 @@ const resetFilters = () => {
   padding: 20px 0;
 }
 :deep(.pagination-wrap .el-pagination) {
-  background: var(--bg-card);
+  background: #ffffff;
   padding: 10px 16px;
   border-radius: 12px;
   box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
@@ -1000,7 +1000,7 @@ const resetFilters = () => {
   top: 50%;
   transform: translateY(-50%);
   width: 220px;
-  background: var(--bg-card);
+  background: #ffffff;
   border-radius: 14px;
   box-shadow: 0 6px 28px rgba(0,0,0,0.5);
   border: 1px solid var(--border-color);
