@@ -494,9 +494,9 @@ const resetFilters = () => {
 <style scoped>
 /* ====== 侧边栏 ====== */
 .sidebar-wrapper {
-  background: #ffffff;
+  background: #f5f5ff;
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #e0e0f0;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   overflow: hidden;
   position: sticky;
