@@ -48,6 +48,7 @@ public class AdminServiceImpl implements AdminService {
     private final GameCategoryMapper gameCategoryMapper;
     private final EscrowService escrowService;
     private final SysNotificationService sysNotificationService;
+    private final com.lobster.trade.mapper.WalletMapper walletMapper;
 
     @Override
     public Map<String, Object> login(AdminLoginRequest req) {
@@ -151,7 +152,16 @@ public class AdminServiceImpl implements AdminService {
         if (body.get("nickname") != null) user.setNickname((String) body.get("nickname"));
         if (body.get("status") != null) user.setStatus((Integer) body.get("status"));
         if (body.get("userLevel") != null) user.setUserLevel((Integer) body.get("userLevel"));
-        if (body.get("balance") != null) user.setBalance(new BigDecimal(body.get("balance").toString()));
+        if (body.get("balance") != null) {
+            BigDecimal newBalance = new BigDecimal(body.get("balance").toString());
+            user.setBalance(newBalance);
+            // 同步更新 Wallet 表
+            com.lobster.trade.model.entity.Wallet wallet = walletMapper.selectById(id);
+            if (wallet != null) {
+                wallet.setBalance(newBalance);
+                walletMapper.updateById(wallet);
+            }
+        }
         user.setUpdateTime(LocalDateTime.now());
         userMapper.updateById(user);
     }
