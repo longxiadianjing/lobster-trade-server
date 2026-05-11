@@ -406,22 +406,22 @@ const typeMap = {
 }
 
 const mockHotProducts = [
-  { id: 1, title: '三角洲行动 哈夫币 100万', price: 80, unit: '万', gameName: '三角洲行动', productType: 'goods', coverImage: '', sellerNickname: '专业搬砖商', reputationScore: '4.9' },
-  { id: 2, title: '战场段位代练 全程手打不坐牢', price: 200, unit: '局', gameName: '三角洲行动', productType: 'boost', coverImage: '', sellerNickname: '靠谱代练', reputationScore: '5.0' },
-  { id: 3, title: '烽火保险箱任务代肝', price: 150, unit: '个', gameName: '三角洲行动', productType: 'boost', coverImage: '', sellerNickname: '三角洲专家', reputationScore: '4.8' },
-  { id: 4, title: '王者荣耀 点券 5000', price: 350, unit: '5000点', gameName: '王者荣耀', productType: 'goods', coverImage: '', sellerNickname: '游戏商人', reputationScore: '4.7' },
-  { id: 5, title: '原神 原石 5000个', price: 200, unit: '5000个', gameName: '原神', productType: 'goods', coverImage: '', sellerNickname: '原神玩家', reputationScore: '5.0' },
-  { id: 6, title: '史诗级装备礼包', price: 500, unit: '套', gameName: '王者荣耀', productType: 'goods', coverImage: '', sellerNickname: '装备专家', reputationScore: '4.6' },
-  { id: 7, title: '和平精英 套装皮肤全套', price: 180, unit: '套', gameName: '和平精英', productType: 'goods', coverImage: '', sellerNickname: '皮肤商', reputationScore: '4.5' },
-  { id: 8, title: '等级/通行证代肝 全程手打', price: 120, unit: '项', gameName: '三角洲行动', productType: 'boost', coverImage: '', sellerNickname: '靠谱代练', reputationScore: '5.0' },
-  { id: 9, title: '英雄联盟 点券 2000', price: 150, unit: '2000点', gameName: '英雄联盟', productType: 'goods', coverImage: '', sellerNickname: 'LOL专家', reputationScore: '4.8' },
-  { id: 10, title: '魔兽世界 金币 10万', price: 250, unit: '10万', gameName: '魔兽世界', productType: 'goods', coverImage: '', sellerNickname: '魔兽工作室', reputationScore: '4.9' },
-  { id: 11, title: '炉石传说 卡牌包合集', price: 88, unit: '套', gameName: '炉石传说', productType: 'goods', coverImage: '', sellerNickname: '炉石玩家', reputationScore: '4.7' },
-  { id: 12, title: 'DNF 深渊派对门票', price: 30, unit: '张', gameName: 'DNF', productType: 'goods', coverImage: '', sellerNickname: 'DNF专业户', reputationScore: '4.8' },
-  { id: 13, title: '暗区突围 装备礼包', price: 320, unit: '套', gameName: '暗区突围', productType: 'goods', coverImage: '', sellerNickname: '暗区商人', reputationScore: '4.6' },
-  { id: 14, title: '穿越火线 英雄级武器', price: 680, unit: '把', gameName: '穿越火线', productType: 'goods', coverImage: '', sellerNickname: 'CF商人', reputationScore: '4.5' },
-  { id: 15, title: '战场排位代练 从零上战神', price: 800, unit: '单', gameName: '三角洲行动', productType: 'boost', coverImage: '', sellerNickname: '战神代练', reputationScore: '4.9' },
-  { id: 16, title: '原神 深渊代打 满星通关', price: 300, unit: '次', gameName: '原神', productType: 'boost', coverImage: '', sellerNickname: '原神代肝', reputationScore: '5.0' }
+  { id: 1, title: '三角洲行动 哈夫币 100万', price: 80, unit: '万', gameName: '三角洲行动', productType: 'goods', coverImage: '/images/delta_hafu_1.png', sellerNickname: '专业搬砖商', reputationScore: '4.9' },
+  { id: 2, title: '战场段位代练 全程手打不坐牢', price: 200, unit: '局', gameName: '三角洲行动', productType: 'boost', coverImage: '/images/gaming_gear_2.png', sellerNickname: '靠谱代练', reputationScore: '5.0' },
+  { id: 3, title: '烽火保险箱任务代肝', price: 150, unit: '个', gameName: '三角洲行动', productType: 'boost', coverImage: '/images/gaming_gear_1.png', sellerNickname: '三角洲专家', reputationScore: '4.8' },
+  { id: 4, title: '王者荣耀 点券 5000', price: 350, unit: '5000点', gameName: '王者荣耀', productType: 'goods', coverImage: '/images/gaming_gear_4.png', sellerNickname: '游戏商人', reputationScore: '4.7' },
+  { id: 5, title: '原神 原石 5000个', price: 200, unit: '5000个', gameName: '原神', productType: 'goods', coverImage: '/images/delta_hafu_3.png', sellerNickname: '原神玩家', reputationScore: '5.0' },
+  { id: 6, title: '史诗级装备礼包', price: 500, unit: '套', gameName: '王者荣耀', productType: 'goods', coverImage: '/images/delta_hafu_4.png', sellerNickname: '装备专家', reputationScore: '4.6' },
+  { id: 7, title: '和平精英 套装皮肤全套', price: 180, unit: '套', gameName: '和平精英', productType: 'goods', coverImage: '/images/gaming_gear_3.png', sellerNickname: '皮肤商', reputationScore: '4.5' },
+  { id: 8, title: '等级/通行证代肝 全程手打', price: 120, unit: '项', gameName: '三角洲行动', productType: 'boost', coverImage: '/images/delta_hafu_2.png', sellerNickname: '靠谱代练', reputationScore: '5.0' },
+  { id: 9, title: '英雄联盟 点券 2000', price: 150, unit: '2000点', gameName: '英雄联盟', productType: 'goods', coverImage: '/images/gaming_gear_1.png', sellerNickname: 'LOL专家', reputationScore: '4.8' },
+  { id: 10, title: '魔兽世界 金币 10万', price: 250, unit: '10万', gameName: '魔兽世界', productType: 'goods', coverImage: '/images/delta_hafu_2.png', sellerNickname: '魔兽工作室', reputationScore: '4.9' },
+  { id: 11, title: '炉石传说 卡牌包合集', price: 88, unit: '套', gameName: '炉石传说', productType: 'goods', coverImage: '/images/delta_hafu_3.png', sellerNickname: '炉石玩家', reputationScore: '4.7' },
+  { id: 12, title: 'DNF 深渊派对门票', price: 30, unit: '张', gameName: 'DNF', productType: 'goods', coverImage: '/images/gaming_gear_2.png', sellerNickname: 'DNF专业户', reputationScore: '4.8' },
+  { id: 13, title: '暗区突围 装备礼包', price: 320, unit: '套', gameName: '暗区突围', productType: 'goods', coverImage: '/images/gaming_gear_4.png', sellerNickname: '暗区商人', reputationScore: '4.6' },
+  { id: 14, title: '穿越火线 英雄级武器', price: 680, unit: '把', gameName: '穿越火线', productType: 'goods', coverImage: '/images/delta_hafu_1.png', sellerNickname: 'CF商人', reputationScore: '4.5' },
+  { id: 15, title: '战场排位代练 从零上战神', price: 800, unit: '单', gameName: '三角洲行动', productType: 'boost', coverImage: '/images/delta_hafu_4.png', sellerNickname: '战神代练', reputationScore: '4.9' },
+  { id: 16, title: '原神 深渊代打 满星通关', price: 300, unit: '次', gameName: '原神', productType: 'boost', coverImage: '/images/gaming_gear_3.png', sellerNickname: '原神代肝', reputationScore: '5.0' }
 ]
 
 const selectGame = (id) => {
@@ -591,43 +591,44 @@ onMounted(() => {
 .section-title { margin: 0; font-size: 17px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
 
 /* 商品网格 */
-.product-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 14px; }
-.hot-product-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 14px; }
+.product-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.hot-product-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
 .product-card {
-  background: var(--bg-card);
-  border-radius: 12px; overflow: hidden;
-  cursor: pointer; transition: all 0.3s;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-sm);
+  background: #fff;
+  border-radius: 10px; overflow: hidden;
+  cursor: pointer; transition: all 0.25s;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
 .product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(233, 69, 96, 0.2);
-  border-color: var(--accent-color);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  border-color: #ddd;
 }
-.card-image { height: 110px; background: #12122a; position: relative; overflow: hidden; }
-.card-image img, .cover-img { width: 100%; height: 100%; object-fit: cover; background-size: cover; background-position: center; }
-.image-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.15); }
+.card-image { height: 160px; background: #f5f5f5; position: relative; overflow: hidden; }
+.card-image img, .cover-img { width: 100%; height: 100%; object-fit: cover; background-size: cover; background-position: center; transition: transform 0.3s ease; }
+.product-card:hover .card-image img { transform: scale(1.04); }
+.image-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: rgba(0,0,0,0.15); }
 .card-badges { position: absolute; top: 8px; left: 8px; }
-.type-tag { padding: 2px 8px; border-radius: 4px; font-size: 11px; color: #fff; background: var(--accent-color); }
-.type-tag.boost { background: var(--success); }
-.type-tag.accompany { background: var(--info); }
-.type-tag.recommended-tag { background: linear-gradient(135deg, var(--gold-color), #e6762a); }
-.type-tag.goods { background: var(--gold-color); }
+.type-tag { padding: 2px 8px; border-radius: 4px; font-size: 11px; color: #fff; background: #e94560; }
+.type-tag.boost { background: #10b981; }
+.type-tag.accompany { background: #3b82f6; }
+.type-tag.recommended-tag { background: linear-gradient(135deg, #f0a500, #e6762a); }
+.type-tag.goods { background: #f0a500; }
 .card-body { padding: 12px; }
-.product-title { margin: 0 0 8px; font-size: 13px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.product-title { margin: 0 0 8px; font-size: 13px; color: #1a1a1a; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
 .product-tags { margin-bottom: 8px; }
-.game-tag { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; color: var(--accent-color); background: rgba(233,69,96,0.1); padding: 2px 6px; border-radius: 3px; border: 1px solid rgba(233,69,96,0.2); }
+.game-tag { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; color: #667eea; background: rgba(102,126,234,0.1); padding: 2px 6px; border-radius: 3px; }
 .card-bottom { margin-bottom: 8px; }
 .price-wrap { display: flex; align-items: baseline; }
-.price-sign { font-size: 13px; font-weight: 700; color: var(--gold-color); }
-.price { font-size: 20px; font-weight: 800; color: var(--gold-color); }
-.unit { font-size: 12px; color: var(--text-muted); margin-left: 2px; }
+.price-sign { font-size: 13px; font-weight: 700; color: #e94560; }
+.price { font-size: 20px; font-weight: 800; color: #e94560; }
+.unit { font-size: 12px; color: #999; margin-left: 2px; }
 .seller-row { display: flex; align-items: center; justify-content: space-between; }
-.seller-name { font-size: 12px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100px; }
-.seller-name.clickable { cursor: pointer; color: var(--accent-color); }
+.seller-name { font-size: 12px; color: #666; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100px; }
+.seller-name.clickable { cursor: pointer; color: #667eea; }
 .seller-name.clickable:hover { text-decoration: underline; }
-.rating-wrap { display: flex; align-items: center; gap: 2px; font-size: 12px; color: var(--gold-color); }
+.rating-wrap { display: flex; align-items: center; gap: 2px; font-size: 12px; color: #f0a500; }
 .star-icon { font-size: 12px; }
 
 /* 为什么选我们 */
