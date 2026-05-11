@@ -238,7 +238,7 @@ onMounted(() => {
 
 .balance-sub {
   font-size: 12px;
-  color: #666;
+  color: #e94560;
 }
 
 .balance-amount {
