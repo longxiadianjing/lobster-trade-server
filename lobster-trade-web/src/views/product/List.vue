@@ -585,11 +585,11 @@ const resetFilters = () => {
   width: 8px; height: 8px; border-radius: 50%;
   flex-shrink: 0;
 }
-.dot-game { background: var(--accent-color); box-shadow: 0 0 6px rgba(233,69,96,0.5); }
-.dot-type { background: var(--danger); box-shadow: 0 0 6px rgba(239,68,68,0.5); }
-.dot-price { background: var(--gold-color); box-shadow: 0 0 6px rgba(240,165,0,0.5); }
-.dot-stock { background: var(--success); box-shadow: 0 0 6px rgba(16,185,129,0.5); }
-.dot-ptype { background: #909399; box-shadow: 0 0 6px rgba(144,147,153,0.5); }
+.dot-game { background: #667eea; box-shadow: 0 0 6px rgba(102,126,234,0.5); }
+.dot-type { background: #667eea; box-shadow: 0 0 6px rgba(102,126,234,0.5); }
+.dot-price { background: #e94560; box-shadow: 0 0 6px rgba(233,69,96,0.5); }
+.dot-stock { background: #e94560; box-shadow: 0 0 6px rgba(233,69,96,0.5); }
+.dot-ptype { background: #667eea; box-shadow: 0 0 6px rgba(102,126,234,0.5); }
 .block-name {
   font-size: 12px;
   font-weight: 700;
@@ -622,7 +622,7 @@ const resetFilters = () => {
   color: #667eea !important;
 }
 :deep(.game-tag.el-tag--primary) {
-  background: linear-gradient(135deg, var(--accent-color), #c73e54) !important;
+  background: linear-gradient(135deg, #667eea, #764ba2) !important;
   border-color: transparent !important;
   color: #667eea !important;
   font-weight: 700 !important;
@@ -638,9 +638,9 @@ const resetFilters = () => {
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 12px;
-  color: #666;
-  background: rgba(233,69,96,0.05);
-  border: 1.5px solid rgba(233,69,96,0.15);
+  color: #1a1a1a;
+  background: #f0f0f5;
+  border: 1.5px solid #e0e0e8;
   cursor: pointer;
   transition: all 0.2s;
   display: flex;
@@ -651,10 +651,10 @@ const resetFilters = () => {
 .type-btn:hover {
   border-color: #667eea;
   color: #667eea;
-  background: rgba(233,69,96,0.1);
+  background: rgba(102,126,234,0.08);
 }
 .type-btn.active {
-  background: linear-gradient(135deg, var(--accent-color), #c73e54);
+  background: linear-gradient(135deg, #667eea, #764ba2);
   border-color: transparent;
   color: #fff;
   font-weight: 700;
@@ -671,23 +671,23 @@ const resetFilters = () => {
   padding: 8px 6px;
   border-radius: 10px;
   font-size: 12px;
-  color: #666;
-  background: rgba(240,165,0,0.05);
-  border: 1.5px solid rgba(240,165,0,0.15);
+  color: #1a1a1a;
+  background: #f0f0f5;
+  border: 1.5px solid #e0e0e8;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s;
   user-select: none;
 }
 .price-btn:hover {
-  border-color: #e94560;
-  color: #e94560;
-  background: rgba(240,165,0,0.1);
+  border-color: #667eea;
+  color: #667eea;
+  background: rgba(102,126,234,0.08);
 }
 .price-btn.active {
   background: linear-gradient(135deg, #667eea, #764ba2);
   border-color: transparent;
-  color: #1a1a2e;
+  color: #fff;
   font-weight: 700;
   box-shadow: 0 3px 10px rgba(240,165,0,0.3);
 }
@@ -716,7 +716,7 @@ const resetFilters = () => {
   padding: 8px 12px;
   border-radius: 10px;
   font-size: 13px;
-  color: #666;
+  color: #1a1a1a;
   background: rgba(233,69,96,0.05);
   border: 1.5px solid rgba(233,69,96,0.15);
   cursor: pointer;
@@ -726,21 +726,21 @@ const resetFilters = () => {
 .ptype-btn:hover {
   border-color: #667eea;
   color: #667eea;
-  background: rgba(233,69,96,0.1);
+  background: rgba(102,126,234,0.08);
 }
 .ptype-btn.active {
-  background: linear-gradient(135deg, var(--accent-color), #c73e54);
+  background: linear-gradient(135deg, #667eea, #764ba2);
   border-color: transparent;
   color: #fff;
   font-weight: 700;
-  box-shadow: 0 3px 10px rgba(233,69,96,0.3);
+  box-shadow: 0 3px 10px rgba(102,126,234,0.3);
 }
 .ptype-dot {
   width: 8px; height: 8px; border-radius: 50%;
   background: var(--border-color); flex-shrink: 0;
   transition: background 0.2s;
 }
-.ptype-btn:hover .ptype-dot { background: var(--accent-color); }
+.ptype-btn:hover .ptype-dot { background: #667eea; }
 .ptype-btn.active .ptype-dot { background: rgba(255,255,255,0.7); }
 
 .reset-row {
@@ -751,7 +751,7 @@ const resetFilters = () => {
 .reset-btn {
   width: 100%;
   border-radius: 10px !important;
-  border: 1.5px dashed var(--border-color) !important;
+  border: 1.5px dashed #e0e0e8 !important;
   color: #667eea !important;
   font-size: 13px !important;
   background: #f0f2ff !important;
@@ -769,10 +769,10 @@ const resetFilters = () => {
 .search-bar {
   display: flex; gap: 10px; align-items: center;
   background: #ffffff; padding: 14px 16px; border-radius: 14px;
-  box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08); border: 1px solid #e8e8e8;
 }
 :deep(.search-input .el-input__wrapper) {
-  border-radius: 10px; border: 1.5px solid var(--border-color);
+  border-radius: 10px; border: 1.5px solid #e8e8e8;
   box-shadow: none !important;
 }
 :deep(.search-input .el-input__wrapper:focus-within) {
@@ -792,14 +792,14 @@ const resetFilters = () => {
   background: #ffffff;
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08); border: 1px solid #e8e8e8;
 }
 .section-head {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  background: linear-gradient(135deg, var(--accent-color), #c73e54);
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: #fff;
 }
 .section-icon { font-size: 16px; }
@@ -890,7 +890,7 @@ const resetFilters = () => {
 
 .product-card {
   background: #ffffff; border-radius: 14px; overflow: hidden;
-  cursor: pointer; transition: all 0.25s; border: 1px solid var(--border-color);
+  cursor: pointer; transition: all 0.25s; border: 1px solid #e8e8e8;
 }
 .product-card:hover {
   border-color: #667eea; transform: translateY(-4px);
@@ -911,7 +911,7 @@ const resetFilters = () => {
 }
 .official-badge {
   position: absolute; top: 8px; right: 8px;
-  background: linear-gradient(135deg, var(--accent-color), #c73e54);
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: #fff; padding: 3px 10px; border-radius: 12px;
   font-size: 11px; font-weight: 800;
   box-shadow: 0 2px 8px rgba(233,69,96,0.4);
@@ -919,7 +919,7 @@ const resetFilters = () => {
 }
 .hot-badge {
   position: absolute; top: 8px; left: 8px;
-  background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: #fff; padding: 3px 10px; border-radius: 12px;
   font-size: 11px; font-weight: 800;
   box-shadow: 0 2px 8px rgba(233,69,96,0.4);
@@ -948,7 +948,7 @@ const resetFilters = () => {
   display: flex; flex-direction: column; align-items: center;
   justify-content: center; padding: 60px 0; gap: 16px;
   background: #ffffff; border-radius: 14px;
-  border: 1px solid var(--border-color);
+  border: 1px solid #e8e8e8;
 }
 .empty-icon { font-size: 48px; }
 .empty-text { font-size: 15px; color: #666; }
@@ -990,7 +990,7 @@ const resetFilters = () => {
   background: #ffffff;
   padding: 10px 16px;
   border-radius: 12px;
-  box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08); border: 1px solid #e8e8e8;
 }
 
 /* ====== 最近成交动态（右侧悬浮） ====== */
@@ -1003,7 +1003,7 @@ const resetFilters = () => {
   background: #ffffff;
   border-radius: 14px;
   box-shadow: 0 6px 28px rgba(0,0,0,0.5);
-  border: 1px solid var(--border-color);
+  border: 1px solid #e8e8e8;
   z-index: 100;
   overflow: hidden;
 }
@@ -1012,7 +1012,7 @@ const resetFilters = () => {
   align-items: center;
   gap: 6px;
   padding: 10px 12px 8px;
-  background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: #fff;
   font-size: 12px;
   font-weight: 700;
