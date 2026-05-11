@@ -1,5 +1,7 @@
 <template>
-  <div class="security-center">
+  <PageLayout>
+    <template #sidebar>
+      <el-card class="menu-card" shadow="never" :body-style="{ padding: '0' }">
     <div class="page-header">
       <h2>安全中心</h2>
     </div>
@@ -84,13 +86,17 @@
         </el-button>
       </div>
     </el-card>
-  </div>
+  </PageLayout>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/utils/request'
+import PageLayout from '@/components/PageLayout.vue'
+
+const router = useRouter()
 
 const securityData = ref({ score: 0, level: '', events: [] })
 const devices = ref([])
@@ -193,7 +199,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.security-center { padding: 0; }
+.security-center { padding: 0; max-width: 100%; }
 
 .page-header { margin-bottom: 20px; }
 .page-header h2 { margin: 0; font-size: 18px; font-weight: 600; }

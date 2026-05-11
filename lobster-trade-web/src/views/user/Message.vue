@@ -430,6 +430,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  max-width: 100%;
 }
 
 .menu-card {
