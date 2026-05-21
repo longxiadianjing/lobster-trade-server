@@ -54,6 +54,7 @@ com\lobster\trade\common\Result.class
 com\lobster\trade\service\impl\CertificationServiceImpl.class
 com\lobster\trade\payment\config\WeChatPayProperties.class
 com\lobster\trade\LobsterTradeApplication.class
+com\lobster\trade\service\PlatformConfigService.class
 com\lobster\trade\payment\service\impl\MockPayGateway.class
 com\lobster\trade\mapper\HotSearchWordMapper.class
 com\lobster\trade\service\impl\FavoriteServiceImpl.class
@@ -105,6 +106,7 @@ com\lobster\trade\model\entity\ProductMedia.class
 com\lobster\trade\service\WalletService.class
 com\lobster\trade\mapper\ImSessionMapper.class
 com\lobster\trade\model\request\WithdrawRequest.class
+com\lobster\trade\service\impl\PlatformConfigServiceImpl.class
 com\lobster\trade\model\entity\PlatformConfig.class
 com\lobster\trade\payment\service\impl\UnifiedPayService.class
 com\lobster\trade\model\entity\UserLoginLog.class
@@ -248,6 +250,7 @@ com\lobster\trade\service\SysNotificationService.class
 com\lobster\trade\controller\admin\StatsController.class
 com\lobster\trade\model\response\ImSessionVO.class
 com\lobster\trade\controller\admin\AdminCertificationController.class
+com\lobster\trade\controller\admin\AdminPaymentConfigController.class
 com\lobster\trade\config\WebMvcConfig.class
 com\lobster\trade\model\entity\Product.class
 com\lobster\trade\service\RealNameVerifyService.class

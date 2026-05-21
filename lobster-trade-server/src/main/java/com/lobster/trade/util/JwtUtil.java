@@ -2,11 +2,12 @@ package com.lobster.trade.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,11 +48,11 @@ public class JwtUtil {
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + (STATIC_EXPIRE != null ? STATIC_EXPIRE : 86400000L));
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(now)
-                .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS256, STATIC_SECRET)
+                .claims(claims)
+                .subject(subject)
+                .issuedAt(now)
+                .expiration(expireDate)
+                .signWith(Keys.hmacShaKeyFor(STATIC_SECRET.getBytes(StandardCharsets.UTF_8)))
                 .compact();
     }
 
@@ -59,19 +60,20 @@ public class JwtUtil {
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + expire);
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(now)
-                .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .claims(claims)
+                .subject(subject)
+                .issuedAt(now)
+                .expiration(expireDate)
+                .signWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
                 .compact();
     }
 
     private Claims parseToken(String token) {
         return Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(token)
-                .getBody();
+                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     public boolean isTokenExpired(String token) {
@@ -98,9 +100,10 @@ public class JwtUtil {
         }
         try {
             Claims claims = Jwts.parser()
-                    .setSigningKey(STATIC_SECRET)
-                    .parseClaimsJws(token)
-                    .getBody();
+                    .verifyWith(Keys.hmacShaKeyFor(STATIC_SECRET.getBytes(StandardCharsets.UTF_8)))
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
             return Long.parseLong(claims.getSubject());
         } catch (Exception e) {
             return null;
@@ -114,9 +117,10 @@ public class JwtUtil {
         }
         try {
             Claims claims = Jwts.parser()
-                    .setSigningKey(STATIC_SECRET)
-                    .parseClaimsJws(token)
-                    .getBody();
+                    .verifyWith(Keys.hmacShaKeyFor(STATIC_SECRET.getBytes(StandardCharsets.UTF_8)))
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
             Map<String, Object> map = new HashMap<>();
             map.put("userId", claims.get("userId"));
             map.put("adminId", claims.get("adminId"));

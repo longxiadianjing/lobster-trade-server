@@ -156,7 +156,10 @@ public class AdminServiceImpl implements AdminService {
             BigDecimal newBalance = new BigDecimal(body.get("balance").toString());
             user.setBalance(newBalance);
             // 同步更新 Wallet 表
-            com.lobster.trade.model.entity.Wallet wallet = walletMapper.selectById(id);
+            com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<com.lobster.trade.model.entity.Wallet> wq =
+                new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<>();
+            wq.eq(com.lobster.trade.model.entity.Wallet::getUserId, id);
+            com.lobster.trade.model.entity.Wallet wallet = walletMapper.selectOne(wq);
             if (wallet != null) {
                 wallet.setBalance(newBalance);
                 walletMapper.updateById(wallet);

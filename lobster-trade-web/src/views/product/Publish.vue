@@ -350,7 +350,7 @@ onMounted(async () => {
   try {
     const res = await getGameList()
     if (res.data && res.data.length > 0) {
-      gameOptions.value = res.data.map(g => ({ id: g.id, name: g.gameName }))
+      gameOptions.value = res.data.map(g => ({ id: g.id, gameName: g.gameName }))
     }
   } catch (e) {
     console.error('加载游戏列表失败:', e)

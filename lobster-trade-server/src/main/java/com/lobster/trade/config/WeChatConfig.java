@@ -44,6 +44,9 @@ public class WeChatConfig {
     /** 是否启用 */
     private boolean enabled = true;
 
+    /** APIv3 私钥内容（直接注入） */
+    private String privateKey;
+
     /** 懒加载私钥内容 */
     private String privateKeyCache;
 
@@ -63,6 +66,7 @@ public class WeChatConfig {
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
     public String getPrivateKeyPath() { return privateKeyPath; }
     public void setPrivateKeyPath(String privateKeyPath) { this.privateKeyPath = privateKeyPath; }
+    public void setPrivateKey(String privateKey) { this.privateKey = privateKey; if (privateKey != null && !privateKey.isEmpty()) this.privateKeyCache = privateKey; }
 
     /**
      * 获取私钥内容（从文件懒加载，只读一次）

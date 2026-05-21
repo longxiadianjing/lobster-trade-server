@@ -1,0 +1,120 @@
+version: '3.8'
+
+services:
+  # MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: lobster-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root123}
+      MYSQL_DATABASE: lobster_trade
+      MYSQL_USER: lobster
+      MYSQL_PASSWORD: ${DB_PASSWORD:-lobster123}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - lobster-net
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: lobster-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - lobster-net
+
+  # 后端服务
+  server:
+    image: eclipse-temurin:17-jre-alpine
+    container_name: lobster-server
+    working_dir: /app
+    copy:
+      - lobster-trade-server/target/lobster-trade-server-1.0.0-SNAPSHOT.jar:/app/app.jar
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=lobster_trade
+      - DB_USERNAME=lobster
+      - DB_PASSWORD=${DB_PASSWORD:-lobster123}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=${JWT_SECRET}
+      - PAYMENT_SECRET=${PAYMENT_SECRET}
+      - ALIPAY_ENABLED=${ALIPAY_ENABLED:-false}
+      - ALIPAY_APP_ID=${ALIPAY_APP_ID}
+      - ALIPAY_PRIVATE_KEY=${ALIPAY_PRIVATE_KEY}
+      - ALIPAY_PUBLIC_KEY=${ALIPAY_PUBLIC_KEY}
+      - ALIPAY_NOTIFY_URL=${ALIPAY_NOTIFY_URL}
+      - ALIPAY_RETURN_URL=${ALIPAY_RETURN_URL}
+      - ALIPAY_SANDBOX=${ALIPAY_SANDBOX:-false}
+      - WECHAT_ENABLED=${WECHAT_ENABLED:-false}
+      - WECHAT_APP_ID=${WECHAT_APP_ID}
+      - WECHAT_MCH_ID=${WECHAT_MCH_ID}
+      - WECHAT_PRIVATE_KEY=${WECHAT_PRIVATE_KEY}
+      - WECHAT_CERT_SERIAL_NO=${WECHAT_CERT_SERIAL_NO}
+      - WECHAT_NOTIFY_URL=${WECHAT_NOTIFY_URL}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - redis
+    restart: unless-stopped
+    networks:
+      - lobster-net
+
+  # 用户端前端
+  web:
+    image: nginx:alpine
+    container_name: lobster-web
+    copy:
+      - lobster-trade-web/dist:/usr/share/nginx/html
+      - nginx-web.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    restart: unless-stopped
+    networks:
+      - lobster-net
+
+  # 管理后台前端
+  admin:
+    image: nginx:alpine
+    container_name: lobster-admin
+    copy:
+      - lobster-trade-admin/dist:/usr/share/nginx/html
+      - nginx-admin.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "81:80"
+    restart: unless-stopped
+    networks:
+      - lobster-net
+
+  # H5前端
+  h5:
+    image: nginx:alpine
+    container_name: lobster-h5
+    copy:
+      - lobster-trade-h5/dist:/usr/share/nginx/html
+      - nginx-h5.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    networks:
+      - lobster-net
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  lobster-net:
+    driver: bridge

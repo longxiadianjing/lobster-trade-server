@@ -1,22 +1,156 @@
 @media (max-width: 768px) {
-  /* 顶部导航 */
-  .site-header .header-inner { padding: 0 12px; }
-  .site-header .nav-links { display: none; }
-  .site-header .search-box { width: 100%; margin: 0 12px; }
+  /* ==================== 通用 ==================== */
+  * { font-size: 14px !important; }
 
-  /* 首页 */
-  .product-grid { grid-template-columns: repeat(1, 1fr) !important; }
-  .product-card .product-info { padding: 8px; }
+  /* ==================== 顶部导航 ==================== */
+  .site-header .header-inner { padding: 0 12px; height: 50px; }
+  .site-header .nav-links { display: none !important; }
+  .site-header .search-box { display: none; }
+  .site-header .logo-text { display: none; }
+  .site-header .logo-icon { font-size: 22px; }
+  .site-header .header-center { display: none; }
+  .site-header .header-actions { gap: 8px; }
+  .site-header .header-divider { display: none; }
 
-  /* 商品详情 */
-  .detail-container .product-image img { width: 100%; border-radius: 0; }
-  .detail-container .action-bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 12px 16px; background: #fff; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 100; }
+  /* ==================== Hero 横幅 ==================== */
+  .hero-banner {
+    border-radius: 12px;
+    padding: 24px 20px !important;
+    min-height: auto !important;
+    flex-direction: column;
+    gap: 20px !important;
+    margin-bottom: 16px;
+  }
+  .hero-deco { display: none; }
+  .hero-content {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 20px !important;
+  }
+  .hero-right { width: 100%; }
+  .hero-guarantees { width: 100% !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+  .hero-badge { font-size: 12px !important; padding: 4px 10px !important; margin-bottom: 12px !important; }
+  .hero-title { font-size: 22px !important; letter-spacing: -0.3px !important; }
+  .hero-sub { font-size: 13px !important; margin-bottom: 16px !important; }
+  .hero-ctas { flex-direction: row !important; gap: 10px !important; width: 100%; }
+  .hero-btn-primary, .hero-btn-sell { font-size: 14px !important; padding: 8px 16px !important; height: 38px !important; }
+  .hero-right { display: flex !important; width: 100% !important; min-width: unset !important; }
+  .hero-guarantees { grid-template-columns: repeat(4, 1fr) !important; gap: 8px !important; width: 100% !important; }
+  .hero-guarantee-item { flex-direction: column !important; align-items: center !important; padding: 10px 6px !important; gap: 6px !important; text-align: center !important; }
+  .hg-icon { width: 36px !important; height: 36px !important; }
+  .hg-text { width: 100% !important; }
+  .hg-title { font-size: 12px !important; margin-bottom: 1px !important; }
+  .hg-sub { display: none !important; }
 
-  /* 订单中心 */
-  .order-tabs .el-tabs__nav { white-space: nowrap; overflow-x: auto; }
+  /* ==================== 区块标题 ==================== */
+  .section { margin-bottom: 20px; }
+  .section-header { margin-bottom: 12px; }
+  .section-title { font-size: 16px !important; }
+  .section-title .el-icon { font-size: 16px !important; }
 
-  /* 钱包 */
-  .wallet-balance-card { padding: 16px !important; }
-  .wallet-balance-card .balance-amount { font-size: 28px !important; }
-  .transaction-item .tx-desc { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* ==================== 商品网格 ==================== */
+  .product-grid, .hot-product-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+  .card-image { height: 110px !important; }
+  .card-body { padding: 8px !important; }
+  .product-title { font-size: 12px !important; margin-bottom: 4px !important; }
+  .price { font-size: 16px !important; }
+  .price-sign { font-size: 12px !important; }
+  .unit { font-size: 11px !important; }
+  .product-tags { margin-bottom: 4px !important; }
+  .card-bottom { margin-bottom: 4px !important; }
+  .seller-name { max-width: 70px !important; }
+  .type-tag { font-size: 10px !important; padding: 1px 5px !important; }
+
+  /* ==================== 页面容器 ==================== */
+  .page-layout .page-body { padding: 12px 12px !important; }
+  .page-main { padding: 0 !important; }
+  .el-row { margin-left: 0 !important; margin-right: 0 !important; }
+  .el-col { padding-left: 4px !important; padding-right: 4px !important; }
+
+  /* ==================== 卡片 ==================== */
+  .el-card { border-radius: 10px !important; }
+
+  /* ==================== 按钮 ==================== */
+  .el-button { font-size: 13px !important; padding: 8px 14px !important; height: 36px !important; }
+  .el-button--large { font-size: 14px !important; height: 42px !important; }
+
+  /* ==================== 表单 ==================== */
+  .el-form-item { margin-bottom: 14px !important; }
+  .el-input { font-size: 14px !important; }
+  .el-select { width: 100% !important; }
+
+  /* ==================== 订单页 ==================== */
+  .order-tabs .el-tabs__nav { white-space: nowrap !important; overflow-x: auto !important; display: flex !important; }
+  .order-tabs .el-tabs__item { font-size: 13px !important; padding: 0 12px !important; }
+  .order-card { padding: 12px !important; }
+  .order-card .order-title { font-size: 12px !important; }
+  .order-card .product-title { font-size: 13px !important; }
+
+  /* ==================== 商品详情 ==================== */
+  .detail-container { padding: 0 !important; }
+  .detail-container .product-image img { width: 100% !important; border-radius: 0 !important; }
+  .detail-container .action-bar {
+    position: fixed !important;
+    bottom: 0 !important; left: 0 !important; right: 0 !important;
+    padding: 10px 14px !important;
+    background: #fff !important;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.12) !important;
+    z-index: 100 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+  .detail-container .action-bar .el-button { flex: 1 !important; }
+  .detail-info { padding: 12px !important; }
+  .detail-info .price { font-size: 24px !important; }
+  .detail-info .product-title { font-size: 16px !important; }
+
+  /* ==================== 钱包 ==================== */
+  .wallet-balance-card { padding: 16px !important; border-radius: 12px !important; margin-bottom: 14px !important; }
+  .wallet-balance-card .balance-amount { font-size: 26px !important; }
+  .wallet-balance-card .balance-label { font-size: 12px !important; }
+  .wallet-actions { flex-direction: row !important; gap: 10px !important; }
+  .wallet-actions .el-button { flex: 1 !important; height: 40px !important; font-size: 14px !important; }
+  .transaction-item { padding: 10px 0 !important; }
+  .transaction-item .tx-desc { max-width: 100px !important; font-size: 12px !important; }
+  .transaction-item .tx-time { font-size: 11px !important; }
+  .transaction-item .tx-amount { font-size: 14px !important; }
+
+  /* ==================== 用户中心 ==================== */
+  .user-profile-card { padding: 16px !important; }
+  .user-profile-card .nickname { font-size: 18px !important; }
+  .user-stats { gap: 0 !important; justify-content: space-around !important; }
+  .user-stats .stat-item { font-size: 12px !important; }
+
+  /* ==================== 底部 Tab ==================== */
+  .bottom-tab-bar { display: flex !important; }
+
+  /* ==================== 弹窗 ==================== */
+  .el-dialog { width: 92% !important; margin: 0 auto !important; border-radius: 12px !important; }
+  .el-dialog__body { padding: 16px !important; font-size: 14px !important; }
+  .el-dialog__header { padding: 14px 16px !important; }
+  .el-message-box { width: 90% !important; }
+
+  /* ==================== 头像 ==================== */
+  .user-avatar-link .el-avatar { width: 28px !important; height: 28px !important; }
+
+  /* ==================== 收藏/足迹 ==================== */
+  .favorites-grid, .history-list { padding: 0 !important; }
+  .favorites-item { margin-bottom: 10px !important; }
+
+  /* ==================== 客服 ==================== */
+  .customer-service-btn { width: 44px !important; height: 44px !important; bottom: 70px !important; right: 12px !important; }
+
+  /* ==================== 地图/列表筛选 ==================== */
+  .filter-bar { flex-wrap: wrap !important; gap: 6px !important; }
+  .filter-bar .el-select { width: calc(50% - 3px) !important; font-size: 12px !important; }
+
+  /* ==================== 进度条/徽章 ==================== */
+  .el-tag { font-size: 11px !important; padding: 0 6px !important; }
+  .el-badge__content { font-size: 10px !important; }
+
+  /* ==================== 空状态 ==================== */
+  .empty-state { padding: 40px 0 !important; }
+  .empty-state .empty-icon { font-size: 48px !important; }
+  .empty-state p { font-size: 14px !important; }
 }

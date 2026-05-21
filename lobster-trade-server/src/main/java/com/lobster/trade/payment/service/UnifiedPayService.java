@@ -4,7 +4,6 @@ import com.lobster.trade.payment.config.PayChannelConfig;
 import com.lobster.trade.payment.entity.*;
 import com.lobster.trade.payment.service.PaymentGateway;
 import com.lobster.trade.payment.util.PaymentSignatureUtil;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,6 @@ import java.util.Map;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class UnifiedPayService {
 
     /** 支付网关映射 */

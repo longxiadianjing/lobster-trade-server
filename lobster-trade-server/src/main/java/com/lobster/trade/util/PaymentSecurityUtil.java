@@ -22,7 +22,7 @@ public class PaymentSecurityUtil {
 
     private static String STATIC_SECRET;
 
-    @javax.annotation.PostConstruct
+    @jakarta.annotation.PostConstruct
     public void init() {
         STATIC_SECRET = paymentSecret;
     }

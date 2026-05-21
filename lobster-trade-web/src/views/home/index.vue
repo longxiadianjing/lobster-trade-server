@@ -566,24 +566,24 @@ onMounted(() => {
 
 .hero-content { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 40px; }
 .hero-left { flex: 1; }
-.hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233, 69, 96, 0.25); border: 1px solid rgba(233, 69, 96, 0.4); border-radius: 20px; padding: 6px 14px; font-size: 13px; margin-bottom: 18px; color: #ff9eb5; }
-.hero-title { font-size: 32px; font-weight: 800; margin: 0 0 12px; line-height: 1.3; }
-.hero-title .highlight { color: #f0d060; text-shadow: none; }
-.hero-sub { font-size: 15px; margin: 0 0 28px; opacity: 0.75; line-height: 1.6; color: rgba(255,255,255,0.8); }
+.hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233, 69, 96, 0.35); border: 1.5px solid #e94560; border-radius: 20px; padding: 6px 16px; font-size: 14px; margin-bottom: 18px; color: #ffb3c1; font-weight: 600; letter-spacing: 0.5px; box-shadow: 0 0 16px rgba(233, 69, 96, 0.25); }
+.hero-title { font-size: 34px; font-weight: 900; margin: 0 0 12px; line-height: 1.25; color: #ffffff; letter-spacing: -0.5px; text-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+.hero-title .highlight { color: #ffd700; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5); font-weight: 900; }
+.hero-sub { font-size: 16px; margin: 0 0 28px; line-height: 1.7; color: rgba(255,255,255,0.9); font-weight: 500; letter-spacing: 0.3px; }
 .hero-ctas { display: flex; gap: 14px; }
-.hero-btn-primary { background: #f0a500; border: none; color: #fff; font-weight: 700; box-shadow: 0 4px 16px rgba(240, 165, 0, 0.4); }
-.hero-btn-primary:hover { background: #e09600; box-shadow: 0 0 24px rgba(240,165,0,0.4); }
-.hero-btn-sell { background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.4); color: #fff; font-weight: 600; }
-.hero-btn-sell:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.6); }
+.hero-btn-primary { background: #f0a500; border: none; color: #fff; font-weight: 800; box-shadow: 0 4px 20px rgba(240, 165, 0, 0.5); letter-spacing: 1px; }
+.hero-btn-primary:hover { background: #ffb800; box-shadow: 0 0 28px rgba(255, 184, 0, 0.6); transform: translateY(-2px); }
+.hero-btn-sell { background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.5); color: #fff; font-weight: 700; backdrop-filter: blur(4px); }
+.hero-btn-sell:hover { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.8); transform: translateY(-2px); }
 
 .hero-right { flex-shrink: 0; min-width: 200px; }
 .hero-guarantees { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 360px; }
-.hero-guarantee-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: rgba(233, 69, 96, 0.08); border: 1px solid rgba(233, 69, 96, 0.2); border-radius: 12px; backdrop-filter: blur(4px); transition: all 0.3s; }
-.hero-guarantee-item:hover { border-color: rgba(233,69,96,0.4); background: rgba(233,69,96,0.15); }
-.hg-icon { width: 42px; height: 42px; border-radius: 10px; background: rgba(233, 69, 96, 0.2); display: flex; align-items: center; justify-content: center; color: var(--gold-color); flex-shrink: 0; }
+.hero-guarantee-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: rgba(233, 69, 96, 0.15); border: 1.5px solid rgba(233, 69, 96, 0.35); border-radius: 14px; backdrop-filter: blur(6px); transition: all 0.3s; box-shadow: 0 2px 12px rgba(233, 69, 96, 0.15); }
+.hero-guarantee-item:hover { border-color: rgba(233,69,96,0.6); background: rgba(233,69,96,0.22); box-shadow: 0 4px 20px rgba(233, 69, 96, 0.25); transform: translateY(-1px); }
+.hg-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(233, 69, 96, 0.30); border: 1.5px solid rgba(233, 69, 96, 0.5); display: flex; align-items: center; justify-content: center; color: #ffd700; flex-shrink: 0; box-shadow: 0 0 12px rgba(233, 69, 96, 0.2); }
 .hg-text { flex: 1; }
-.hg-title { margin: 0 0 2px; font-size: 13px; font-weight: 700; color: #fff; }
-.hg-sub { margin: 0; font-size: 11px; color: rgba(255, 255, 255, 0.6); }
+.hg-title { margin: 0 0 3px; font-size: 14px; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; }
+.hg-sub { margin: 0; font-size: 12px; color: rgba(255, 255, 255, 0.80); font-weight: 500; }
 
 /* 区块通用 */
 .section { margin-bottom: 32px; }

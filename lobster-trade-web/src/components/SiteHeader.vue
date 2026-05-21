@@ -26,7 +26,9 @@
             </el-button>
           </el-badge>
           <router-link to="/user" class="user-avatar-link">
-            <el-avatar :size="32">{{ userStore.nickname?.charAt(0) || '我' }}</el-avatar>
+            <el-avatar :size="32" :src="userStore.avatar">
+              {{ userStore.avatar ? '' : (userStore.nickname?.charAt(0) || '我') }}
+            </el-avatar>
           </router-link>
         </template>
         <template v-else>
