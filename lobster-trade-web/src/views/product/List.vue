@@ -624,9 +624,9 @@ const resetFilters = () => {
 :deep(.game-tag.el-tag--primary) {
   background: linear-gradient(135deg, #667eea, #764ba2) !important;
   border-color: transparent !important;
-  color: #667eea !important;
+  color: #ffffff !important;
   font-weight: 700 !important;
-  box-shadow: 0 3px 10px rgba(233,69,96,0.35) !important;
+  box-shadow: 0 3px 10px rgba(102,126,234,0.4) !important;
 }
 
 .type-wrap {

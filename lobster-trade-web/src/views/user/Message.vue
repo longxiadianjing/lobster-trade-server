@@ -76,8 +76,8 @@
                   <div class="msg-content">{{ msg.content }}</div>
                   <div class="msg-footer">
                     <span class="msg-time">{{ formatTime(msg.createTime) }}</span>
-                    <el-button v-if="msg.linkUrl" type="primary" link size="small" @click.stop="handleMsgAction(msg)">
-                      查看详情
+                    <el-button v-if="msg.linkUrl" type="danger" link size="small" @click.stop="handleMsgAction(msg)">
+                      查看详情 →
                     </el-button>
                   </div>
                 </div>
@@ -122,8 +122,8 @@
                   <div class="msg-content">{{ msg.content }}</div>
                   <div class="msg-footer">
                     <span class="msg-time">{{ formatTime(msg.createTime) }}</span>
-                    <el-button v-if="msg.linkUrl" type="primary" link size="small" @click.stop="handleMsgAction(msg)">
-                      查看详情
+                    <el-button v-if="msg.linkUrl" type="danger" link size="small" @click.stop="handleMsgAction(msg)">
+                      查看详情 →
                     </el-button>
                   </div>
                 </div>
@@ -168,8 +168,8 @@
                   <div class="msg-content">{{ msg.content }}</div>
                   <div class="msg-footer">
                     <span class="msg-time">{{ formatTime(msg.createTime) }}</span>
-                    <el-button v-if="msg.linkUrl" type="primary" link size="small" @click.stop="handleMsgAction(msg)">
-                      查看详情
+                    <el-button v-if="msg.linkUrl" type="danger" link size="small" @click.stop="handleMsgAction(msg)">
+                      查看详情 →
                     </el-button>
                   </div>
                 </div>
@@ -214,8 +214,8 @@
                   <div class="msg-content">{{ msg.content }}</div>
                   <div class="msg-footer">
                     <span class="msg-time">{{ formatTime(msg.createTime) }}</span>
-                    <el-button v-if="msg.linkUrl" type="primary" link size="small" @click.stop="handleMsgAction(msg)">
-                      查看详情
+                    <el-button v-if="msg.linkUrl" type="danger" link size="small" @click.stop="handleMsgAction(msg)">
+                      查看详情 →
                     </el-button>
                   </div>
                 </div>
@@ -579,6 +579,14 @@ onMounted(() => {
 
 .msg-actions {
   flex-shrink: 0;
+}
+
+.msg-actions :deep(.el-button--danger.is-link) {
+  color: #b91c1c !important;
+  font-weight: 700 !important;
+}
+.msg-actions :deep(.el-button--danger.is-link:hover) {
+  color: #991b1b !important;
 }
 
 .loading-wrap {

@@ -59,6 +59,7 @@ com\lobster\trade\payment\service\impl\MockPayGateway.class
 com\lobster\trade\mapper\HotSearchWordMapper.class
 com\lobster\trade\service\impl\FavoriteServiceImpl.class
 com\lobster\trade\service\TradeReviewService.class
+com\lobster\trade\util\AliyunSmsUtil.class
 com\lobster\trade\mapper\RiskControlLogMapper.class
 com\lobster\trade\service\WeChatPayService.class
 com\lobster\trade\config\AdminContext.class
@@ -97,6 +98,7 @@ com\lobster\trade\model\request\SmsSendRequest.class
 com\lobster\trade\payment\util\PaymentSignatureUtil.class
 com\lobster\trade\service\OrderProgressService.class
 com\lobster\trade\util\RateLimitUtil.class
+com\lobster\trade\controller\admin\AdminSmsConfigController.class
 com\lobster\trade\controller\NotificationApiController.class
 com\lobster\trade\model\entity\User.class
 com\lobster\trade\mapper\UserMapper.class
@@ -116,6 +118,7 @@ com\lobster\trade\scheduler\OrderScheduler.class
 com\lobster\trade\mapper\ProductMapper.class
 com\lobster\trade\service\impl\OrderServiceImpl.class
 com\lobster\trade\service\AlipayService.class
+com\lobster\trade\config\FixFactoryBeanTypePostProcessor.class
 com\lobster\trade\controller\CertificationController$CertificationApplyRequest.class
 com\lobster\trade\controller\admin\CsAdminController$CsAdminMessageRequest.class
 com\lobster\trade\payment\entity\PayCallbackResponse.class
@@ -150,6 +153,7 @@ com\lobster\trade\model\entity\UserLoginDevice.class
 com\lobster\trade\model\response\ProductDetailVO.class
 com\lobster\trade\mapper\CouponMapper.class
 com\lobster\trade\util\PasswordEncoder.class
+com\lobster\trade\config\MyBatisConfig.class
 com\lobster\trade\controller\StatsApiController.class
 com\lobster\trade\controller\AuthController.class
 com\lobster\trade\config\WeChatConfig.class
@@ -177,6 +181,7 @@ com\lobster\trade\service\impl\ImPushServiceImpl.class
 com\lobster\trade\model\response\OrderRecognizeVO.class
 com\lobster\trade\controller\admin\AdminCertificationController$CertificationReviewRequest.class
 com\lobster\trade\payment\service\PaymentGateway.class
+com\lobster\trade\config\MyBatisFixConfig.class
 com\lobster\trade\model\response\CsSessionVO.class
 com\lobster\trade\mapper\SysNotificationMapper.class
 com\lobster\trade\payment\entity\PayResponse.class

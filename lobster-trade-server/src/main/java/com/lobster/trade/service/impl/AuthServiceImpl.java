@@ -12,6 +12,7 @@ import com.lobster.trade.model.request.*;
 import com.lobster.trade.model.response.LoginResponse;
 import com.lobster.trade.service.AuthService;
 import com.lobster.trade.service.SecurityCenterService;
+import com.lobster.trade.util.AliyunSmsUtil;
 import com.lobster.trade.util.JwtUtil;
 import com.lobster.trade.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
     private final SecurityCenterService securityCenterService;
     private final SmsCodeMapper smsCodeMapper;
     private final JwtUtil jwtUtil;
+    private final AliyunSmsUtil aliyunSmsUtil;
     private final RedisTemplate<String, String> redisTemplate;
 
     /** 短信验证码有效期（分钟） */
@@ -66,14 +68,15 @@ public class AuthServiceImpl implements AuthService {
         // 生成验证码
         String code = generateSmsCode();
 
-        // 存储到Redis（生产环境建议用Redis）
+        // 存储到Redis
         String cacheKey = "sms:code:" + phone + ":" + type;
         redisTemplate.opsForValue().set(cacheKey, code, SMS_CODE_EXPIRE_MINUTES, TimeUnit.MINUTES);
 
-        // TODO: 调用第三方短信API发送真实短信
-        // 调试期间验证码固定为 123456，方便前端测试
-        code = "123456";
-        log.info("[模拟短信] 发送给 {} 的验证码：{}，类型：{}", phone, code, type);
+        // 通过阿里云短信发送真实验证码
+        boolean smsSent = aliyunSmsUtil.sendVerifyCode(phone, code);
+        if (!smsSent) {
+            log.warn("[短信] 阿里云发送失败，手机号={}，验证码={}（已存入Redis，仍可用于测试）", phone, code);
+        }
 
         // 也存入数据库便于校验
         SmsCode smsCode = new SmsCode();

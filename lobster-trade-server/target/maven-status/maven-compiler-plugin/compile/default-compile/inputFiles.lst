@@ -11,6 +11,7 @@ C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobste
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\controller\FavoriteController.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\entity\AdminRole.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\payment\service\PaymentGateway.java
+C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\controller\admin\AdminSmsConfigController.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\entity\CsMessage.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\entity\SmsCode.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\impl\CsServiceImpl.java
@@ -66,6 +67,7 @@ C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobste
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\controller\AnnouncementApiController.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\payment\util\PaymentCryptoUtil.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\entity\ProductCategory.java
+C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\util\AliyunSmsUtil.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\PaymentService.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\aspect\PermissionAspect.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\request\RechargeRequest.java
@@ -78,6 +80,7 @@ C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobste
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\mapper\DisputeTicketMapper.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\controller\admin\AuditLogController.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\aspect\AuditLogAspect.java
+C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\config\FixFactoryBeanTypePostProcessor.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\controller\admin\HotSearchWordController.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\request\CsStartRequest.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\controller\FileUploadController.java
@@ -129,6 +132,7 @@ C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobste
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\config\SpaFallbackController.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\mapper\AdminRoleMapper.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\entity\BankCardBinding.java
+C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\config\MyBatisFixConfig.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\payment\entity\PayChannel.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\request\CsMessageRequest.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\request\SmsSendRequest.java
@@ -240,6 +244,7 @@ C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobste
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\entity\RiskControlLog.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\model\request\LoginRequest.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\WeChatPayService.java
+C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\config\MyBatisConfig.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\AlipayService.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\impl\DisputeServiceImpl.java
 C:\Users\Administrator\.openclaw\workspace\projects\龙虾道具交易平台\code\lobster-trade-server\src\main\java\com\lobster\trade\service\impl\HotSearchWordServiceImpl.java

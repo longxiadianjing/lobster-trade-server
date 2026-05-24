@@ -179,6 +179,31 @@ img { max-width: 100%; }
   color: #e94560 !important;
 }
 
+/* Radio */
+.el-radio__input.is-checked .el-radio__inner {
+  background-color: #e94560 !important;
+  border-color: #e94560 !important;
+}
+.el-radio__input.is-checked .el-radio__inner::after {
+  background-color: white !important;
+}
+.el-radio__label {
+  color: #374151 !important;
+  font-weight: 600 !important;
+}
+.el-radio__input.is-checked + .el-radio__label {
+  color: #e94560 !important;
+  font-weight: 700 !important;
+}
+.el-radio {
+  margin-right: 16px;
+}
+.el-radio__inner {
+  width: 18px !important;
+  height: 18px !important;
+  border-width: 2px !important;
+}
+
 /* 输入框 */
 .el-input__wrapper {
   background-color: #ffffff !important;

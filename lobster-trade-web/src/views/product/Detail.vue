@@ -1473,7 +1473,7 @@ onUnmounted(() => {
   font-size: 12px; font-weight: 600; color: #333;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 4px;
 }
-.similar-game { font-size: 11px; color: #999; }
+.similar-game { font-size: 12px; font-weight: 600; color: #667eea; }
 
 /* ========== 商品描述 ========== */
 .description-section {

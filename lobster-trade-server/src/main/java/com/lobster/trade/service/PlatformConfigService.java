@@ -11,4 +11,8 @@ public interface PlatformConfigService {
     Map<String, String> getPaymentConfig();
 
     void savePaymentConfig(Map<String, String> config);
+
+    Map<String, String> getSmsConfig();
+
+    void saveSmsConfig(Map<String, String> config);
 }

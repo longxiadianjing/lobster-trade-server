@@ -620,9 +620,11 @@ onMounted(() => {
 }
 
 .p-meta span {
-  background: #f5f6f7;
-  padding: 1px 6px;
-  border-radius: 3px;
+  background: rgba(102,126,234,0.08);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 700;
+  color: #667eea;
 }
 
 .p-price {

@@ -22,13 +22,18 @@ spring:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  mapper-locations: classpath*:/mapper/**/*.xml
-  type-aliases-package: com.lobster.trade.model.entity
 
 jwt:
   secret: ${JWT_SECRET:lobster-trade-jwt-secret-key-2024-dev-only}
   expire: ${JWT_EXPIRE:86400000}
+
+aliyun:
+  sms:
+    access-key-id: ${ALIYUN_ACCESS_KEY_ID:}
+    access-key-secret: ${ALIYUN_ACCESS_KEY_SECRET:}
+    sign-name: ${ALIYUN_SMS_SIGN_NAME:龙虾道具交易平台}
+    template-code: ${ALIYUN_SMS_TEMPLATE_CODE:}
+    endpoint: dysmsapi.aliyuncs.com
 
 server:
   port: 8080

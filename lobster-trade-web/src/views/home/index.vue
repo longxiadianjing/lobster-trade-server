@@ -544,7 +544,7 @@ onMounted(() => {
 .game-tab { padding: 12px 24px; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; color: #666; display: flex; align-items: center; gap: 6px; }
 .game-tab:hover { color: #667eea; background: rgba(102,126,234,0.08); }
 .game-tab.active { border-bottom-color: #667eea; color: #667eea; }
-.game-tab-name { font-size: 14px; font-weight: 500; }
+.game-tab-name { font-size: 14px; font-weight: 700; color: #1a1a1a; }
 .game-tab-icon { font-size: 18px; }
 
 /* 主体内容 */
@@ -619,7 +619,7 @@ onMounted(() => {
 .card-body { padding: 12px; }
 .product-title { margin: 0 0 8px; font-size: 13px; color: #1a1a1a; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
 .product-tags { margin-bottom: 8px; }
-.game-tag { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; color: #667eea; background: rgba(102,126,234,0.1); padding: 2px 6px; border-radius: 3px; }
+.game-tag { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 700; color: #667eea; background: rgba(102,126,234,0.12); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(102,126,234,0.2); }
 .card-bottom { margin-bottom: 8px; }
 .price-wrap { display: flex; align-items: baseline; }
 .price-sign { font-size: 13px; font-weight: 700; color: #e94560; }

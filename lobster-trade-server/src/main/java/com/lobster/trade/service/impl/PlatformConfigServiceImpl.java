@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +38,14 @@ public class PlatformConfigServiceImpl implements PlatformConfigService {
     private static final String WECHAT_NOTIFY_URL = "wechat_notify_url";
     private static final String WECHAT_ENABLED = "wechat_enabled";
 
+    // 阿里云短信配置 Key 常量
+    private static final String ALIYUN_SMS_ACCESS_KEY_ID = "aliyun_sms_access_key_id";
+    private static final String ALIYUN_SMS_ACCESS_KEY_SECRET = "aliyun_sms_access_key_secret";
+    private static final String ALIYUN_SMS_SIGN_NAME = "aliyun_sms_sign_name";
+    private static final String ALIYUN_SMS_TEMPLATE_CODE = "aliyun_sms_template_code";
+    private static final String ALIYUN_SMS_TEMPLATE_PARAM_JSON = "aliyun_sms_template_param_json";
+    private static final String ALIYUN_SMS_ENABLED = "aliyun_sms_enabled";
+
     @Override
     public String getValue(String key) {
         LambdaQueryWrapper<PlatformConfig> q = new LambdaQueryWrapper<>();
@@ -57,11 +66,14 @@ public class PlatformConfigServiceImpl implements PlatformConfigService {
             config.setConfigName(name);
             config.setConfigDesc(desc);
             config.setConfigValue(value);
+            config.setCreateTime(LocalDateTime.now());
+            config.setUpdateTime(LocalDateTime.now());
             platformConfigMapper.insert(config);
         } else {
             config.setConfigValue(value);
             if (StringUtils.hasText(name)) config.setConfigName(name);
             if (StringUtils.hasText(desc)) config.setConfigDesc(desc);
+            config.setUpdateTime(LocalDateTime.now());
             platformConfigMapper.updateById(config);
         }
     }
@@ -88,6 +100,18 @@ public class PlatformConfigServiceImpl implements PlatformConfigService {
     }
 
     @Override
+    public Map<String, String> getSmsConfig() {
+        Map<String, String> map = new HashMap<>();
+        map.put(ALIYUN_SMS_ACCESS_KEY_ID, getValue(ALIYUN_SMS_ACCESS_KEY_ID));
+        map.put(ALIYUN_SMS_ACCESS_KEY_SECRET, getValue(ALIYUN_SMS_ACCESS_KEY_SECRET));
+        map.put(ALIYUN_SMS_SIGN_NAME, getValue(ALIYUN_SMS_SIGN_NAME));
+        map.put(ALIYUN_SMS_TEMPLATE_CODE, getValue(ALIYUN_SMS_TEMPLATE_CODE));
+        map.put(ALIYUN_SMS_TEMPLATE_PARAM_JSON, getValue(ALIYUN_SMS_TEMPLATE_PARAM_JSON));
+        map.put(ALIYUN_SMS_ENABLED, getValue(ALIYUN_SMS_ENABLED));
+        return map;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void savePaymentConfig(Map<String, String> config) {
         if (config == null) return;
@@ -109,6 +133,32 @@ public class PlatformConfigServiceImpl implements PlatformConfigService {
                 case WECHAT_CERT_CONTENT -> name = "微信证书内容";
                 case WECHAT_NOTIFY_URL -> name = "微信异步回调地址";
                 case WECHAT_ENABLED -> name = "微信启用状态";
+                case ALIYUN_SMS_ACCESS_KEY_ID -> name = "阿里云AccessKeyId";
+                case ALIYUN_SMS_ACCESS_KEY_SECRET -> name = "阿里云AccessKeySecret";
+                case ALIYUN_SMS_SIGN_NAME -> name = "阿里云短信签名";
+                case ALIYUN_SMS_TEMPLATE_CODE -> name = "阿里云模板CODE";
+                case ALIYUN_SMS_TEMPLATE_PARAM_JSON -> name = "阿里云模板参数JSON";
+                case ALIYUN_SMS_ENABLED -> name = "阿里云短信启用状态";
+            }
+            if (name != null) {
+                setValue(key, value, name, desc);
+            }
+        });
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void saveSmsConfig(Map<String, String> config) {
+        if (config == null) return;
+        config.forEach((key, value) -> {
+            String name = null, desc = null;
+            switch (key) {
+                case ALIYUN_SMS_ACCESS_KEY_ID -> name = "阿里云AccessKeyId";
+                case ALIYUN_SMS_ACCESS_KEY_SECRET -> name = "阿里云AccessKeySecret";
+                case ALIYUN_SMS_SIGN_NAME -> name = "阿里云短信签名";
+                case ALIYUN_SMS_TEMPLATE_CODE -> name = "阿里云模板CODE";
+                case ALIYUN_SMS_TEMPLATE_PARAM_JSON -> name = "阿里云模板参数JSON";
+                case ALIYUN_SMS_ENABLED -> name = "阿里云短信启用状态";
             }
             if (name != null) {
                 setValue(key, value, name, desc);

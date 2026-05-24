@@ -291,6 +291,21 @@ a {
   color: var(--theme-text-primary) !important;
 }
 
+/* Radio */
+.el-radio__input.is-checked .el-radio__inner {
+  background-color: var(--theme-accent) !important;
+  border-color: var(--theme-accent) !important;
+}
+.el-radio__input.is-checked .el-radio__inner::after {
+  background-color: white !important;
+}
+.el-radio__label {
+  color: var(--theme-text-primary) !important;
+}
+.el-radio__input.is-checked + .el-radio__label {
+  color: var(--theme-accent) !important;
+}
+
 /* 滚动条 */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--theme-bg-dark); }

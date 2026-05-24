@@ -27,6 +27,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getCurrentUser(Long userId) {
+        if (userId == null) {
+            throw new BusinessException("用户未登录或登录已失效");
+        }
         User user = userMapper.selectById(userId);
         if (user == null) {
             throw new BusinessException("用户不存在");
