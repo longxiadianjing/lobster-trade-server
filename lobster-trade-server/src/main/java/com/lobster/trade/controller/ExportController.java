@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/admin/export")
+@RequestMapping("/api/admin/finance")
 @RequiredArgsConstructor
 public class ExportController {
 

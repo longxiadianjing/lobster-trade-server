@@ -209,6 +209,7 @@ com\lobster\trade\mapper\WithdrawApplicationMapper.class
 com\lobster\trade\controller\admin\AnnouncementController.class
 com\lobster\trade\controller\ImController.class
 com\lobster\trade\service\impl\RealNameVerifyServiceImpl.class
+com\lobster\trade\controller\FinanceController.class
 com\lobster\trade\service\JwtAuthService.class
 com\lobster\trade\model\entity\AdminRole.class
 com\lobster\trade\payment\service\impl\UnifiedPayService$1.class
