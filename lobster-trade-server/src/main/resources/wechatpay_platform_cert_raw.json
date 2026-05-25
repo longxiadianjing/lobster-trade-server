@@ -1,0 +1,15 @@
+{
+  "data": [
+    {
+      "effective_time": "2025-04-23T14:12:49+08:00",
+      "encrypt_certificate": {
+        "algorithm": "AEAD_AES_256_GCM",
+        "associated_data": "certificate",
+        "ciphertext": "LDY3dwZJkN8AEWjIKIzWiPeZb7Ii+wdtxoS8Yax4I7b09E1W9+jj3SgIQnBzUY3SRgGCNJbnyRFLpb+Hg3PFAGD4QXFi57cFi24VX8nXgm93TPUmu8CwklHB47g7464NjtIaAnEhYfaq3dzol5m32CuejOllQpHojWZdHTbwOBZAZjREcsVPUycG6DgP/K2rgtoMU6jxRaGF3wOokujgIrt3/HLjbwj+esyz8WAHuX0ExzhxP2zccE8WnPoUwpQBfqN6E6Gh4LdWUdcIsjGynAWHa74BpTDxBHeGKszpJZKX98AJrB8hrvfCZj8DPV2c3Epb4EcTz0hc/AKfAjvgAh9oOa2VB+KtY3LMemj56dcC/zyPxjmwKGphrSIBfK12LpsE+p1eNmQqSoWXv/dfgMOnyw6dEVgJVI7xYZ6TsA+qXYbq3RZWdsqpWUy453N+YxCXtQ8+dQPfP0C44muNDgzob4JIKYU0EQC/lvz3pAUX5o4h0aaGUm/D6gl+D04ZhV85tzH3DK1nHq74t2U+Qqvw6CidmjWZtFRostVFyHc/Emb26RV3IlESgnwZvr4r+hIuotNtGCRNsUAIUCsKA/FmTJWLssCxryq+Ospge5wbfqrIQnrjIZTbTcEDn33IJs0H4HY/CgyTL189ipWASRcMyioi67hZRW+cVxZiWWP63V4uu73iDfl+0BkckzAuxWGkhwXAf0ir4pGmDeU2tEs6Ife2z7lescdo3roUDK7eCSYmPlpaRxNTeetJiNlHz7Z/W+lL7Ur7mXuDziC3bPqjEDCwuSRkn64Hwi7HLCK0hmZn4NZFbXoLm8ETJlu+P87H/Wp36ZAJoPBt7gX5x8DB8XAbx1FRVjn0hhtyIYtzxhFCUFA2ezftdtzPsyvY2/xbRhBpplbdhff5CGXwAEsXskOVrryKommcewttiVoRKYWjpAh3Tl8foBjittfXD0ztCLDc4qiDL3OsR6GfnZGr7vD6lx+e0W/qXQILq6kXBq/aQiFWHUElrTAOymlhNK7t0DzDkM3wVStBY/nnWGEknvdn+EuT93MrClN6m/fWZzcd51VpUyOEYd+ONdTh5vDJLqtXdfxDThLwtM9EZxF3YZAVfMk2H8+pnxQ5EO8gvVzmouO7ZQfeH87oZL4BjaxWAdcKy0nBEmc8Hn6g7NRdg9bjfrOrxJcG5D+NJ3epkJoIkiPy+swNpJEwswvmy8F5FrpvT5Lj3KPOT0Ny3XkYsIRmuQHMIY8AYawxgW7iQKUIUtIrS/uSgnfF2/9RoRGq/5wnDFSUOplEs1cZD93rcaJzgHKZuZabr414KCpw01O7uJA9yRZ9rHGl+/9mnf/WIErp74Pj1vrqGyEv/g+CEI6uzeDLbIeyY9zMN9gAxxv/zwmYUu7z0U1v1KE6n/FOK8RJzzRYHGgTMzuLd4aYGnm3qVw0eh52Y0Fmrq5pSOR/Qg4MchSZUor3qybWIPJrvktNm8b7rThWF+L+Qid0Yps5dHTBoxuyc/GmQha1qCPgEubYWNgxZzl2sTC3b/OUtSMMKx5kHqcdkwtEzhc6yW8v9Em2S5o8zZpEW/aN0u7mKuf1SRY1nTQ5VhFkaOrcJ2NPf0M2cxPR9QC/L2LreS2ZWJ8X1RVqNNiD23jHNjK7dfPLoYTLutO+f1kmZc8yCiaxVq5CfUk8FHU83XxN0vg0Bphis/q50ZnC8oxcxJHzRyxcM6pJL+wMgMaiPsP0uD0B9k75ZkDWI06Sv8cwjs4SLYJxx5VwIsGBBwIHCYBLjIDHa7MHqam08xEWNC9afxtGEn7bjqGRY0f1xIp5D4oE0DBtCP5ta59AZxv5QCaYlTdP9dRo+YHpOALuXEgQOg+7vaKigmYszSA0fFJgWa3uw06THLv6ymNd09ij9wO8/koOcYhqEubZqOoqPx/LSSIthk6x65BYXp/wCX6ob5Sam3J/lmCTpky5rfDh6oAreLXmGakosBUq1FcaWPqv",
+        "nonce": "c85d3f246931"
+      },
+      "expire_time": "2030-04-22T14:12:49+08:00",
+      "serial_no": "2AB5AE9532590E806F24DEC9616879EC73A21609"
+    }
+  ]
+}

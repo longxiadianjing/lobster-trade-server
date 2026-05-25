@@ -13,6 +13,7 @@ com\lobster\trade\service\StatsService.class
 com\lobster\trade\model\entity\Coupon.class
 com\lobster\trade\payment\config\BankCardProperties.class
 com\lobster\trade\service\impl\ProductRecommendSlotServiceImpl.class
+com\lobster\trade\service\SmsConfigService.class
 com\lobster\trade\mapper\UserLoginDeviceMapper.class
 com\lobster\trade\controller\admin\NotificationController.class
 com\lobster\trade\model\response\OrderRecognizeVO$RecognizedFields.class
@@ -31,6 +32,7 @@ com\lobster\trade\service\AuthService.class
 com\lobster\trade\mapper\ProductCategoryMapper.class
 com\lobster\trade\service\ProductCategoryService.class
 com\lobster\trade\model\entity\ProductRecommendSlot.class
+com\lobster\trade\service\PaymentConfigService.class
 com\lobster\trade\payment\entity\PayRequest.class
 com\lobster\trade\controller\ProductCategoryController.class
 com\lobster\trade\mapper\PlatformConfigMapper.class
@@ -53,6 +55,7 @@ com\lobster\trade\mapper\OrderProgressMapper.class
 com\lobster\trade\common\Result.class
 com\lobster\trade\service\impl\CertificationServiceImpl.class
 com\lobster\trade\payment\config\WeChatPayProperties.class
+com\lobster\trade\service\impl\PaymentConfigServiceImpl.class
 com\lobster\trade\LobsterTradeApplication.class
 com\lobster\trade\service\PlatformConfigService.class
 com\lobster\trade\payment\service\impl\MockPayGateway.class
@@ -239,6 +242,7 @@ com\lobster\trade\model\entity\TradeOrder.class
 com\lobster\trade\util\JwtUtil.class
 com\lobster\trade\controller\OrderProgressController.class
 com\lobster\trade\service\HotSearchWordService.class
+com\lobster\trade\service\impl\SmsConfigServiceImpl.class
 com\lobster\trade\model\entity\Admin.class
 com\lobster\trade\service\ProductService.class
 com\lobster\trade\controller\UserController$ApplyRealNameRequest.class
@@ -251,6 +255,7 @@ com\lobster\trade\service\CsService.class
 com\lobster\trade\service\impl\ImPushServiceImpl$EmitterEntry.class
 com\lobster\trade\controller\FileUploadController.class
 com\lobster\trade\payment\util\PaymentCryptoUtil.class
+com\lobster\trade\controller\SmsConfigController.class
 com\lobster\trade\service\SysNotificationService.class
 com\lobster\trade\controller\admin\StatsController.class
 com\lobster\trade\model\response\ImSessionVO.class
@@ -281,6 +286,7 @@ com\lobster\trade\model\entity\UserCoupon.class
 com\lobster\trade\service\impl\ProductCategoryServiceImpl.class
 com\lobster\trade\model\response\LoginResponse.class
 com\lobster\trade\model\request\AdminProductUpdateRequest.class
+com\lobster\trade\controller\PaymentConfigController.class
 com\lobster\trade\model\entity\GameCategory.class
 com\lobster\trade\model\request\AuditLogRequest.class
 com\lobster\trade\config\JwtAuthenticationFilter.class

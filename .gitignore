@@ -30,3 +30,8 @@ node_modules/
 memory/
 *.png
 *.jpg
+
+# Sensitive keys/certs (never commit)
+*.pem
+*.key
+*.crt

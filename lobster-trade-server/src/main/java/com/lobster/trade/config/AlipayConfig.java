@@ -12,10 +12,14 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "payment.alipay")
 public class AlipayConfig {
 
+    /** 是否启用 */
+    private boolean enabled = false;
+
     private String appId;
     private String privateKey;
     private String alipayPublicKey;
     private String notifyUrl;
+    private String returnUrl;
     private boolean sandbox;
 
     @Bean

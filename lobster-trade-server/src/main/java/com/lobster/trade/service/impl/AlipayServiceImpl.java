@@ -7,9 +7,9 @@ import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.lobster.trade.config.AlipayConfig;
 import com.lobster.trade.mapper.PaymentTransactionMapper;
 import com.lobster.trade.model.entity.PaymentTransaction;
-import com.lobster.trade.payment.config.AlipayProperties;
 import com.lobster.trade.service.AlipayService;
 import com.lobster.trade.service.WalletService;
 import lombok.RequiredArgsConstructor;
@@ -27,15 +27,27 @@ import java.util.Map;
 public class AlipayServiceImpl implements AlipayService {
 
     private final AlipayClient alipayClient;
-    private final AlipayProperties alipayProperties;
+    private final AlipayConfig alipayConfig;
     private final PaymentTransactionMapper paymentMapper;
     private final WalletService walletService;
 
     @Override
     public String createRechargePayment(Long userId, BigDecimal amount, String paymentNo) {
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
-        request.setReturnUrl("http://localhost:5174/payment/result?paymentNo=" + paymentNo);
-        request.setNotifyUrl("http://localhost:8080/api/payment/alipay/notify");
+        // 优先使用数据库配置的回跳地址，未配置时使用默认值
+        String returnUrl = alipayConfig.getReturnUrl();
+        if (returnUrl == null || returnUrl.isEmpty()) {
+            returnUrl = "http://localhost:5174/payment/result?paymentNo=" + paymentNo;
+        } else {
+            returnUrl += (returnUrl.contains("?") ? "&" : "?") + "paymentNo=" + paymentNo;
+        }
+        request.setReturnUrl(returnUrl);
+
+        String notifyUrl = alipayConfig.getNotifyUrl();
+        if (notifyUrl == null || notifyUrl.isEmpty()) {
+            notifyUrl = "http://localhost:8080/api/payment/alipay/notify";
+        }
+        request.setNotifyUrl(notifyUrl);
 
         // 构建业务参数
         String bizContent = "{"
@@ -74,12 +86,12 @@ public class AlipayServiceImpl implements AlipayService {
             outTradeNo, tradeStatus, tradeNo, totalAmount);
 
         // 【安全修复1】必须先验证签名，防止伪造回调
-        if (alipayProperties.getAlipayPublicKey() != null
-                && !alipayProperties.getAlipayPublicKey().isEmpty()) {
+        if (alipayConfig.getAlipayPublicKey() != null
+                && !alipayConfig.getAlipayPublicKey().isEmpty()) {
             try {
                 boolean signValid = AlipaySignature.rsaCheckV2(
                     params,
-                    alipayProperties.getAlipayPublicKey(),
+                    alipayConfig.getAlipayPublicKey(),
                     "UTF-8",
                     "RSA2"
                 );
