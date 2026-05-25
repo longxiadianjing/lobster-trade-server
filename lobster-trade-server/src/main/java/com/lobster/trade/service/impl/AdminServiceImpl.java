@@ -150,6 +150,8 @@ public class AdminServiceImpl implements AdminService {
             throw new BusinessException(ErrorCode.PARAM_INVALID, "用户不存在");
         }
         if (body.get("nickname") != null) user.setNickname((String) body.get("nickname"));
+        if (body.get("email") != null) user.setEmail((String) body.get("email"));
+        if (body.get("phone") != null) user.setPhone((String) body.get("phone"));
         if (body.get("status") != null) user.setStatus((Integer) body.get("status"));
         if (body.get("userLevel") != null) user.setUserLevel((Integer) body.get("userLevel"));
         if (body.get("balance") != null) {
@@ -167,6 +169,22 @@ public class AdminServiceImpl implements AdminService {
         }
         user.setUpdateTime(LocalDateTime.now());
         userMapper.updateById(user);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String resetUserPassword(Long id) {
+        User user = userMapper.selectById(id);
+        if (user == null || user.getIsDeleted() == 1) {
+            throw new BusinessException(ErrorCode.PARAM_INVALID, "用户不存在");
+        }
+        // 生成6位随机密码
+        String rawPwd = String.format("%06d", new java.util.Random().nextInt(999999));
+        String encodedPwd = com.lobster.trade.util.PasswordEncoder.encode(rawPwd);
+        user.setPassword(encodedPwd);
+        user.setUpdateTime(LocalDateTime.now());
+        userMapper.updateById(user);
+        return rawPwd;
     }
 
     // ==================== 订单管理 ====================

@@ -19,6 +19,7 @@ public interface AdminService {
     void banUser(Long userId);
     void unbanUser(Long userId);
     void updateUser(Long id, Map<String, Object> body);
+    String resetUserPassword(Long id);
 
     // 订单管理
     Page<com.lobster.trade.model.entity.TradeOrder> listOrders(String keyword, String status, String tradeType, int page, int size);

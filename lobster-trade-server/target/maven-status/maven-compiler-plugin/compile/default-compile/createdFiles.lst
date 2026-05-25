@@ -19,7 +19,6 @@ com\lobster\trade\controller\admin\NotificationController.class
 com\lobster\trade\model\response\OrderRecognizeVO$RecognizedFields.class
 com\lobster\trade\controller\DebugController.class
 com\lobster\trade\controller\RealNameApiController.class
-com\lobster\trade\controller\ExportController.class
 com\lobster\trade\exception\BusinessException.class
 com\lobster\trade\service\ProductRecommendSlotService.class
 com\lobster\trade\service\AdminAuditService.class
@@ -257,7 +256,6 @@ com\lobster\trade\service\CsService.class
 com\lobster\trade\service\impl\ImPushServiceImpl$EmitterEntry.class
 com\lobster\trade\controller\FileUploadController.class
 com\lobster\trade\payment\util\PaymentCryptoUtil.class
-com\lobster\trade\controller\SmsConfigController.class
 com\lobster\trade\service\SysNotificationService.class
 com\lobster\trade\controller\admin\StatsController.class
 com\lobster\trade\model\response\ImSessionVO.class
@@ -288,7 +286,6 @@ com\lobster\trade\model\entity\UserCoupon.class
 com\lobster\trade\service\impl\ProductCategoryServiceImpl.class
 com\lobster\trade\model\response\LoginResponse.class
 com\lobster\trade\model\request\AdminProductUpdateRequest.class
-com\lobster\trade\controller\PaymentConfigController.class
 com\lobster\trade\model\entity\GameCategory.class
 com\lobster\trade\model\request\AuditLogRequest.class
 com\lobster\trade\config\JwtAuthenticationFilter.class

@@ -83,6 +83,14 @@ public class AdminController {
         return Result.success(null);
     }
 
+    @Audit(value = "重置用户密码", targetType = "User")
+    @PostMapping("/user/{id}/reset-password")
+    @RequirePermission(AdminPermission.USER_EDIT)
+    public Result<String> resetUserPassword(@PathVariable Long id) {
+        String newPwd = adminService.resetUserPassword(id);
+        return Result.success(newPwd);
+    }
+
     @Audit(value = "修改用户", targetType = "User")
     @PutMapping("/user/{id}")
     @RequirePermission(AdminPermission.USER_EDIT)
