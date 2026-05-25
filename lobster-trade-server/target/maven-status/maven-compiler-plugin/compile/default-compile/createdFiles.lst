@@ -19,6 +19,7 @@ com\lobster\trade\controller\admin\NotificationController.class
 com\lobster\trade\model\response\OrderRecognizeVO$RecognizedFields.class
 com\lobster\trade\controller\DebugController.class
 com\lobster\trade\controller\RealNameApiController.class
+com\lobster\trade\controller\ExportController.class
 com\lobster\trade\exception\BusinessException.class
 com\lobster\trade\service\ProductRecommendSlotService.class
 com\lobster\trade\service\AdminAuditService.class

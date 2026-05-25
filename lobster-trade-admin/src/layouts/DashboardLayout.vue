@@ -74,6 +74,10 @@
           <el-icon><Star /></el-icon>
           <span>评价管理</span>
         </el-menu-item>
+        <el-menu-item index="/finance">
+          <el-icon><Money /></el-icon>
+          <span>财务统计</span>
+        </el-menu-item>
         <el-menu-item index="/export">
           <el-icon><Download /></el-icon>
           <span>数据导出</span>
@@ -142,7 +146,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAdminStore } from '@/stores/admin'
-import { DataLine, User, List, Goods, Warning, Monitor, SwitchButton, TrendCharts, Bell, MessageBox, Ticket, Star, Download, Postcard, Document, Key, Wallet, ChatLineSquare } from '@element-plus/icons-vue'
+import { DataLine, User, List, Goods, Warning, Monitor, SwitchButton, TrendCharts, Bell, MessageBox, Ticket, Star, Download, Postcard, Document, Key, Wallet, ChatLineSquare, Money } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -161,7 +165,8 @@ const pageTitle = computed(() => {
     '/disputes': '仲裁管理',
     '/games': '游戏管理',
     '/payment-config': '支付设置',
-    '/sms-config': '短信设置'
+    '/sms-config': '短信设置',
+    '/finance': '财务统计'
   }
   return map[route.path] || ''
 })

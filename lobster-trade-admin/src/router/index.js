@@ -36,6 +36,7 @@ const routes = [
       { path: 'coupon', name: 'Coupon', component: () => import('@/views/CouponManage.vue'), meta: { permissions: ['COUPON_MANAGE'] } },
       { path: 'payment-config', name: 'PaymentConfig', component: () => import('@/views/PaymentConfig.vue'), meta: { permissions: ['CONFIG_VIEW'] } },
       { path: 'sms-config', name: 'SmsConfig', component: () => import('@/views/SmsConfig.vue'), meta: { permissions: ['CONFIG_VIEW'] } },
+      { path: 'finance', name: 'Finance', component: () => import('@/views/FinanceStats.vue'), meta: { permissions: ['ORDER_VIEW'] } },
       { path: 'admin-manage', name: 'AdminManage', component: () => import('@/views/AdminManage.vue'), meta: { permissions: ['ADMIN_MANAGE'] } },
     ]
   }

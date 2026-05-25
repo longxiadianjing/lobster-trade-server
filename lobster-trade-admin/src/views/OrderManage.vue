@@ -5,6 +5,9 @@
         <div class="card-header-flex">
           <span class="card-title">订单管理</span>
           <div class="filter-row">
+            <el-button type="success" @click="handleExport" style="margin-right:8px">
+              <el-icon><Download /></el-icon>导出
+            </el-button>
             <el-input v-model="keyword" placeholder="订单号/商品名称" style="width: 220px;" clearable @change="loadOrders">
               <template #prefix><el-icon><Search /></el-icon></template>
             </el-input>
@@ -243,6 +246,7 @@
 document.title = '订单管理 - 龙虾道具交易平台'
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { Download } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
 const loading = ref(false)
@@ -357,6 +361,15 @@ const openEditFromDetail = () => {
   if (!currentOrder.value) return
   handleEdit(currentOrder.value)
   showDetail.value = false
+}
+
+const handleExport = () => {
+  const params = new URLSearchParams()
+  if (filterStatus.value) params.append('status', filterStatus.value)
+  if (filterType.value) params.append('tradeType', filterType.value)
+  if (keyword.value) params.append('keyword', keyword.value)
+  window.open(`/api/admin/export/orders?${params.toString()}`)
+  ElMessage.success('订单 CSV 开始下载')
 }
 
 onMounted(() => { loadOrders() })
